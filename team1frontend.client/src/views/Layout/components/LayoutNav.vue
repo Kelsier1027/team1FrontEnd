@@ -13,8 +13,8 @@
                 style="color: RGB(38, 190, 201)"
             >
                 小白旅遊
-            </div></v-app-bar-title
-        >
+            </div>
+        </v-app-bar-title>
 
         <!-- 使用flex容器包裹右邊的兩個元件，並利用CSS控制排列 -->
         <div class="flex-right">
