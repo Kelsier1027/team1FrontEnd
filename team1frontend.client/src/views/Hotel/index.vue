@@ -1,6 +1,6 @@
-<template>
+ï»¿<template>
     <v-main>
-        <h1>Hotel¶º©±</h1>
+        <h1>Hotelé£¯åº—</h1>
         <Search @search="handleSearch" />
         <Carousel :items="items" :currentOffset="currentOffset" :atEndOfList="atEndOfList" :atHeadOfList="atHeadOfList" @move-carousel="moveCarousel" />
     </v-main>
@@ -8,23 +8,30 @@
 </template>
 
 <script setup>
+    import { useRouter } from 'vue-router';
+    
+    //æœå°‹
+    import Search from '@/views/Hotel/search.vue';
 
-    //·j´M
-    import Search from '../Layout/components/search.vue';
+    const router = useRouter();
+    const searchQuery = ref({
+        // ... ä½ çš„æœç´¢è¡¨å•æ•°æ®
+    });
 
     function handleSearch(searchQuery) {
-        // ³B²z·j¯ÁÅŞ¿è
+        // è™•ç†æœç´¢é‚è¼¯
+        router.push({ path: '/hotel/list', query: searchQuery.value });
     }
 
-    //±ÛÂà¤ì°¨
+    //æ—‹è½‰æœ¨é¦¬
     import { ref, computed } from 'vue';
-    import Carousel from '../Layout/components/Carousel.vue'; // ½T«O¸ô®|¥¿½T
+    import Carousel from '../Layout/components/Carousel.vue'; // ç¢ºä¿è·¯å¾‘æ­£ç¢º
 
     const items = ref([
-        { name: '¥x¤¤', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" },
-        { name: "¥x¥_", image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
-        { name: '¥x¤¤', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" }
-        // §ó¦h¶µ¥Ø...
+        { name: 'å°ä¸­', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" },
+        { name: "å°åŒ—", image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
+        { name: 'å°ä¸­', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" }
+        // æ›´å¤šé …ç›®...
     ]);
     const currentOffset = ref(0);
     const paginationFactor = 220;

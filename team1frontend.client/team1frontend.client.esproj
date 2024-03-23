@@ -9,6 +9,9 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="src\views\Hotel\search.vue" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="node_modules\%40aashutoshrathi\word-wrap\index.d.ts" />
     <None Include="node_modules\%40aashutoshrathi\word-wrap\index.js" />
     <None Include="node_modules\%40aashutoshrathi\word-wrap\LICENSE" />

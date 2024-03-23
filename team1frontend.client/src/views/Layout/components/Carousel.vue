@@ -9,7 +9,7 @@
                         <img :src="item.image" />
                         <div class="card-carousel--card--footer">
                             <p>{{ item.name }}</p>
-                            <p class="tag">{{ item.acount }}¶¡©Ğ¶¡</p>
+                            <p >{{ item.acount }}é–“æˆ¿é–“</p>
                         </div>
                     </div>
                 </div>
@@ -31,11 +31,11 @@ defineProps({
 
 <style scoped>
    
-    /* ³o¸Ìª½±µ¨Ï¥Î§A´£¨Ñªº CSS ¼Ë¦¡ */
+    /* é€™è£¡ç›´æ¥ä½¿ç”¨ä½ æä¾›çš„ CSS æ¨£å¼ */
     body {
         background: #f8f8f8;
         color: #2c3e50;
-        font-family: "Source Sans Pro", sans-serif;
+        /*font-family: "Source Sans Pro", sans-serif;*/
     }
 
     .card-carousel-wrapper {

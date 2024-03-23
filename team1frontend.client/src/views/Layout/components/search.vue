@@ -1,8 +1,9 @@
 <template>
+    <input type="text" placeholder="要去哪？" v-model="searchQuery.location" required />
     <div class="search-panel">
         <form class="search-form" @submit.prevent="submitForm">
             <div class="input-group">
-                <input type="text" placeholder="要去哪裡？" v-model="searchQuery.location" required />
+                <input type="text" placeholder="要去哪？" v-model="searchQuery.location" required />
             </div>
             <div class="input-group">
                 <input type="date" v-model="searchQuery.checkInDate" required />

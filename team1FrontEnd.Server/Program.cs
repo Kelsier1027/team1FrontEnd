@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using team1FrontEnd.Server.Models;
+
 namespace team1FrontEnd.Server
 {
 	public class Program
@@ -7,9 +10,15 @@ namespace team1FrontEnd.Server
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
+            // 加入DbContext服務
+            builder.Services.AddDbContext<dbTeam1Context>(
+          options => options.UseSqlServer(
+           builder.Configuration.GetConnectionString("dbTeam1Connection")
+         ));
 
-			builder.Services.AddControllers();
+            // Add services to the container.
+
+            builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
