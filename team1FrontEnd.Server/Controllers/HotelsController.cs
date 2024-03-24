@@ -11,16 +11,16 @@ namespace team1FrontEnd.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Hotels1Controller : ControllerBase
+    public class HotelsController : ControllerBase
     {
         private readonly dbTeam1Context _context;
 
-        public Hotels1Controller(dbTeam1Context context)
+        public HotelsController(dbTeam1Context context)
         {
             _context = context;
         }
 
-        // GET: api/Hotels1
+        // GET: api/Hotels
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
         {
@@ -31,7 +31,7 @@ namespace team1FrontEnd.Server.Controllers
             return await _context.Hotels.ToListAsync();
         }
 
-        // GET: api/Hotels1/5
+        // GET: api/Hotels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
@@ -49,7 +49,7 @@ namespace team1FrontEnd.Server.Controllers
             return hotel;
         }
 
-        // PUT: api/Hotels1/5
+        // PUT: api/Hotels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHotel(int id, Hotel hotel)
@@ -80,7 +80,7 @@ namespace team1FrontEnd.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Hotels1
+        // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
@@ -95,7 +95,7 @@ namespace team1FrontEnd.Server.Controllers
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
 
-        // DELETE: api/Hotels1/5
+        // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
