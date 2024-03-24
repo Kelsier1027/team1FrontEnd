@@ -145,6 +145,9 @@ public partial class dbTeam1Context : DbContext
         {
             entity.ToTable("Answer");
 
+            entity.Property(e => e.AdateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("ADateTime");
             entity.Property(e => e.Answer1)
                 .IsRequired()
                 .HasMaxLength(500)
@@ -161,16 +164,14 @@ public partial class dbTeam1Context : DbContext
         {
             entity.Property(e => e.Address).IsRequired();
             entity.Property(e => e.Description).IsRequired();
+            entity.Property(e => e.Latitude).HasColumnName("latitude");
+            entity.Property(e => e.Longitude).HasColumnName("longitude");
             entity.Property(e => e.Name).IsRequired();
 
             entity.HasOne(d => d.AttractionCategory).WithMany(p => p.Attractions)
                 .HasForeignKey(d => d.AttractionCategoryId)
-                .HasConstraintName("FK_Attractions_AttractionCategories");
-
-            entity.HasOne(d => d.City).WithMany(p => p.Attractions)
-                .HasForeignKey(d => d.CityId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Attractions_Cities");
+                .HasConstraintName("FK_Attractions_AttractionCategories");
         });
 
         modelBuilder.Entity<AttractionCategory>(entity =>
@@ -222,7 +223,7 @@ public partial class dbTeam1Context : DbContext
         modelBuilder.Entity<AttractionOrder>(entity =>
         {
             entity.Property(e => e.OrderDate).HasColumnType("datetime");
-            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.TicketTotalPrice).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.AttractionOrderStatus).WithMany(p => p.AttractionOrders)
                 .HasForeignKey(d => d.AttractionOrderStatusId)
@@ -667,6 +668,8 @@ public partial class dbTeam1Context : DbContext
             entity.Property(e => e.EncryptedPassword)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
             entity.Property(e => e.RegistrationDate).HasColumnType("datetime");
             entity.Property(e => e.Salt).IsUnicode(false);
         });
@@ -727,16 +730,11 @@ public partial class dbTeam1Context : DbContext
 
         modelBuilder.Entity<MemberProfile>(entity =>
         {
+            entity.Property(e => e.Country).HasMaxLength(50);
             entity.Property(e => e.Email)
                 .IsRequired()
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.FirstName)
-                .IsRequired()
-                .HasMaxLength(20);
-            entity.Property(e => e.LastName)
-                .IsRequired()
-                .HasMaxLength(20);
 
             entity.HasOne(d => d.Gender).WithMany(p => p.MemberProfiles)
                 .HasForeignKey(d => d.GenderId)
@@ -912,6 +910,7 @@ public partial class dbTeam1Context : DbContext
         {
             entity.ToTable("Question");
 
+            entity.Property(e => e.DateTime).HasColumnType("datetime");
             entity.Property(e => e.Question1)
                 .IsRequired()
                 .HasMaxLength(500)

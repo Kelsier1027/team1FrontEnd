@@ -11,6 +11,8 @@ public partial class Question
 
     public int MemberId { get; set; }
 
+    public DateTime DateTime { get; set; }
+
     public string Question1 { get; set; }
 
     public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();

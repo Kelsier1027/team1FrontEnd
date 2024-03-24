@@ -11,9 +11,9 @@ namespace team1FrontEnd.Server
 			var builder = WebApplication.CreateBuilder(args);
 
             // 加入DbContext服務
-            builder.Services.AddDbContext<dbTeam1Context>(
-          options => options.UseSqlServer(
-           builder.Configuration.GetConnectionString("dbTeam1Connection")
+        builder.Services.AddDbContext<dbTeam1Context>(
+		options => options.UseSqlServer(
+		builder.Configuration.GetConnectionString("dbTeam1Connection")
          ));
 
             // Add services to the container.

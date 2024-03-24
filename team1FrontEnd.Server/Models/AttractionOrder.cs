@@ -13,7 +13,7 @@ public partial class AttractionOrder
 
     public DateTime? OrderDate { get; set; }
 
-    public decimal Price { get; set; }
+    public decimal TicketTotalPrice { get; set; }
 
     public int AttractionOrderStatusId { get; set; }
 

@@ -19,6 +19,10 @@ public partial class AttractionTicket
 
     public bool TicketStatus { get; set; }
 
+    public string TicketTitle { get; set; }
+
+    public string TicketDetail { get; set; }
+
     public virtual Attraction Attraction { get; set; }
 
     public virtual ICollection<AttractionTicketStock> AttractionTicketStocks { get; set; } = new List<AttractionTicketStock>();

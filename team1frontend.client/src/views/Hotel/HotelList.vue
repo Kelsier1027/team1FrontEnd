@@ -83,7 +83,7 @@
                 <div class="hotel-card"
                      v-for="hotel in hotels"
                      :key="hotel.id"
-                     @click="goToHotel(hotel.id)">
+                     @click="goToHotelRoom(hotel.id)">
                     <img :src="hotel.imageUrl" alt="Hotel Image" class="hotel-image" />
                     <div class="hotel-info">
                         <h2>{{ hotel.name }}</h2>
@@ -114,6 +114,7 @@
         // 處理搜索邏輯
     }
     import { ref } from 'vue'
+    import { useRouter } from 'vue-router';
     //飯店設施
     const facilities = ref([
         { name: '健身房' },
@@ -184,9 +185,10 @@
         // ...其他酒店數據
     ]);
     // 跳转到酒店详细页面的函数
-    const goToHotel = (hotelId) => {
+    const goToHotelRoom = (hotelId) => {
         // 这里可以使用Vue Router或者window.location来导航
-        console.log('Go to hotel:', hotelId);
+        router.push({ name: 'HotelRoom', params: { id: hotelId } });
+        console.log('Go to hotel:');
     };
 
     // 处理酒店预订的函数

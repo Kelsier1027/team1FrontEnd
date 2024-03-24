@@ -49,7 +49,7 @@ defineProps({
     .card-carousel {
         display: flex;
         justify-content: center;
-        width: 640px;
+        width: 740px;
     }
 
     .card-carousel--overflow-container {

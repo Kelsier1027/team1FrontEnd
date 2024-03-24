@@ -19,6 +19,12 @@ public partial class Member
 
     public string Salt { get; set; }
 
+    public string FirstName { get; set; }
+
+    public string LastName { get; set; }
+
+    public bool? IsEmailVerified { get; set; }
+
     public virtual ICollection<AttractionOrder> AttractionOrders { get; set; } = new List<AttractionOrder>();
 
     public virtual ICollection<CarOrder> CarOrders { get; set; } = new List<CarOrder>();

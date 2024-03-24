@@ -13,13 +13,11 @@ public partial class MemberProfile
 
     public string Email { get; set; }
 
-    public string FirstName { get; set; }
-
-    public string LastName { get; set; }
-
     public int? GenderId { get; set; }
 
     public string ProfileImage { get; set; }
+
+    public string Country { get; set; }
 
     public virtual Gender Gender { get; set; }
 
