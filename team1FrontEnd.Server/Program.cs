@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using team1FrontEnd.Server.Models;
+using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
+using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 
 namespace team1FrontEnd.Server
 {
@@ -12,6 +14,9 @@ namespace team1FrontEnd.Server
 
 			// Add services to the container.
 			builder.Services.AddControllers(); // 加入Controller服務
+
+			// 加入MemberRepository服務
+			builder.Services.AddScoped<IMemberRepository, MemberEFRepository>();
 
 			// 加入DbContext服務
 			builder.Services.AddDbContext<dbTeam1Context>(

@@ -1,11 +1,11 @@
 ﻿using team1FrontEnd.Server.個人.Yen.Core.Configs;
+using team1FrontEnd.Server.個人.Yen.Core.Entities;
 using team1FrontEnd.Server.個人.Yen.Core.Infra.Validators;
 using team1FrontEnd.Server.個人.Yen.Exts.Members;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IServices.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IValidators;
 using team1FrontEnd.Server.個人.Yen.Models.DTO.Member;
-using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 
 namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 {
@@ -20,13 +20,25 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 		// 建立一個私有的 IValidator 變數 用來驗證 密碼
 		private IValidator _passwordValidator;
 
-		public MemberService()
-		{
-			_repo = new MemberEFRepository();
-			_accountValidator = new AccountValidator();
-			_emailValidator = new EmailValidator();
-			_passwordValidator = new PasswordValidator();
-		}
+		// 建構子
+		//public MemberService()
+		//{
+		//	_repo = new MemberEFRepository(new dbTeam1Context());
+		//	_accountValidator = new AccountValidator();
+		//	_emailValidator = new EmailValidator();
+		//	_passwordValidator = new PasswordValidator();
+		//}
+
+		//public MemberService(IEnumerable<IValidator> validators)
+		//{
+		//	_repo = new MemberEFRepository(new dbTeam1Context());
+
+		//	_emailValidator = validators.FirstOrDefault(v => v.GetType() == typeof(EmailValidator)) ?? new EmailValidator();
+
+		//	_accountValidator = validators.FirstOrDefault(v => v.GetType() == typeof(AccountValidator)) ?? new AccountValidator();
+
+		//	_passwordValidator = validators.FirstOrDefault(v => v.GetType() == typeof(PasswordValidator)) ?? new PasswordValidator();
+		//}
 
 		public MemberService(IMemberRepository repo)
 		{
@@ -58,7 +70,7 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 			if (memberDto.Account == null || memberDto.OriginalPassword == null) throw new ArgumentException(ValidationMessages.EmptyAccountAndPassword);
 
 			// 檢查帳號是否已存在
-			if (IsAccountExistsAsync(memberDto.Account).Result) throw new ArgumentException("帳號已存在");
+			if (await IsAccountExistsAsync(memberDto.Account)) throw new ArgumentException("帳號已存在");
 
 			// 驗證帳號、密碼
 			ValidateMember(memberDto);
@@ -69,8 +81,14 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 			// 加入註冊日期
 			memberDto.RegistrationDate = DateTime.Now;
 
-			// 將 ActiveStatus 設為 false 表示信箱未驗證
-			memberDto.ActiveStatus = false;
+			// 將 ActiveStatus 設為 true 表示帳號已啟用
+			memberDto.ActiveStatus = true;
+
+			// 將 IsEmailVerified 設為 false 表示 Email 未驗證
+			memberDto.IsEmailVerified = false;
+
+			// 將 FirstName 設為 "Guest"
+			memberDto.FirstName = "Guest";
 
 			return await CreateMemberAsync(memberDto);
 		}
@@ -162,16 +180,23 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 		/// </summary>
 		/// <param name="account"></param>
 		/// <returns></returns>
-		public Task<bool> IsAccountExistsAsync(string account)
+		public async Task<bool> IsAccountExistsAsync(string account)
 		{
-			// 根據傳入的帳號查詢會員
-			var member = _repo.GetMember(account);
-
+			MemberEntity member;
+			try
+			{
+				// 根據傳入的帳號查詢會員
+				member = await _repo.GetMember(account);
+			}
+			catch (Exception)
+			{
+				// 如果查詢不到會員，回傳 false
+				return await Task.FromResult(false);
+			}
 			// 如果查詢到會員，回傳 true
-			if (member != null) return Task.FromResult(true);
+			if (member != null) return await Task.FromResult(true);
+			return await Task.FromResult(false);
 
-			// 如果查詢不到會員，回傳 false
-			return Task.FromResult(false);
 		}
 
 		/// <summary>

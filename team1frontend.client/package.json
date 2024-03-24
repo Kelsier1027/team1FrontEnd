@@ -10,6 +10,9 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@jamescoyle/vue-icon": "^0.1.2",
+    "@mdi/js": "^7.4.47",
+    "axios": "^1.6.8",
     "element-plus": "^2.6.1",
     "pinia": "^2.1.7",
     "scss": "^0.2.4",
@@ -23,6 +26,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "eslint-plugin-vue": "^9.17.0",
     "sass": "^1.71.1",
-    "vite": "^5.1.5"
+    "vite": "^5.1.5",
+    "vite-plugin-vuetify": "^2.0.3"
   }
 }

@@ -3,13 +3,12 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace team1FrontEnd.Server.Models;
 
 public partial class dbTeam1Context : DbContext
 {
-	public dbTeam1Context(DbContextOptions<dbTeam1Context> options)
+    public dbTeam1Context(DbContextOptions<dbTeam1Context> options)
         : base(options)
     {
     }
@@ -21,8 +20,6 @@ public partial class dbTeam1Context : DbContext
     public virtual DbSet<Attraction> Attractions { get; set; }
 
     public virtual DbSet<AttractionCategory> AttractionCategories { get; set; }
-
-    public virtual DbSet<AttractionContent> AttractionContents { get; set; }
 
     public virtual DbSet<AttractionImage> AttractionImages { get; set; }
 
@@ -179,18 +176,6 @@ public partial class dbTeam1Context : DbContext
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50);
-        });
-
-        modelBuilder.Entity<AttractionContent>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_AttractionContexts");
-
-            entity.Property(e => e.Context).IsRequired();
-
-            entity.HasOne(d => d.Attraction).WithMany(p => p.AttractionContents)
-                .HasForeignKey(d => d.AttractionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AttractionContents_Attractions");
         });
 
         modelBuilder.Entity<AttractionImage>(entity =>
@@ -653,6 +638,8 @@ public partial class dbTeam1Context : DbContext
             entity.Property(e => e.EncryptedPassword)
                 .IsRequired()
                 .IsUnicode(false);
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
             entity.Property(e => e.RegistrationDate).HasColumnType("datetime");
             entity.Property(e => e.Salt).IsUnicode(false);
         });

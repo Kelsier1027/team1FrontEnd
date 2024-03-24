@@ -28,10 +28,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AttractionContents]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[AttractionImages]",
          "ObjectType": 0
       },

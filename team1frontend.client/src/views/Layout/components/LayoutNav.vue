@@ -1,15 +1,33 @@
 <script setup>
 import { ref } from 'vue';
-
+import { computed } from 'vue';
 import Options from './Options.vue';
 import LoginOrRegister from './LoginOrRegister.vue';
+// import AuthForm from './AuthForm.vue';
+import { useMemberStore } from '@/stores/memberStore';
+import { useRouter, useRoute } from 'vue-router';
+
+import Searcher from './Searcher.vue';
+
+const router = useRouter();
+const route = useRoute();
+
+const memberStore = useMemberStore();
+
+const dialog = ref(false);
 const showLogin = ref(false); // 控制顯示哪個組件
-const isLogin = ref(false); //  控制顯示登入或註冊
+const email = ref('');
+
+console.log(route.path);
+// 只在 member 路由顯示搜尋框
+const showSearcher = computed(() => {
+    return route.path.startsWith('/member');
+});
 
 // 確認是否登入
 function checkLogin() {
     // 如果為尚未登入狀態，則顯示 Options 組件， 將 showLogin 設為 false
-    if (!isLogin.value) {
+    if (!memberStore.isLoggedIn) {
         showLogin.value = false;
     }
     dialog.value = true;
@@ -20,8 +38,18 @@ function toggleShowLogin() {
     showLogin.value = !showLogin.value;
 }
 
+// 關閉對話框
+function closeDialog() {
+    dialog.value = false;
+}
+
+// 使用 router to 跳轉到指定路由
+function toHome() {
+    router.push('/home');
+}
+
 const drawer = ref(false);
-const dialog = ref(false);
+
 const items = ref([
     { title: 'Foo', value: 'foo' },
     { title: 'Bar', value: 'bar' },
@@ -31,36 +59,74 @@ const items = ref([
 </script>
 
 <template>
-    <v-app-bar :elevation="1" class="app-bar-flex">
+    <v-app-bar :elevation="0" class="app-bar-flex">
         <!-- 將標題放在最左邊 -->
         <v-app-bar-title>
-            <div
-                class="font-weight-bold text-h4"
-                style="color: RGB(38, 190, 201)"
-            >
-                小白旅遊
-            </div></v-app-bar-title
-        >
+            <v-row>
+                <v-col
+                    cols="2"
+                    class="font-weight-bold text-h4 webSiteTitle"
+                    style="color: RGB(38, 190, 201)"
+                    @click="toHome"
+                >
+                    小白旅遊
+                </v-col>
+                <v-col
+                    cols="4"
+                    style="height: 64px; padding-left: 0"
+                    v-if="showSearcher"
+                >
+                    <Searcher
+                /></v-col>
+            </v-row>
+        </v-app-bar-title>
 
         <!-- 使用flex容器包裹右邊的兩個元件，並利用CSS控制排列 -->
         <div class="flex-right">
-            <v-icon icon="mdi-cart-outline" class="pe-6" />
-            <v-btn @click="checkLogin">
+            <v-icon
+                v-if="memberStore.isLoggedIn"
+                icon="mdi-cart-outline"
+                class="pe-6"
+            />
+            <v-btn v-if="!memberStore.isLoggedIn" @click="checkLogin">
                 <div class="font-weight-bold" style="color: gray">
                     登入/註冊
                 </div>
             </v-btn>
 
             <!-- 只在大螢幕上顯示v-avatar，並在小螢幕上隱藏v-app-bar-nav-icon -->
+            <v-btn
+                v-if="memberStore.isLoggedIn"
+                icon="mdi-account"
+                size="small"
+                elevation="4"
+            >
+            </v-btn>
+            <v-btn
+                :to="'/member'"
+                icon="mdi-account"
+                size="small"
+                elevation="0"
+                border="1"
+                color="gray"
+            >
+            </v-btn>
             <!-- <v-avatar
+                v-if="memberStore.isLoggedIn"
+                class=""
+                color="grey-darken-1"
+                size="32"
+            ></v-avatar> -->
+            <!-- <v-avatar
+                v-if="memberStore.isLoggedIn"
                 class="hidden-sm-and-down"
                 color="grey-darken-1"
                 size="32"
             ></v-avatar> -->
-            <v-app-bar-nav-icon
+            <!-- <v-app-bar-nav-icon
                 class="hidden-md-and-up"
                 @click.stop="drawer = !drawer"
-            ></v-app-bar-nav-icon>
+            ></v-app-bar-nav-icon> -->
         </div>
     </v-app-bar>
 
@@ -105,7 +171,7 @@ const items = ref([
                             v-if="!showLogin"
                             @show-login="toggleShowLogin"
                         />
-                        <LoginOrRegister v-else />
+                        <LoginOrRegister v-else @close-dialog="closeDialog" />
                     </v-container>
                 </div>
             </v-card>
@@ -129,7 +195,7 @@ const items = ref([
 }
 .app-bar-flex {
     /* height: 64px; */
-    padding-left: 350px; /* 起始點設置較大的間距 */
+    padding-left: 360px; /* 起始點設置較大的間距 */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -149,12 +215,18 @@ const items = ref([
         padding-left: 260px;
         padding-right: 290px;
     }
+    :deep(.webSiteTitle) {
+        margin-right: 60px;
+    }
 }
 @media (max-width: 1600px) {
     .app-bar-flex,
     .flex-right {
         padding-left: 165px;
         padding-right: 190px;
+    }
+    :deep(.webSiteTitle) {
+        margin-right: 35px;
     }
 }
 @media (max-width: 1300px) {

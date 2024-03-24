@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using team1FrontEnd.Server.Models;
+using team1FrontEnd.Server.個人.Yen.Core.Configs;
 using team1FrontEnd.Server.個人.Yen.Core.Entities;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 
@@ -7,9 +8,16 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 {
 	public class MemberEFRepository : IMemberRepository
 	{
-		DbContextOptions<dbTeam1Context> options = new DbContextOptionsBuilder<dbTeam1Context>()
-			.UseSqlServer("Server= sparkle206-sparkle.myftp.biz;Initial Catalog=dbTeam1;Persist Security Info=True;User ID=team1;Password=team1;Integrated Security=True;TrustServerCertificate=true")
-			.Options;
+
+		//DbContextOptions<dbTeam1Context> options = new DbContextOptionsBuilder<dbTeam1Context>()
+		//	.UseSqlServer("Server= sparkle206-sparkle.myftp.biz;Initial Catalog=dbTeam1;Persist Security Info=True;User ID=team1;Password=team1;Integrated Security=True;TrustServerCertificate=true")
+		//	.Options;
+		private readonly dbTeam1Context db;
+
+		public MemberEFRepository(dbTeam1Context context)
+		{
+			db = context;
+		}
 
 		/// <summary>
 		/// 創建會員
@@ -26,28 +34,25 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				throw new ArgumentNullException(nameof(memberEntity));
 			}
 
-			// new 出一個Entity Framework的資料模型
-			using (var db = new dbTeam1Context(options))
+
+			// 將Entity類別的資料轉換成Entity Framework的資料模型
+			var member = new Member
 			{
+				Account = memberEntity.Account,
+				EncryptedPassword = memberEntity.EncryptedPassword,
+				RegistrationDate = memberEntity.RegistrationDate ?? DateTime.Now,
+				ActiveStatus = memberEntity.ActiveStatus
+			};
 
-				// 將Entity類別的資料轉換成Entity Framework的資料模型
-				var member = new Member
-				{
-					Account = memberEntity.Account,
-					EncryptedPassword = memberEntity.EncryptedPassword,
-					RegistrationDate = memberEntity.RegistrationDate ?? DateTime.Now,
-					ActiveStatus = memberEntity.ActiveStatus
-				};
+			// 新增資料
+			db.Members.Add(member);
+			await db.SaveChangesAsync();
 
-				// 新增資料
-				db.Members.Add(member);
-				await db.SaveChangesAsync();
+			// 取得新增的會員ID
+			var id = member.Id;
 
-				// 取得新增的會員ID
-				var id = member.Id;
+			return id;
 
-				return id;
-			}
 		}
 
 		public void DeleteMember(int id)
@@ -63,30 +68,31 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 		/// <exception cref="ArgumentNullException">傳入值為Null</exception>
 		public async Task<MemberEntity> GetMember(int id)
 		{
-			// new 出一個Entity Framework的資料模型
-			using (var db = new dbTeam1Context(options))
+			// 透過ID取得資料
+			var member = await db.Members.FindAsync(id);
+			// 檢查是否有資料
+			if (member == null)
 			{
-				// 透過ID取得資料
-				var member = await db.Members.FindAsync(id);
-				// 檢查是否有資料
-				if (member == null)
-				{
-					// 若無資料則傳出錯誤
-					throw new ArgumentNullException(nameof(id));
-				}
-				// 將Entity Framework的資料模型轉換成Entity類別的資料
-				var memberEntity = new MemberEntity
-				{
-					Id = member.Id,
-					Account = member.Account,
-					EncryptedPassword = member.EncryptedPassword,
-					RegistrationDate = member.RegistrationDate,
-					ActiveStatus = member.ActiveStatus
-				};
-
-				// 回傳Entity類別的資料
-				return memberEntity;
+				// 若無資料則傳出錯誤
+				throw new ArgumentNullException(nameof(id));
 			}
+			// 將Entity Framework的資料模型轉換成Entity類別的資料
+			var memberEntity = new MemberEntity
+			{
+				Id = member.Id,
+				Account = member.Account,
+				EncryptedPassword = member.EncryptedPassword,
+				RegistrationDate = member.RegistrationDate,
+				ActiveStatus = member.ActiveStatus,
+				FirstName = member.FirstName,
+				LastName = member.LastName,
+				IsEmailVerified = member.IsEmailVerified ?? false
+
+			};
+
+			// 回傳Entity類別的資料
+			return memberEntity;
+
 		}
 
 		/// <summary>
@@ -96,29 +102,26 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 		/// <returns>回傳MemberEntity</returns>
 		public async Task<MemberEntity> GetMember(string account)
 		{
-			// new 出一個Entity Framework的資料模型
-			using (var db = new dbTeam1Context(options))
+
+			// 透過帳號取得資料
+			var member = await db.Members.Where(x => x.Account == account).FirstOrDefaultAsync();
+			// 檢查是否有資料
+			if (member == null)
 			{
-				// 透過帳號取得資料
-				var member = await db.Members.Where(x => x.Account == account).FirstOrDefaultAsync();
-				// 檢查是否有資料
-				if (member == null)
-				{
-					// 若無資料則傳出錯誤
-					throw new ArgumentNullException(nameof(account));
-				}
-				// 將Entity Framework的資料模型轉換成Entity類別的資料
-				var memberEntity = new MemberEntity
-				{
-					Id = member.Id,
-					Account = member.Account,
-					EncryptedPassword = member.EncryptedPassword,
-					RegistrationDate = member.RegistrationDate,
-					ActiveStatus = member.ActiveStatus
-				};
-				// 回傳Entity類別的資料
-				return memberEntity;
+				// 若無資料則傳出錯誤
+				throw new Exception(nameof(account) + "," + DBMessages.DbNoDataError);
 			}
+			// 將Entity Framework的資料模型轉換成Entity類別的資料
+			var memberEntity = new MemberEntity
+			{
+				Id = member.Id,
+				Account = member.Account,
+				EncryptedPassword = member.EncryptedPassword,
+				RegistrationDate = member.RegistrationDate,
+				ActiveStatus = member.ActiveStatus
+			};
+			// 回傳Entity類別的資料
+			return memberEntity;
 		}
 
 		/// <summary>
@@ -134,30 +137,31 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 			{
 				throw new ArgumentNullException(nameof(memberEntity));
 			}
-			// new 出一個Entity Framework的資料模型
-			using (var db = new dbTeam1Context(options))
+
+			// 透過ID取得資料
+			var member = db.Members.Find(memberEntity.Id);
+			// 檢查是否有資料
+			if (member == null)
 			{
-				// 透過ID取得資料
-				var member = db.Members.Find(memberEntity.Id);
-				// 檢查是否有資料
-				if (member == null)
-				{
-					// 若無資料則傳出錯誤
-					throw new ArgumentNullException(nameof(memberEntity.Id));
-				}
-				// 更新資料
-				member.EncryptedPassword = memberEntity.EncryptedPassword;
-				member.ActiveStatus = memberEntity.ActiveStatus;
-				db.SaveChanges();
-
-				// 檢查是否成功更新
-				if (member.EncryptedPassword != memberEntity.EncryptedPassword || member.ActiveStatus != memberEntity.ActiveStatus)
-				{
-					// 若無資料則傳出錯誤
-					throw new Exception("更新失敗，資料未變更");
-				}
+				// 若無資料則傳出錯誤
+				throw new ArgumentNullException(nameof(memberEntity.Id));
 			}
-		}
+			// 更新資料
+			member.EncryptedPassword = memberEntity.EncryptedPassword;
+			member.ActiveStatus = memberEntity.ActiveStatus;
+			db.SaveChanges();
 
+			// 檢查是否成功更新
+			if (member.EncryptedPassword != memberEntity.EncryptedPassword || member.ActiveStatus != memberEntity.ActiveStatus)
+			{
+				// 若無資料則傳出錯誤
+				throw new Exception("更新失敗，資料未變更");
+			}
+
+		}
 	}
+
+
+
 }
+

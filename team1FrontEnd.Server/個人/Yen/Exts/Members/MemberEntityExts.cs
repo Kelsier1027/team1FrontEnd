@@ -15,7 +15,10 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				Account = memberEntity.Account,
 				EncryptedPassword = memberEntity.EncryptedPassword,
 				RegistrationDate = memberEntity.RegistrationDate,
-				ActiveStatus = memberEntity.ActiveStatus
+				ActiveStatus = memberEntity.ActiveStatus,
+				FirstName = memberEntity.FirstName,
+				LastName = memberEntity.LastName,
+				IsEmailVerified = memberEntity.IsEmailVerified
 			};
 		}
 
@@ -28,7 +31,10 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				Account = memberEntity.Account,
 				EncryptedPassword = memberEntity.EncryptedPassword,
 				RegistrationDate = memberEntity.RegistrationDate ?? DateTime.Now,
-				ActiveStatus = memberEntity.ActiveStatus
+				ActiveStatus = memberEntity.ActiveStatus,
+				FirstName = memberEntity.FirstName,
+				LastName = memberEntity.LastName,
+				IsEmailVerified = memberEntity.IsEmailVerified
 			};
 		}
 

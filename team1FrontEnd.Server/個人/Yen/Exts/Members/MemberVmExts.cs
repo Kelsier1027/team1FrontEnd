@@ -11,7 +11,7 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 			return new MemberDto
 			{
 				Account = memberVm.Account,
-				EncryptedPassword = memberVm.Password,
+				OriginalPassword = memberVm.Password,
 			};
 		}
 	}

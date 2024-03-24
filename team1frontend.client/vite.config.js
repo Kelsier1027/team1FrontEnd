@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import child_process from 'child_process';
 import { env } from 'process';
+// import VuetifyPlugin from 'vite-plugin-vuetify';
 
 const baseFolder =
     env.APPDATA !== undefined && env.APPDATA !== ''
@@ -64,5 +65,6 @@ export default defineConfig({
             cert: fs.readFileSync(certFilePath),
         },
     },
+
     css: ['https://cdn.jsdelivr.net/npm/vuetify@3.5.8/dist/vuetify-labs.css'],
 });

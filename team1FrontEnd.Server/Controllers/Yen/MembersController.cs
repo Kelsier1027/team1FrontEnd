@@ -3,10 +3,14 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using team1FrontEnd.Server.Models;
 using team1FrontEnd.Server.個人.Yen.Core.Configs;
 using team1FrontEnd.Server.個人.Yen.Exts.Members;
+using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IServices.Member;
+using team1FrontEnd.Server.個人.Yen.Models.DTO.Member;
 using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member;
+using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 using team1FrontEnd.Server.個人.Yen.Services.Menber;
 
 namespace team1FrontEnd.Server.Controllers.Yen
@@ -17,15 +21,15 @@ namespace team1FrontEnd.Server.Controllers.Yen
 	{
 		private readonly IMemberService _memberService;
 
-		public MembersController()
+		// Repository 透過 DI 注入
+		private IMemberRepository _memberRepository;
+
+		public MembersController(dbTeam1Context db)
 		{
-			_memberService = new MemberService();
+			_memberRepository = new MemberEFRepository(db);
+			_memberService = new MemberService(_memberRepository);
 		}
 
-		public MembersController(IMemberService memberService)
-		{
-			_memberService = memberService;
-		}
 
 		// 註冊
 		// POST: api/Members/register
@@ -44,7 +48,9 @@ namespace team1FrontEnd.Server.Controllers.Yen
 			try
 			{
 				var registeredMember = await _memberService.RegisterMemberAsync(memberDto);
-				return Ok(registeredMember);
+				// 將 DTO 轉換成 ViewModel
+				var registeredMemberVm = registeredMember.ToMemberInfoForFrontEndVm();
+				return Ok(registeredMemberVm);
 			}
 			catch (ArgumentException ex)
 			{
@@ -63,30 +69,40 @@ namespace team1FrontEnd.Server.Controllers.Yen
 				return BadRequest(ModelState);
 			}
 			var memberDto = vm.ToDto();
-
-			var member = await _memberService.LoginMemberAsync(memberDto);
-
-			if (member == null)
+			MemberDto member = new MemberDto();
+			try
 			{
-				return Unauthorized(MemberApiMessages.AccountOrPasswordError);
-			}
+				member = await _memberService.LoginMemberAsync(memberDto);
 
-			// 驗證 member.Account 是否為空值
-			if (string.IsNullOrWhiteSpace(member.Account))
-			{
-				return Unauthorized(MemberApiMessages.EmptyAccount);
-			}
-			var claims = new List<Claim>
+				if (member == null)
+				{
+					// 回覆帳號或密碼錯誤
+					return Unauthorized(MemberApiMessages.AccountOrPasswordError);
+				}
+
+				// 驗證 member.Account 是否為空值
+				if (string.IsNullOrWhiteSpace(member.Account))
+				{
+					return Unauthorized(MemberApiMessages.EmptyAccount);
+				}
+				var claims = new List<Claim>
 		{
 			new Claim(ClaimTypes.Name, member.Account),
             // 這裡可以根據實際情況添加更多的聲明
         };
 
-			var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-			var authProperties = new AuthenticationProperties();
-			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+				var authProperties = new AuthenticationProperties();
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+				var memberInfo = member.ToMemberInfoForFrontEndVm();
+				return Ok(memberInfo);
+			}
+			catch (Exception)
+			{
+				// 回覆帳號或密碼錯誤
+				return Unauthorized(MemberApiMessages.AccountOrPasswordError);
+			}
 
-			return Ok(MemberApiMessages.LoginSuccess);
 		}
 
 		// 登出

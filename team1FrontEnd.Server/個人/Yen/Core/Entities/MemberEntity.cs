@@ -11,5 +11,11 @@
 		public DateTime? RegistrationDate { get; set; }
 
 		public bool ActiveStatus { get; set; }
+
+		public string? FirstName { get; set; }
+
+		public string? LastName { get; set; }
+
+		public bool IsEmailVerified { get; set; }
 	}
 }
