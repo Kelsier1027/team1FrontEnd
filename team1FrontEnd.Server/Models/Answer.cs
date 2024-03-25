@@ -11,6 +11,8 @@ public partial class Answer
 
     public int Qid { get; set; }
 
+    public DateTime AdateTime { get; set; }
+
     public string Answer1 { get; set; }
 
     public virtual Question QidNavigation { get; set; }

@@ -1,4 +1,4 @@
-﻿using team1FrontEnd.Server.個人.Yen.Models.DTO.Member;
+﻿using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
 using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member;
 
 namespace team1FrontEnd.Server.個人.Yen.Exts.Members

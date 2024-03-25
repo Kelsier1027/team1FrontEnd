@@ -21,13 +21,15 @@ public partial class Attraction
 
     public string MainImage { get; set; }
 
+    public string Latitude { get; set; }
+
+    public string Longitude { get; set; }
+
     public virtual AttractionCategory AttractionCategory { get; set; }
 
     public virtual ICollection<AttractionImage> AttractionImages { get; set; } = new List<AttractionImage>();
 
     public virtual ICollection<AttractionTicket> AttractionTickets { get; set; } = new List<AttractionTicket>();
-
-    public virtual City City { get; set; }
 
     public virtual ICollection<PackageAttractionItem> PackageAttractionItems { get; set; } = new List<PackageAttractionItem>();
 }

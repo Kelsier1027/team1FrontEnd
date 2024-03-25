@@ -2,6 +2,15 @@
 {
 	public static class ValidationConfig
 	{
+
+		public const int DialCodeMaxLength = 6; // 國際區碼最大長度
+
+		public const int PhoneNumberMaxLength = 15; // 電話號碼最大長度
+
+		public const int EmailMaxLength = 50; // Email最大長度
+
+		public const int NameMaxLength = 50; // 名字最大長度
+
 		public const int PasswordMinLength = 6; // 密碼最小長度
 
 		public const int PasswordMaxLength = 20; // 密碼最大長度

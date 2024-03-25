@@ -8,12 +8,12 @@ using team1FrontEnd.Server.個人.Yen.Core.Configs;
 using team1FrontEnd.Server.個人.Yen.Exts.Members;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IServices.Member;
-using team1FrontEnd.Server.個人.Yen.Models.DTO.Member;
+using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
 using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member;
 using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 using team1FrontEnd.Server.個人.Yen.Services.Menber;
 
-namespace team1FrontEnd.Server.Controllers.Yen
+namespace team1FrontEnd.Server.Controllers.Yen.Members
 {
 	[Route("api/[controller]")]
 	[ApiController]
@@ -24,10 +24,13 @@ namespace team1FrontEnd.Server.Controllers.Yen
 		// Repository 透過 DI 注入
 		private IMemberRepository _memberRepository;
 
-		public MembersController(dbTeam1Context db)
+		private readonly dbTeam1Context _context;
+
+		public MembersController(dbTeam1Context context)
 		{
-			_memberRepository = new MemberEFRepository(db);
+			_memberRepository = new MemberEFRepository(context);
 			_memberService = new MemberService(_memberRepository);
+			_context = context;
 		}
 
 

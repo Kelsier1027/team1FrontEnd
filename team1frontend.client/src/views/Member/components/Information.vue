@@ -165,7 +165,9 @@
                     <v-col cols="8">
                         <v-text-field
                             v-model="phoneNumber"
-                            :rules="[required, numberOnly]"
+                            :rules="[required, numberOnly, maxLength15]"
+                            type="number"
+                            hide-spin-buttons
                             class="dialSelectorField"
                             single-line
                             color="#26bec9"
@@ -193,7 +195,7 @@
                 </div>
                 <v-text-field
                     v-model="email"
-                    :rules="[required, emailFormat]"
+                    :rules="[required, emailFormat, maxLength50]"
                     single-line
                     class="originalField"
                     color="#26bec9"
@@ -204,10 +206,10 @@
                 </v-text-field>
             </v-col>
         </v-row>
-        <v-row justify="end" style="margin-top: 35px">
+        <v-row justify="end" style="margin-top: 8px; margin-bottom: -2px">
             <v-col cols="auto">
                 <v-btn class="saveBtn" color="#26bec9" variant="flat"
-                    ><span class="saveBtnText" style="color: withe">儲存</span>
+                    ><span class="saveBtnText" style="color: white">儲存</span>
                 </v-btn>
             </v-col>
         </v-row>
@@ -308,6 +310,7 @@ const required = (v) => !!v || '此欄位必填';
 const emailFormat = (v) => /.+@.+\..+/.test(v) || '錯誤的 email 格式';
 // 判斷長度在50字元以內
 const maxLength50 = (v) => (v && v.length <= 50) || '最多只能輸入50個字';
+const maxLength15 = (v) => (v && v.length <= 15) || '最多只能輸入15個字';
 const passwordUpperCase = (v) =>
     /[A-Z]/.test(v) || '密碼需包含至少一個大寫字母';
 const passwordLowerCase = (v) =>
@@ -324,9 +327,6 @@ const HasNoSpecialWords = (v) => !/[^A-Za-z0-9]/.test(v) || '不能包含特殊�
     /* border-bottom: 1px solid #dfdfdf; */
 }
 
-:deep(.v-slide-group-item--active) {
-    border-bottom: 4px solid #398b8f;
-}
 :deep(.fields) {
     color: #555555;
     font-size: 14px;

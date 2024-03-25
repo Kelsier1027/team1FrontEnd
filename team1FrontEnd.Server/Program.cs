@@ -66,6 +66,12 @@ namespace team1FrontEnd.Server
 
 			app.UseCors("AllowAll"); // 使用CORS
 
+			if (app.Environment.IsDevelopment())
+			{
+				app.UseSwagger();
+				app.UseSwaggerUI();
+			};
+
 			app.UseHttpsRedirection();  // 使用HTTPS重新導向
 
 			app.UseAuthorization(); // 使用授權

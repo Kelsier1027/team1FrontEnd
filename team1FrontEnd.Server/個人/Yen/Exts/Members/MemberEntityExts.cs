@@ -1,13 +1,13 @@
 ﻿using team1FrontEnd.Server.Models;
-using team1FrontEnd.Server.個人.Yen.Core.Entities;
-using team1FrontEnd.Server.個人.Yen.Models.DTO.Member;
+using team1FrontEnd.Server.個人.Yen.Core.Entities.Members;
+using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
 
 namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 {
 	public static class MemberEntityExts
 	{
 		// 將  MemberEntity 轉換成 MemberDto
-		public static MemberDto ToDto(this MemberEntity memberEntity)
+		public static MemberDto ToMemberDto(this MemberEntity memberEntity)
 		{
 			return new MemberDto
 			{
@@ -37,6 +37,20 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				IsEmailVerified = memberEntity.IsEmailVerified
 			};
 		}
+
+		// 將 MemberEntity 轉換成 MemberPorfileDto
+		public static MemberProfileDto ToMemberPorfileDto(this MemberEntity entity)
+		{
+			return new MemberProfileDto
+			{
+				MemberPorfileId = entity.Id,
+				MemberId = entity.Id,
+				Account = entity.Account,
+				FirstName = entity.FirstName,
+				LastName = entity.LastName,
+			};
+		}
+
 
 	}
 }

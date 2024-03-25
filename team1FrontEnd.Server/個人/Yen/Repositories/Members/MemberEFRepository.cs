@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using team1FrontEnd.Server.Models;
 using team1FrontEnd.Server.個人.Yen.Core.Configs;
-using team1FrontEnd.Server.個人.Yen.Core.Entities;
+using team1FrontEnd.Server.個人.Yen.Core.Entities.Members;
+using team1FrontEnd.Server.個人.Yen.Exts.Members;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
+using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
 
 namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 {
@@ -26,7 +28,7 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 		/// <returns>新增的會員的ID</returns>
 		/// <exception cref="NotImplementedException"></exception>
 		/// <exception cref="ArgumentNullException">傳入值為Null</exception>
-		public async Task<int> CreateMember(MemberEntity memberEntity)
+		public async Task<int> CreateMemberAsync(MemberEntity memberEntity)
 		{
 			// 檢查 memberEntity 是否為 null
 			if (memberEntity == null)
@@ -66,7 +68,7 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 		/// <param name="id">會員ID</param>
 		/// <returns>回傳MemberEntity</returns>
 		/// <exception cref="ArgumentNullException">傳入值為Null</exception>
-		public async Task<MemberEntity> GetMember(int id)
+		public async Task<MemberDto> GetMembersAsync(int id)
 		{
 			// 透過ID取得資料
 			var member = await db.Members.FindAsync(id);
@@ -90,8 +92,12 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 
 			};
 
-			// 回傳Entity類別的資料
-			return memberEntity;
+			// 將Entity類別的資料轉換成Dto類別的資料
+			var memberDto = memberEntity.ToMemberDto();
+
+			// 回傳Dto類別的資料
+
+			return memberDto;
 
 		}
 
@@ -100,7 +106,7 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 		/// </summary>
 		/// <param name="account">會員帳號</param>
 		/// <returns>回傳MemberEntity</returns>
-		public async Task<MemberEntity> GetMember(string account)
+		public async Task<MemberDto> GetMembersAsync(string account)
 		{
 
 			// 透過帳號取得資料
@@ -120,12 +126,16 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				RegistrationDate = member.RegistrationDate,
 				ActiveStatus = member.ActiveStatus
 			};
-			// 回傳Entity類別的資料
-			return memberEntity;
+			// 將Entity類別的資料轉換成Dto類別的資料
+			var memberDto = memberEntity.ToMemberDto();
+
+			// 回傳Dto類別的資料
+
+			return memberDto;
 		}
 
 		/// <summary>
-		/// 更新會員資料，限制只能更新密碼和帳號狀態
+		/// 更新會員密碼
 		/// </summary>
 		/// <param name="memberEntity"></param>
 		/// <exception cref="ArgumentNullException">傳入值為Null</exception>
@@ -159,6 +169,42 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 			}
 
 		}
+
+
+		// 更新會員資料
+		public Task<MemberDto> UpdateMemberInfoAsync(MemberEntity memberEntity)
+		{
+
+			// 透過ID取得實體
+			var member = db.Members.Find(memberEntity.Id);
+			// 檢查是否有資料
+			if (member == null)
+			{
+				// 若無資料則傳出錯誤
+				throw new ArgumentNullException(nameof(memberEntity.Id));
+			}
+			// 更新資料
+			member.FirstName = memberEntity.FirstName;
+			member.LastName = memberEntity.LastName;
+			db.SaveChanges();
+
+			// 將更新後的資料轉換成Entity類別的資料， 並且只保留 FirstName LastName 以及 ID
+			var updatedMemberEntity = new MemberEntity
+			{
+				Id = member.Id,
+				FirstName = member.FirstName,
+				LastName = member.LastName,
+			};
+
+			// 將Entity類別的資料轉換成Dto類別的資料
+			var memberDtoFromDb = updatedMemberEntity.ToMemberDto();
+
+			// 回傳Dto類別的資料
+			return Task.FromResult(memberDtoFromDb);
+
+		}
+
+
 	}
 
 

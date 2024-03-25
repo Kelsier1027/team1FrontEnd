@@ -1,9 +1,9 @@
 ﻿using team1FrontEnd.Server.Models;
-using team1FrontEnd.Server.個人.Yen.Core.Entities;
+using team1FrontEnd.Server.個人.Yen.Core.Entities.Members;
 
 namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 {
-	public static class MemberEFModelExts
+    public static class MemberEFModelExts
 	{
 		// Member 轉換成 MemberEntity
 		public static MemberEntity ToEntity(this Member member)

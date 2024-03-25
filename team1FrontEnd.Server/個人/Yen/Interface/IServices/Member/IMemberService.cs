@@ -1,4 +1,4 @@
-﻿using team1FrontEnd.Server.個人.Yen.Models.DTO.Member;
+﻿using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
 
 namespace team1FrontEnd.Server.個人.Yen.Interface.IServices.Member
 {
@@ -13,8 +13,7 @@ namespace team1FrontEnd.Server.個人.Yen.Interface.IServices.Member
 		// 取得會員資料
 		Task<MemberDto> GetMember(MemberDto memberDto);
 
-
-		// 更新會員資料
+		// 更新會員密碼
 		void UpdatePassword(MemberDto memberDto);
 
 		// 刪除會員
@@ -22,6 +21,8 @@ namespace team1FrontEnd.Server.個人.Yen.Interface.IServices.Member
 
 		// 驗證帳號是否存在
 		Task<bool> IsAccountExistsAsync(string account);
+
+
 
 	}
 }

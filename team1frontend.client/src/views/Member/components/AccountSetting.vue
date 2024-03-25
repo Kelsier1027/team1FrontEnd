@@ -1,13 +1,15 @@
 <script setup>
 import { ref, computed } from 'vue';
 import Information from './Information.vue';
+import Traveler from './Traveler.vue';
+import Security from './Security.vue';
 
 const tab = ref(null);
 </script>
 
 <template>
     <v-card
-        height="807.5"
+        height="auto"
         variant="flat"
         style="background-color: rgb(255, 255, 255)"
     >
@@ -51,10 +53,12 @@ const tab = ref(null);
                 </v-window-item>
 
                 <v-window-item value="frequentTravelers">
-                    常用旅客
+                    <Traveler />
                 </v-window-item>
 
-                <v-window-item value="accountSafety"> 帳號安全 </v-window-item>
+                <v-window-item value="accountSafety">
+                    <Security />
+                </v-window-item>
             </v-window>
         </v-card-text>
     </v-card>
@@ -69,6 +73,9 @@ const tab = ref(null);
     font-weight: 900;
     font-size: 14px;
     color: gray;
+}
+:deep(.v-slide-group-item--active) {
+    border-bottom: 4px solid #398b8f;
 }
 </style>
 

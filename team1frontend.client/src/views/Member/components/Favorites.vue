@@ -1,10 +1,22 @@
 <script setup></script>
 
 <template>
-    <v-card
-        height="807.5"
-        variant="flat"
-        style="background-color: rgb(255, 255, 255)"
-    >
-    </v-card>
+    <div class="board">
+        <div class="page-head"><h1>我的收藏</h1></div>
+        <!---->
+        <div class="empty-list">
+            <div class="none-title">
+                <img
+                    src="https://cdn.kkday.com/pc-web/assets/img/empty_state/wish_list.svg"
+                    alt="您目前沒有收藏清單"
+                />
+                <h4 class="text-muted text-center">您目前沒有收藏清單</h4>
+            </div>
+        </div>
+        <!---->
+    </div>
 </template>
+
+<style scoped>
+@import url(https://cdn.kkday.com/pc-web/pc/dist/css/app.a4e9ad7d127981b7f9f9.css);
+</style>

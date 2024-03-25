@@ -1,11 +1,10 @@
 ﻿using team1FrontEnd.Server.個人.Yen.Core.Configs;
-using team1FrontEnd.Server.個人.Yen.Core.Entities;
 using team1FrontEnd.Server.個人.Yen.Core.Infra.Validators;
 using team1FrontEnd.Server.個人.Yen.Exts.Members;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IServices.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IValidators;
-using team1FrontEnd.Server.個人.Yen.Models.DTO.Member;
+using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
 
 namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 {
@@ -19,26 +18,6 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 		private IValidator _emailValidator;
 		// 建立一個私有的 IValidator 變數 用來驗證 密碼
 		private IValidator _passwordValidator;
-
-		// 建構子
-		//public MemberService()
-		//{
-		//	_repo = new MemberEFRepository(new dbTeam1Context());
-		//	_accountValidator = new AccountValidator();
-		//	_emailValidator = new EmailValidator();
-		//	_passwordValidator = new PasswordValidator();
-		//}
-
-		//public MemberService(IEnumerable<IValidator> validators)
-		//{
-		//	_repo = new MemberEFRepository(new dbTeam1Context());
-
-		//	_emailValidator = validators.FirstOrDefault(v => v.GetType() == typeof(EmailValidator)) ?? new EmailValidator();
-
-		//	_accountValidator = validators.FirstOrDefault(v => v.GetType() == typeof(AccountValidator)) ?? new AccountValidator();
-
-		//	_passwordValidator = validators.FirstOrDefault(v => v.GetType() == typeof(PasswordValidator)) ?? new PasswordValidator();
-		//}
 
 		public MemberService(IMemberRepository repo)
 		{
@@ -137,16 +116,15 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 			if (string.IsNullOrWhiteSpace(memberDto.Account) || string.IsNullOrWhiteSpace(memberDto.EncryptedPassword) || memberDto.RegistrationDate == null) throw new ArgumentException("會員資料不完整");
 
 			// 創建 memberEntity
-			var memberEntity = memberDto.ToEntity();
+			var memberEntity = memberDto.TomMemberEntity();
 
 			// 呼叫 MemberRepository 創建會員
-			var memberId = await _repo.CreateMember(memberEntity);
+			var memberId = await _repo.CreateMemberAsync(memberEntity);
 
 			// 取得創建的會員
-			var entity = await _repo.GetMember(memberId);
+			var memberDtoFromDb = await _repo.GetMembersAsync(memberId);
 
-			// 將會員轉換成 Dto
-			return entity.ToDto();
+			return memberDtoFromDb;
 		}
 
 		public void DeleteMember(MemberDto memberDto)
@@ -169,10 +147,10 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 			}
 
 			// 根據傳入的帳號查詢會員，如果查詢不到會員，拋出錯誤
-			var member = await _repo.GetMember(memberDto.Account) ?? throw new ArgumentException("帳號不存在");
+			var MemberDtoFromDb = await _repo.GetMembersAsync(memberDto.Account) ?? throw new ArgumentException("帳號不存在");
 
 			// 將會員轉換成 Dto 回傳
-			return member.ToDto();
+			return MemberDtoFromDb;
 		}
 
 		/// <summary>
@@ -182,11 +160,12 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 		/// <returns></returns>
 		public async Task<bool> IsAccountExistsAsync(string account)
 		{
-			MemberEntity member;
+
+			MemberDto member;
 			try
 			{
 				// 根據傳入的帳號查詢會員
-				member = await _repo.GetMember(account);
+				member = await _repo.GetMembersAsync(account);
 			}
 			catch (Exception)
 			{
@@ -221,18 +200,18 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 			if (memberDto.Account == null || memberDto.OriginalPassword == null) throw new ArgumentException(ValidationMessages.EmptyAccountOrPassword);
 
 			// 根據帳號查詢會員
-			var entity = await _repo.GetMember(memberDto.Account) ?? throw new ArgumentException(MemberApiMessages.AccountNotExist);
+			var memberDtoFromDb = await _repo.GetMembersAsync(memberDto.Account) ?? throw new ArgumentException(MemberApiMessages.AccountNotExist);
 
-			if (string.IsNullOrWhiteSpace(memberDto.OriginalPassword) || string.IsNullOrWhiteSpace(entity.EncryptedPassword))
+			if (string.IsNullOrWhiteSpace(memberDto.OriginalPassword) || string.IsNullOrWhiteSpace(memberDtoFromDb.EncryptedPassword))
 			{
 				throw new ArgumentException(ValidationMessages.EmptyPassword);
 			}
 
 			// 驗證密碼
-			VerifyPassword(memberDto.OriginalPassword, entity.EncryptedPassword);
+			VerifyPassword(memberDto.OriginalPassword, memberDtoFromDb.EncryptedPassword);
 
 			// 將會員轉換成 Dto
-			return entity.ToDto();
+			return memberDtoFromDb;
 
 		}
 

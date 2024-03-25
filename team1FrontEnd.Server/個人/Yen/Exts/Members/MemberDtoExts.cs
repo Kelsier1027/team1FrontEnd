@@ -1,5 +1,5 @@
-﻿using team1FrontEnd.Server.個人.Yen.Core.Entities;
-using team1FrontEnd.Server.個人.Yen.Models.DTO.Member;
+﻿using team1FrontEnd.Server.個人.Yen.Core.Entities.Members;
+using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
 using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member;
 
 namespace team1FrontEnd.Server.個人.Yen.Exts.Members
@@ -10,7 +10,7 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 	public static class MemberDtoExts
 	{
 		// 將  MemberDto 轉換成MemberEentity
-		public static MemberEntity ToEntity(this MemberDto memberDto)
+		public static MemberEntity TomMemberEntity(this MemberDto memberDto)
 		{
 			return new MemberEntity
 			{
@@ -36,5 +36,18 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				Account = memberDto.Account
 			};
 		}
+
+		// 將 MemberDto 轉換成 ToMemberProfileDto
+		public static MemberProfileDto ToMemberProfileDto(this MemberDto memberDto)
+		{
+			return new MemberProfileDto
+			{
+				MemberId = memberDto.Id,
+				FirstName = memberDto.FirstName,
+				LastName = memberDto.LastName,
+				Account = memberDto.Account
+			};
+		}
+
 	}
 }

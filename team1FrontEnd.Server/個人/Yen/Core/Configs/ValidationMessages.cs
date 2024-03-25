@@ -2,6 +2,19 @@
 {
 	public static class ValidationMessages
 	{
+
+
+
+		public const string EmptyDialCode = "國際區碼為空值";
+
+		public const string EmptyFirstName = "名字為空值";
+
+		public const string EmptyLastName = "姓氏為空值";
+
+		public const string EmptyPhoneNumber = "電話號碼為空值";
+
+		public const string EmptyMemberId = "會員編號為空值";
+
 		public const string EmptyAccount = "帳號為空值";
 
 		public const string EmptyPassword = "密碼為空值";
