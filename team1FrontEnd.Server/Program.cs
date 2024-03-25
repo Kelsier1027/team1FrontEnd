@@ -1,16 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
-using team1FrontEnd.Server.Models;
-using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
-using team1FrontEnd.Server.個人.Yen.Repositories.Members;
-
-using Microsoft.AspNetCore.Http.Connections;
+﻿using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using team1FrontEnd.Server.Auth;
 using team1FrontEnd.Server.Hubs;
 using team1FrontEnd.Server.HubService;
 using team1FrontEnd.Server.Models;
+using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
+using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 
 namespace team1FrontEnd.Server
 {
@@ -51,7 +47,8 @@ namespace team1FrontEnd.Server
 			});
 
 			string CorsPolicy = "AllowAny";
-			builder.Services.AddCors(options => {
+			builder.Services.AddCors(options =>
+			{
 				options.AddPolicy(name: CorsPolicy,
 					policy =>
 					{
@@ -80,7 +77,8 @@ namespace team1FrontEnd.Server
 			app.UseDefaultFiles(); // 使用預設檔案
 			app.UseStaticFiles(); // 使用靜態檔案
 
-			app.MapHub<ChatHub>("/ChatHub", options => {
+			app.MapHub<ChatHub>("/ChatHub", options =>
+			{
 				options.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
 			});
 			// Configure the HTTP request pipeline.
