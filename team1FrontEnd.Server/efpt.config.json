@@ -28,7 +28,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AttractionContents]",
+         "Name": "[dbo].[AttractionContentContexts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionContentImages]",
          "ObjectType": 0
       },
       {
@@ -244,7 +248,6 @@
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
-   "UseDateOnlyTimeOnly": true,
    "UseDbContextSplitting": false,
    "UseDecimalDataAnnotationForSprocResult": true,
    "UseFluentApiOnly": true,

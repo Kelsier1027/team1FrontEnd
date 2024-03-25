@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home/index.vue';
 import Layout from '@/views/Layout/index.vue';
 import Hotel from '@/views/Hotel/index.vue';
+import HotelList from '@/views/Hotel/HotelList.vue';
+import HotelRoom from '@/views/Hotel/HotelRoom.vue';
 import RentCar from '@/views/RentCar/index.vue';
 import Ticket from '@/views/Ticket/index.vue';
 import Tour from '@/views/Tour/index.vue';
@@ -14,6 +16,7 @@ import Quests from '@/views/Member/components/Quests.vue';
 import Orders from '@/views/Member/components/Orders.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
+
 
 // 建立路徑
 const routes = [
@@ -35,6 +38,15 @@ const routes = [
                 path: 'hotel',
                 component: Hotel,
                 meta: { hideHeader: false },
+            },
+            {
+                path: 'hotel/list',
+                component: HotelList,
+            },
+            {
+                path: '/hotel-room/:id', // :id 是動態路徑參數
+                name: 'HotelRoom',
+                component: HotelRoom,
             },
             {
                 path: 'rentCar',
