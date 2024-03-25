@@ -1,28 +1,32 @@
-//import './assets/main.css';
-// import '@/assets/js/jquery.min.js';
+import './assets/main.css'
 
-import { createApp } from 'vue';
-import ElementPlus from 'element-plus';
-import 'element-plus/dist/index.css';
-import { createPinia } from 'pinia';
-import App from './App.vue';
-import router from './router';
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 
-import 'vuetify/styles';
-import vuetify from './plugins/vuetify';
+import App from './App.vue'
+import router from './router'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
-import '@/styles/common.scss';
+const app = createApp(App)
 
-// // 引入懒加载指令插件并且注册
-// import { lazyPlugin } from '@/directives';
-// // 引入全局组件插件
-// import { componentPlugin } from '@/components';
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+}
 
-const pinia = createPinia();
 
-const app = createApp(App);
-app.use(ElementPlus);
-app.use(vuetify);
-app.use(pinia);
-app.use(router);
-app.mount('#app');
+app.use(createPinia())
+app.use(router)
+
+app.mount('#app')
+
+
+
+
+
+
+
+
+
+
+

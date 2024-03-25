@@ -1,41 +1,54 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using myapi._01_BLL.BLL;
+using myapi._01_BLL.IBILL;
+using myapi._01_BLL.IDAL;
+using myapi._02_DAL;
+using myapi.Models;
 
-namespace team1FrontEnd.Server
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddDbContext<dbTeam1Context>(option =>
 {
-	public class Program
-	{
-		public static void Main(string[] args)
-		{
-			var builder = WebApplication.CreateBuilder(args);
-
-			// Add services to the container.
-
-			builder.Services.AddControllers();
-			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
-
-			var app = builder.Build();
-
-			app.UseDefaultFiles();
-			app.UseStaticFiles();
-
-			// Configure the HTTP request pipeline.
-			if (app.Environment.IsDevelopment())
-			{
-				app.UseSwagger();
-				app.UseSwaggerUI();
-			}
-
-			app.UseHttpsRedirection();
-
-			app.UseAuthorization();
+    option.UseSqlServer(builder.Configuration.GetConnectionString("TripAll"));
+});
+builder.Services.AddControllers();
+//DIµù¥U
+builder.Services.AddScoped<IAttractionService, AttractionService>();
+builder.Services.AddScoped<IAttractionRepository, AttractionRepository>();
+builder.Services.AddScoped<IAttractionTicketService, AttractionTicketService>();
+builder.Services.AddScoped<IAttractionTicketRepository, AttractionTicketRepository>();  
 
 
-			app.MapControllers();
 
-			app.MapFallbackToFile("/index.html");
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy("AllowAll",builder=>builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+});
 
-			app.Run();
-		}
-	}
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+app.UseCors("AllowAll");  
+app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "MyStaticFiles")),
+    RequestPath= "/StaticFiles"
+});
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

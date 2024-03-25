@@ -1,6 +1,17 @@
 {
   "recommendations": [
-    "Vue.volar",
-    "dbaeumer.vscode-eslint"
+    "christian-kohler.npm-intellisense",
+    "davidanson.vscode-markdownlint",
+    "dbaeumer.vscode-eslint",
+    "hollowtree.vue-snippets",
+    "kevinyang.ctlorem",
+    "ms-ceintl.vscode-language-pack-zh-hant",
+    "ms-vscode.live-server",
+    "pkief.material-icon-theme",
+    "ritwickdey.liveserver",
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    "vue.volar",
+    "wayou.vscode-todo-highlight"
   ]
 }

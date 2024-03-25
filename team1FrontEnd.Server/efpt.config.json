@@ -1,0 +1,270 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "dbTeam1Context",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "myapi",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[AdminRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Answer]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionCategories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionContentContexts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionContentImages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionImages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionOrders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionOrderStatuses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Attractions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionTickets]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionTicketStocks]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionTicketTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttrationOrderItems]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BEAdmins]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarBrands]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarEnergyTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarModelImages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarModels]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarOrders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarOrderStatuses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cars]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarStatuses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarTransmissions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cities]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CommentImages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Comments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Districts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Genders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelCategories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelImages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelOrderCancelReasons]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelOrderItems]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelOrders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelOrderStatuses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelRoomImages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelRooms]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Hotels]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HotelTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberActivityRecords]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberLevels]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberPersonalInfos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberProfiles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Members]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageAttractionItems]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageHotelRoomItems]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageMemos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageOrderDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageOrders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageOrderStatuses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Packages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Permissions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PointTransctions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[QAs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Question]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RolePermissions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Roles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ServiceCategories]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "sparkle\\sql2024.dbTeam1.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
