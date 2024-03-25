@@ -4,7 +4,7 @@ import { ref } from 'vue';
 const titles = ref([
     { name: '熱門目的地', url: '/home' },
     { name: '住宿', url: '/hotel' },
-    { name: '景點門票', url: '/ticket' },
+    { name: '景點門票', url: '/attraction' },
     { name: '套裝行程', url: '/tour' },
     { name: '全台租車', url: '/rentCar' },
     // { name: '會員', url: '/member' },

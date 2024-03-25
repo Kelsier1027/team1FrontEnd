@@ -7,6 +7,8 @@ import 'element-plus/dist/index.css';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import thor from 'thor-x'
 // import 'thor-x/dist/index.css'
 
@@ -26,6 +28,10 @@ import axios from 'axios'
 const pinia = createPinia();
 
 const app = createApp(App);
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+
 // app.config.globalProperties.$signalr = signalr.signal;
 axios.defaults.baseURL = "http://localhost:5102"
 app.config.globalProperties.$http = axios;

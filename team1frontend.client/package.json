@@ -23,13 +23,17 @@
     "thor-x": "^0.0.81",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
-    "vuetify": "^3.5.8"
+    "vuetify": "^3.5.8",
+    "@element-plus/icons-vue": "^2.3.1",
+    "vue3-google-map": "^0.20.0"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@vitejs/plugin-vue": "^5.0.4",
     "sass": "^1.71.1",
     "vite": "^5.1.5",
-    "vite-plugin-vuetify": "^2.0.3"
+    "vite-plugin-vuetify": "^2.0.3",
+    "unplugin-auto-import": "^0.17.5",
+    "unplugin-vue-components": "^0.26.0"
   }
 }
