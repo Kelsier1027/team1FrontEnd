@@ -21,6 +21,10 @@ public partial class dbTeam1Context : DbContext
 
     public virtual DbSet<AttractionCategory> AttractionCategories { get; set; }
 
+    public virtual DbSet<AttractionContentContext> AttractionContentContexts { get; set; }
+
+    public virtual DbSet<AttractionContentImage> AttractionContentImages { get; set; }
+
     public virtual DbSet<AttractionImage> AttractionImages { get; set; }
 
     public virtual DbSet<AttractionOrder> AttractionOrders { get; set; }
@@ -180,6 +184,31 @@ public partial class dbTeam1Context : DbContext
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<AttractionContentContext>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_AttractionContexts");
+
+            entity.Property(e => e.Qa).HasColumnName("QA");
+
+            entity.HasOne(d => d.Attraction).WithMany(p => p.AttractionContentContexts)
+                .HasForeignKey(d => d.AttractionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AttractionContents_Attractions");
+        });
+
+        modelBuilder.Entity<AttractionContentImage>(entity =>
+        {
+            entity.Property(e => e.Image).IsRequired();
+            entity.Property(e => e.ImageType)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.HasOne(d => d.Attraction).WithMany(p => p.AttractionContentImages)
+                .HasForeignKey(d => d.AttractionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AttractionContentImages_Attractions");
         });
 
         modelBuilder.Entity<AttractionImage>(entity =>
