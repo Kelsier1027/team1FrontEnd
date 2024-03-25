@@ -4,6 +4,14 @@ using team1FrontEnd.Server.Models;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 
+using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using team1FrontEnd.Server.Auth;
+using team1FrontEnd.Server.Hubs;
+using team1FrontEnd.Server.HubService;
+using team1FrontEnd.Server.Models;
+
 namespace team1FrontEnd.Server
 {
 	public class Program
@@ -37,17 +45,32 @@ namespace team1FrontEnd.Server
 
 			});
 
-			// Configure Cookie Authentication 設定 Cookie 驗證
-			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-				.AddCookie(options => // 設定 Cookie 選項
-				{
-					options.Cookie.HttpOnly = true; // 防止XSS攻擊 (只能透過HTTP傳送Cookie) ， 無法透過JavaScript存取
-					options.ExpireTimeSpan = TimeSpan.FromHours(1); // Cookie過期時間 (1小時)
-					options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax; // 跨域設定為Lax (Lax: 只有在GET請求時才會傳送Cookie) ，無法透過POST傳送
-					options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always; // 安全性設定 (Always: 只有在HTTPS下才會傳送Cookie) ， 無法透過HTTP傳送
-					options.SlidingExpiration = true; // 是否滑動過期 (如果為true，則過期時間會延長) ，如果為false，則過期時間不會延長
-				});
+			builder.Services.AddDbContext<dbTeam1Context>(options =>
+			{
+				options.UseSqlServer(builder.Configuration.GetConnectionString("dbTeam1"));
+			});
 
+			string CorsPolicy = "AllowAny";
+			builder.Services.AddCors(options => {
+				options.AddPolicy(name: CorsPolicy,
+					policy =>
+					{
+						policy.WithOrigins("*").
+						WithHeaders("*").
+						WithMethods("*");
+					});
+			});
+
+			builder.Services.AddSignalR().
+				AddJsonProtocol(options =>
+				{
+					options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+				});
+			builder.Services.TryAddSingleton(typeof(CommonService));
+
+			builder.Services.AddMyJWTBearerAuth();
+
+			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer(); // 加入API探索服務
 			builder.Services.AddSwaggerGen(); // 加入Swagger服務
@@ -57,6 +80,9 @@ namespace team1FrontEnd.Server
 			app.UseDefaultFiles(); // 使用預設檔案
 			app.UseStaticFiles(); // 使用靜態檔案
 
+			app.MapHub<ChatHub>("/ChatHub", options => {
+				options.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
+			});
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment()) // 如果是開發環境
 			{
@@ -70,11 +96,17 @@ namespace team1FrontEnd.Server
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI();
-			};
+			}
+			//app.UseCors();
+			app.UseHttpsRedirection();
 
-			app.UseHttpsRedirection();  // 使用HTTPS重新導向
+			app.UseAuthorization();
 
-			app.UseAuthorization(); // 使用授權
+			app.UseAuthentication();
+			app.UseAuthorization();
+
+			// 授权路径			
+			app.MapGet("generatetoken", c => c.Response.WriteAsync(MyJWTBearer.GenerateToken(c)));
 
 			app.MapControllers(); // 對應控制器
 

@@ -1,5 +1,5 @@
 ﻿{
-   "CodeGenerationMode": 3,
+   "CodeGenerationMode": 4,
    "ContextClassName": "dbTeam1Context",
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
@@ -25,6 +25,10 @@
       },
       {
          "Name": "[dbo].[AttractionCategories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionContents]",
          "ObjectType": 0
       },
       {
@@ -240,7 +244,7 @@
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
-   "UseDateOnlyTimeOnly": false,
+   "UseDateOnlyTimeOnly": true,
    "UseDbContextSplitting": false,
    "UseDecimalDataAnnotationForSprocResult": true,
    "UseFluentApiOnly": true,

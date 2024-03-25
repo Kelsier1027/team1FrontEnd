@@ -3,6 +3,7 @@ import LayoutNav from './components/LayoutNav.vue';
 import LayoutHeader from './components/LayoutHeader.vue';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import Service from './components/Service.vue';
 
 const route = useRoute();
 
@@ -16,6 +17,7 @@ const showHeader = computed(() => !route.meta.hideHeader);
     <LayoutNav />
     <LayoutHeader v-if="showHeader" />
     <RouterView />
+    <Service/>
 </template>
 
 <script></script>
