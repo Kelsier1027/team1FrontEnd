@@ -32,10 +32,6 @@ namespace team1FrontEnd.Server
             builder.Services.AddScoped<IAttractionTicketService, AttractionTicketService>();
             builder.Services.AddScoped<IAttractionTicketRepository, AttractionTicketRepository>();
 
-<<<<<<< HEAD
-			string CorsPolicy = "AllowAny";
-			builder.Services.AddCors(option =>
-=======
             // 加入DbContext服務
             builder.Services.AddDbContext<dbTeam1Context>(
 	options => options.UseSqlServer(
@@ -44,7 +40,7 @@ namespace team1FrontEnd.Server
 
 			// CORS policy 設定
 			builder.Services.AddCors(options =>
->>>>>>> DEV
+
 			{
 				options.AddPolicy("AllowAll",
 					builder => builder
@@ -56,14 +52,12 @@ namespace team1FrontEnd.Server
 
 			});
 
-<<<<<<< HEAD
-            // Add services to the container.
-=======
+
 			builder.Services.AddDbContext<dbTeam1Context>(options =>
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("dbTeam1"));
 			});
->>>>>>> DEV
+
 
 			string CorsPolicy = "AllowAny";
 			builder.Services.AddCors(options =>
