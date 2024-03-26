@@ -2,7 +2,11 @@
     <v-main>
         <h1>Hotel飯店</h1>
         <Search @search="handleSearch" />
-        <Carousel :items="items" :currentOffset="currentOffset" :atEndOfList="atEndOfList" :atHeadOfList="atHeadOfList" @move-carousel="moveCarousel" />
+        <Carousel :items="items" :currentOffset="currentOffset" 
+                  :atEndOfList="atEndOfList" 
+                  :atHeadOfList="atHeadOfList" 
+                  @move-carousel="moveCarousel" 
+                  @item-clicked="navigateToHotelList"/>
     </v-main>
 
 </template>
@@ -21,6 +25,11 @@
     function handleSearch(searchQuery) {
         // 處理搜索邏輯
         router.push({ path: '/hotel/list', query: searchQuery.value });
+    }
+
+    function navigateToHotelList(itemName) {
+        // 使用router.push將用戶導向HotelList頁面，並傳遞itemName作為query參數
+        router.push({ path: '/hotel/list', query: { name: itemName } });
     }
 
     //旋轉木馬

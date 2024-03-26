@@ -19,8 +19,6 @@ namespace team1FrontEnd.Server
 			builder.Configuration.GetConnectionString("dbTeam1Connection")
 			 ));
 
-<<<<<<< Updated upstream
-=======
 			string CorsPolicy = "AllowAny";
 			builder.Services.AddCors(option =>
 			{
@@ -31,7 +29,6 @@ namespace team1FrontEnd.Server
 			});
 
             // Add services to the container.
->>>>>>> Stashed changes
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();

@@ -96,7 +96,7 @@
                             <span class="original-price">原價 NT${{ hotel.originalPrice }}</span>
                         </div>
                         <button class="booking-button"
-                                @click.stop="bookHotel(hotel.id)">
+                               @click="goToHotelRoom(hotel.id)">
                             立即訂購
                         </button>
                     </div>
@@ -109,17 +109,26 @@
 
 <script setup>
     import Search from '../Layout/components/search.vue';
+    import { ref } from 'vue'
+    import { useRoute, useRouter } from 'vue-router';
+
+    const route = useRoute();
+    const router = useRouter();
+    const hotelId = route.params.id;
+
+    function navigateToHotelRoom(hotelId) {
+        console.log(hotelId);
+        router.push({ name: 'HotelRoom', params: { id: hotelId } });
+    }
 
     function handleSearch(searchQuery) {
         // 處理搜索邏輯
     }
-    import { ref } from 'vue'
-    import { useRouter } from 'vue-router';
     //飯店設施
     const facilities = ref([
         { name: '健身房' },
         { name: '游泳池' },
-        { name: '免费早餐' },
+        { name: '免費早餐' },
         { name: '免费早餐' },
         { name: '免费早餐' },
         // 更多设施...

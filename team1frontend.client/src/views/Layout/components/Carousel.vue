@@ -5,11 +5,11 @@
         <div class="card-carousel">
             <div class="card-carousel--overflow-container">
                 <div class="card-carousel-cards" :style="{ transform: 'translateX(' + currentOffset + 'px)'}">
-                    <div class="card-carousel--card" v-for="item in items" :key="item.name">
+                    <div class="card-carousel--card" v-for="item in items" :key="item.name" @click="navigateToHotelList(item.name)">
                         <img :src="item.image" />
                         <div class="card-carousel--card--footer">
                             <p>{{ item.name }}</p>
-                            <p >{{ item.acount }}間房間</p>
+                            <p>{{ item.acount }}間房間</p>
                         </div>
                     </div>
                 </div>
@@ -20,17 +20,26 @@
 </template>
 
 <script setup>
-defineProps({
-  items: Array,
-  currentOffset: Number,
-  atEndOfList: Boolean,
-  atHeadOfList: Boolean,
-  acount : Number,
-});
+
+    import { useRouter } from 'vue-router';
+
+    const props = defineProps({
+        items: Array,
+        currentOffset: Number,
+        atEndOfList: Boolean,
+        atHeadOfList: Boolean,
+        acount: Number,
+    });
+
+    const router = useRouter();
+
+    function navigateToHotelList(itemName) {
+        router.push({ path: '/hotel/list', query: { name: itemName } });
+    }
 </script>
 
 <style scoped>
-   
+
     /* 這裡直接使用你提供的 CSS 樣式 */
     body {
         background: #f8f8f8;
