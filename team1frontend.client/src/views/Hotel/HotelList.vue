@@ -9,12 +9,16 @@
                 <div class="facility-list">
                     <div class="facility-item"
                          v-for="(facility, index) in facilities"
-                         :key="index">
+                         :key="facility.id">
+                        <!-- 使用 facility.id 作為 key -->
+                        <!-- 修正為模板字符串，正確繫結 id -->
+                        <!-- 用 facility.id 作為 value -->
+                        <!-- 確保 selectedFacilities 是一個陣列 -->
                         <input type="checkbox"
-                               :id="`facility-${index}`"
-                               :value="facility.name"
+                               :id="facility.id"
+                               :value="facility.id"
                                v-model="selectedFacilities" />
-                        <label :for="`facility-${index}`">{{ facility.name }}</label>
+                        <label :for="facility.id">{{ facility.jaon }}</label>
                     </div>
                 </div>
                 <!--金額搜尋-->
@@ -109,8 +113,9 @@
 
 <script setup>
     import Search from '../Layout/components/search.vue';
-    import { ref } from 'vue'
+    import { ref, onMounted} from 'vue'
     import { useRoute, useRouter } from 'vue-router';
+    import axios from 'axios';
 
     const route = useRoute();
     const router = useRouter();
@@ -125,14 +130,28 @@
         // 處理搜索邏輯
     }
     //飯店設施
-    const facilities = ref([
-        { name: '健身房' },
-        { name: '游泳池' },
-        { name: '免費早餐' },
-        { name: '免费早餐' },
-        { name: '免费早餐' },
-        // 更多设施...
-    ])
+    //const facilities = ref([
+    //    { id:1, jaon: '健身房' },
+    //    { id:2, jaon: '游泳池' },
+    //    { id:3, jaon: '免費早餐' },
+    //    { id:4, jaon: '免费早餐' },
+    //    { id:5, jaon: '免费早餐' },
+    //    // 更多设施...
+    //])
+    const facilities = ref([])
+    const selectedFacilities = ref([]);
+
+    async function fetchFacilities() {
+        try {
+            const response = await axios.get('https://localhost:7113/api/HotelCategories');
+            facilities.value = response.data; // 假設API返回的數據直接是我們需要的設施列表
+        } catch (error) {
+            console.error('Failed to fetch facilities:', error);
+        }
+    }
+
+    // 使用 onMounted 生命週期鉤子來在組件掛載時獲取數據
+    onMounted(fetchFacilities);
 
     const selectedPrice = ref([])
 

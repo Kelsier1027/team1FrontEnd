@@ -7,19 +7,19 @@
             <div class="input-group">
                 <input type="date" v-model="searchQuery.checkInDate" required />
             </div>
-          
+
             <div class="input-group input-headcount">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="adults-addon">成人</span>
                 </div>
-                <input type="number" class="form-control"  v-model.number="searchQuery.adults" min="1" aria-label="成人" aria-describedby="adults-addon" required />
+                <input type="number" class="form-control" v-model.number="searchQuery.adults" min="1" aria-label="成人" aria-describedby="adults-addon" required />
 
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="children-addon">小孩</span>
                 </div>
-                <input type="number" class="form-control"  v-model.number="searchQuery.children" min="0" aria-label="小孩" aria-describedby="children-addon" required />
+                <input type="number" class="form-control" v-model.number="searchQuery.children" min="0" aria-label="小孩" aria-describedby="children-addon" required />
             </div>
-            
+
 
             <div class="input-group">
                 <button type="submit">搜尋</button>
@@ -59,7 +59,7 @@ function submitForm() {
             width: 100%;
             padding: 10px;
             margin: 4px 0;
-            background-color:white;
+            background-color: white;
             display: inline-block;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -69,20 +69,20 @@ function submitForm() {
             text-align: left;
         }
 
-    .input-group button {
-        width: 100%;
-        background-color: #4CAF50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-        .input-group button:hover {
-            background-color: #45a049;
+        .input-group button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
+
+            .input-group button:hover {
+                background-color: #45a049;
+            }
 
     .search-panel {
         background-color: #ffd54f; /* 您喜歡的顏色 */
@@ -101,10 +101,10 @@ function submitForm() {
 
     .input-group {
         flex: 1
-        
     }
-    .input-headcount{
-        color:black;
-        border:black;
+
+    .input-headcount {
+        color: black;
+        border: black;
     }
 </style>
