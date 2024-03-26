@@ -9,6 +9,7 @@
           <h5 class="card-title">{{ attraction.name }}</h5>
           <p class="card-text">{{ attraction.description }}</p>
         </div>
+        <div class="price">NT${{ attraction.lowPrice }}起</div>
       </div>
     </div>
   </Router-link>

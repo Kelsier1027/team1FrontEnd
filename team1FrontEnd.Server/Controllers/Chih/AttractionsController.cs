@@ -47,7 +47,8 @@ namespace myapi.Controllers
         [HttpGet("/api/Attractions/GetCategories")]
         public async Task<IEnumerable<AttractionCategory>> GetCategories()
         {
-            var categories = await _context.AttractionCategories.ToListAsync();
+            var categories = await _context.AttractionCategories.OrderByDescending(c => c.Id)
+                                                                .ToListAsync();
             categories.ForEach(c =>
             {
                 c.Icon = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/StaticFiles/images/chih/CategoryIcon/{c.Icon}";

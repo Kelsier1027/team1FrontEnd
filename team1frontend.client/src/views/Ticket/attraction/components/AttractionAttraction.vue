@@ -1,6 +1,7 @@
 <template>
+
   <div class="block text-center">
-    <el-carousel height="500px">
+    <el-carousel height="500px" motion-blur>
       <div class="searchBar">
         <div style="display: flex;">
           <div class="searchBarBG">
@@ -17,16 +18,19 @@
       <!-- <el-carousel-item v-for="item in 4" :key="item" :interval="1500">
       </el-carousel-item> -->
       <el-carousel-item :interval="1500">
-        <img src="@/assets/images/chih/1200px-台南_赤崁樓.jpg">
+        <img src="@/assets/images/chih/0x01.webp">
       </el-carousel-item>
       <el-carousel-item :interval="1500">
-        <img src="@/assets/images/chih/Xpark .jpg">
+        <img src="@/assets/images/chih/0x02.webp">
       </el-carousel-item>
       <el-carousel-item :interval="1500">
-        <img src="@/assets/images/chih/e0be7f74-9301-46af-af0e-468b82923f1a.jpg">
+        <img src="@/assets/images/chih/0x03.webp">
       </el-carousel-item>
       <el-carousel-item :interval="1500">
-        <img src="@/assets/images/chih/海生館.jpg">
+        <img src="@/assets/images/chih/0x04.webp">
+      </el-carousel-item>
+      <el-carousel-item :interval="1500">
+        <img src="@/assets/images/chih/0x05.webp">
       </el-carousel-item>
 
     </el-carousel>
@@ -51,7 +55,7 @@
     <el-empty :image-size="200" v-if="attractionList == 0" />
 
   
-</div>
+  </div>
 
 
 
@@ -81,7 +85,13 @@ console.log(categoryList);
 
 
 function categoryQuery(id){
-  category.value=id;
+  if(id===9){
+    category.value=0;
+  }
+  else{
+    category.value=id;
+  }
+  
   search()
 }
 
@@ -122,6 +132,7 @@ onMounted(()=>{
 </script>
 
 <style scoped>
+
 .card-container {
   display: flex;
   margin-top: 5px;

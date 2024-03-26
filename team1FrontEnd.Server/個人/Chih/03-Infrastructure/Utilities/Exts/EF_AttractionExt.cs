@@ -21,7 +21,8 @@ namespace myapi._03_Infrastructure.Utilities.Exts
                 CityId = a.CityId,
                 Description = a.Description,
                 MainImage = a.MainImage,
-                AttractionCategoryDTO = new AttractionCategoryDTO
+                LowPrice = a.AttractionTickets.Select(t => t.Price).DefaultIfEmpty(0m).Min(),
+            AttractionCategoryDTO = new AttractionCategoryDTO
                 {
                     Id = a.AttractionCategory.Id,
                     Name = a.AttractionCategory.Name
@@ -38,6 +39,7 @@ namespace myapi._03_Infrastructure.Utilities.Exts
                 Address = c.Address,
                 Latitude = c.Latitude,
                 Longitude = c.Longitude,
+                LowPrice = c.AttractionTickets.Select(t=>t.Price).DefaultIfEmpty(0m).Min(),  
                 AttractionContentImageDTO = c.AttractionContentImages.Select(image => new AttractionContentImageDTO
                 {
                     Image = image.Image,
