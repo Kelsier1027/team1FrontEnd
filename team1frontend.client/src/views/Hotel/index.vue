@@ -15,7 +15,7 @@
     import { useRouter } from 'vue-router';
     
     //搜尋
-    import Search from '@/views/Hotel/search.vue';
+    import Search from '../Layout/components/search.vue';
 
     const router = useRouter();
     const searchQuery = ref({

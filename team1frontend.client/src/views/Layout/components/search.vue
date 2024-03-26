@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="search-panel">
         <form class="search-form" @submit.prevent="submitForm">
             <div class="input-group">
@@ -7,15 +7,20 @@
             <div class="input-group">
                 <input type="date" v-model="searchQuery.checkInDate" required />
             </div>
-            <div class="input-group">
-                <input type="number" placeholder="成人" v-model.number="searchQuery.adults" min="1" required />
+          
+            <div class="input-group input-headcount">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="adults-addon">成人</span>
+                </div>
+                <input type="number" class="form-control"  v-model.number="searchQuery.adults" min="1" aria-label="成人" aria-describedby="adults-addon" required />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="children-addon">小孩</span>
+                </div>
+                <input type="number" class="form-control"  v-model.number="searchQuery.children" min="0" aria-label="小孩" aria-describedby="children-addon" required />
             </div>
-            <div class="input-group">
-                <input type="number" placeholder="小孩" v-model.number="searchQuery.children" min="0" required />
-            </div>
-            <div class="input-group">
-                <input type="number" placeholder="嬰兒" v-model.number="searchQuery.infants" min="0" required />
-            </div>
+            
+
             <div class="input-group">
                 <button type="submit">搜尋</button>
             </div>
@@ -44,20 +49,25 @@ function submitForm() {
 <!-- 添加 CSS 樣式如果有的話 -->
 <style scoped>
     .input-group {
-        margin-bottom: 10px;
+        display: flex; /* 使用flex布局 */
+        flex-wrap: wrap; /* 允许元素在需要时换行 */
     }
 
-    .input-group input[type="text"],
-    .input-group input[type="number"],
-    .input-group input[type="date"] {
-        width: 100%;
-        padding: 10px;
-        margin: 4px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin: 4px 0;
+            background-color:white;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            flex-grow: 1;
+            flex-basis: calc(33.333% - 20px); /* 分配每个输入框占行的三分之一，减去间隙 */
+            text-align: left;
+        }
 
     .input-group button {
         width: 100%;
@@ -91,5 +101,10 @@ function submitForm() {
 
     .input-group {
         flex: 1
+        
+    }
+    .input-headcount{
+        color:black;
+        border:black;
     }
 </style>
