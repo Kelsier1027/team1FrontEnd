@@ -3,6 +3,9 @@ import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiAccount } from '@mdi/js';
+// import '@/styles/main.scss';
 
 const myCustomLightTheme = {
     dark: false,
@@ -14,6 +17,7 @@ const myCustomLightTheme = {
         'surface-variant': '#424242',
         'on-surface-variant': '#EEEEEE',
         primary: '#1867C0',
+        // primary: '#dfdf',
         'primary-darken-1': '#1F5592',
         secondary: '#48A9A6',
         'secondary-darken-1': '#018786',
@@ -39,6 +43,8 @@ const myCustomLightTheme = {
         'theme-on-kbd': '#FFFFFF',
         'theme-code': '#F5F5F5',
         'theme-on-code': '#000000',
+        'tab-slider-size': '10px',
+        // '-internal-Light-dark': 'red',
     },
     ssr: true,
 };

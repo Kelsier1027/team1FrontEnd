@@ -3,7 +3,7 @@
 <template>
     <v-app id="inspire">
         <Router-View />
-    </v-app>
+    </v-app>    
 </template>
 
 <style scoped></style>

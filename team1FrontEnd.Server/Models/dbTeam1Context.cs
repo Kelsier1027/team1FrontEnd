@@ -178,6 +178,9 @@ public partial class dbTeam1Context : DbContext
         {
             entity.HasIndex(e => e.Name, "UQ_AttractionCategories_Name").IsUnique();
 
+            entity.Property(e => e.Icon)
+                .HasMaxLength(2000)
+                .HasColumnName("icon");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50);
@@ -731,14 +734,18 @@ public partial class dbTeam1Context : DbContext
         modelBuilder.Entity<MemberProfile>(entity =>
         {
             entity.Property(e => e.Country).HasMaxLength(50);
+            entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
+            entity.Property(e => e.DialCode)
+                .HasMaxLength(6)
+                .IsUnicode(false);
             entity.Property(e => e.Email)
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
-
-            entity.HasOne(d => d.Gender).WithMany(p => p.MemberProfiles)
-                .HasForeignKey(d => d.GenderId)
-                .HasConstraintName("FK_MemberProfiles_Genders");
+            entity.Property(e => e.PhoneNumber)
+                .IsRequired()
+                .HasMaxLength(15)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Member).WithMany(p => p.MemberProfiles)
                 .HasForeignKey(d => d.MemberId)

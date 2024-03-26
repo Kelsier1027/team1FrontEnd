@@ -11,5 +11,7 @@ public partial class AttractionCategory
 
     public string Name { get; set; }
 
+    public string Icon { get; set; }
+
     public virtual ICollection<Attraction> Attractions { get; set; } = new List<Attraction>();
 }
