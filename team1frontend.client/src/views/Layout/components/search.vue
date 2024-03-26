@@ -1,24 +1,23 @@
 <template>
-    <input type="text" placeholder="­n¥h­ş¡H" v-model="searchQuery.location" required />
     <div class="search-panel">
         <form class="search-form" @submit.prevent="submitForm">
             <div class="input-group">
-                <input type="text" placeholder="­n¥h­ş¡H" v-model="searchQuery.location" required />
+                <input type="text" placeholder="è¦å»å“ªï¼Ÿ" v-model="searchQuery.location" required />
             </div>
             <div class="input-group">
                 <input type="date" v-model="searchQuery.checkInDate" required />
             </div>
             <div class="input-group">
-                <input type="number" placeholder="¦¨¤H" v-model.number="searchQuery.adults" min="1" required />
+                <input type="number" placeholder="æˆäºº" v-model.number="searchQuery.adults" min="1" required />
             </div>
             <div class="input-group">
-                <input type="number" placeholder="¤p«Ä" v-model.number="searchQuery.children" min="0" required />
+                <input type="number" placeholder="å°å­©" v-model.number="searchQuery.children" min="0" required />
             </div>
             <div class="input-group">
-                <input type="number" placeholder="À¦¨à" v-model.number="searchQuery.infants" min="0" required />
+                <input type="number" placeholder="å¬°å…’" v-model.number="searchQuery.infants" min="0" required />
             </div>
             <div class="input-group">
-                <button type="submit">·j´M</button>
+                <button type="submit">æœå°‹</button>
             </div>
         </form>
     </div>
@@ -42,7 +41,7 @@ function submitForm() {
 }
 </script>
 
-<!-- ²K¥[ CSS ¼Ë¦¡¦pªG¦³ªº¸Ü -->
+<!-- æ·»åŠ  CSS æ¨£å¼å¦‚æœæœ‰çš„è©± -->
 <style scoped>
     .input-group {
         margin-bottom: 10px;
@@ -76,11 +75,11 @@ function submitForm() {
         }
 
     .search-panel {
-        background-color: #ffd54f; /* ±z³ßÅwªºÃC¦â */
+        background-color: #ffd54f; /* æ‚¨å–œæ­¡çš„é¡è‰² */
         padding: 15px;
         border-radius: 8px;
-        max-width: 900px; /* ©ÎªÌ®Ú¾Ú±zªº³]­p»İ¨D½Õ¾ã */
-        margin: 20px auto; /* Åı·j¯Á­±ªO¦b­¶­±¤¤¶¡Åã¥Ü */
+        max-width: 900px; /* æˆ–è€…æ ¹æ“šæ‚¨çš„è¨­è¨ˆéœ€æ±‚èª¿æ•´ */
+        margin: 20px auto; /* è®“æœç´¢é¢æ¿åœ¨é é¢ä¸­é–“é¡¯ç¤º */
     }
 
     .search-form {
