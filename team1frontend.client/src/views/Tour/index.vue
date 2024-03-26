@@ -2,7 +2,7 @@
 //import top from './Components/topForm.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 
-const images = ref(["assets/Images/輪播圖.jfif", "assets/Images/輪播圖3.jpg", "assets/Images/輪播圖1.jfif", "assets/Images/墾丁輪播."]);
+const images = ref(["assets/Images/輪播圖.jfif", "assets/Images/輪播圖3.jpg", "assets/Images/輪播圖1.jfif", "assets/Images/墾丁輪播.jpg"]);
 const currentIndex = ref(0);
 let intervalId;
 
