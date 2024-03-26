@@ -1,6 +1,9 @@
 <template>
-
-  <AttractionAttraction />
+  <v-main>
+    <v-container class="container">
+      <AttractionAttraction />
+    </v-container>
+  </v-main>
 
 </template>
 
@@ -12,6 +15,8 @@ import AttractionAttraction from './components/AttractionAttraction.vue';
 </script>
 
 <style scoped>
+
+
 /* ul{
 border:2px solid black;
   }

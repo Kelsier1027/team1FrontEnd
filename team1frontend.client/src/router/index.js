@@ -122,7 +122,12 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: routes,
     // 跳轉頁面時，滾動到頂部
-    scrollBehavior() {
+    scrollBehavior(to) {
+
+        if (to.path == '/attraction') {
+            return null;
+        }
+
         return {
             top: 0,
         };

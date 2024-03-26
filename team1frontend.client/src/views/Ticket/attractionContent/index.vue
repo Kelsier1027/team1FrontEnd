@@ -1,4 +1,7 @@
 <template>
+  <v-main>
+    <v-container>
+
   <el-breadcrumb :separator-icon="ArrowRight">
     <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
     <el-breadcrumb-item :to="{ path: '/attraction' }">景點</el-breadcrumb-item>
@@ -26,7 +29,8 @@
   <!-- <span class="test">{{ attractionContent[0]?.longitude }}</span> -->
   <h1>地點</h1>
   <Map :lat="attractionContent[0]?.latitude" :lng="attractionContent[0]?.longitude" />
-
+</v-container>
+</v-main>
 </template>
 
 
@@ -99,4 +103,10 @@ onMounted(() => loadContent());
   display: grid;
   padding: 5px;
 }
+:deep(.contain){
+  display:flex;
+  height: 200px;
+  width: 200px;
+}
+
 </style>
