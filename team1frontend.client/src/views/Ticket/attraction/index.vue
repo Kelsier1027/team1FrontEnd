@@ -1,14 +1,17 @@
 <template>
   <v-main>
+    <Cart/>
     <v-container class="container">
       <AttractionAttraction />
     </v-container>
+  
   </v-main>
 
 </template>
 
 <script setup>
 import AttractionAttraction from './components/AttractionAttraction.vue';
+import Cart from '../component/cart.vue'
 
 
 

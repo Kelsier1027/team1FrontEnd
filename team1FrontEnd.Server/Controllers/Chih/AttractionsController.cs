@@ -32,6 +32,14 @@ namespace myapi.Controllers
         public async Task<IEnumerable<AttractionContentDTO>> GetAttractionContent([FromQuery]int id)
         {
             var attractionContent = await _attractionService.GetAttractionContent(id);
+            foreach (var item in attractionContent)
+            {
+                foreach(var image in item.AttractionContentImageDTO)
+                {
+                    image.Image= $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/StaticFiles/images/chih/AttractionContent/{image.Image}";
+                }
+            }
+
             return attractionContent;
         }
         [HttpGet("/api/Attractions/Search")]
