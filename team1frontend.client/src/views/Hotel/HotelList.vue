@@ -91,16 +91,15 @@
                     <img :src="hotel.imageUrl" alt="Hotel Image" class="hotel-image" />
                     <div class="hotel-info">
                         <h2>{{ hotel.name }}</h2>
-                        <p>{{ hotel.description }}</p>
+                        <p>{{ hotel.address }}</p>
                         <div class="hotel-rating">
-                            <span>{{ hotel.rating }}</span>
+                            <span>{{ hotel.grade }}</span>
                         </div>
-                        <div class="hotel-price">
+                        <!--<div class="hotel-price">
                             <span>NT${{ hotel.price }}</span>
                             <span class="original-price">原價 NT${{ hotel.originalPrice }}</span>
-                        </div>
-                        <button class="booking-button"
-                               @click="goToHotelRoom(hotel.id)">
+                        </div>-->
+                        <button class="booking-button">
                             立即訂購
                         </button>
                     </div>
@@ -129,18 +128,10 @@
     function handleSearch(searchQuery) {
         // 處理搜索邏輯
     }
-    //飯店設施
-    //const facilities = ref([
-    //    { id:1, jaon: '健身房' },
-    //    { id:2, jaon: '游泳池' },
-    //    { id:3, jaon: '免費早餐' },
-    //    { id:4, jaon: '免费早餐' },
-    //    { id:5, jaon: '免费早餐' },
-    //    // 更多设施...
-    //])
+ 
     const facilities = ref([])
     const selectedFacilities = ref([]);
-
+    //左欄設施列表
     async function fetchFacilities() {
         try {
             const response = await axios.get('https://localhost:7113/api/HotelCategories');
@@ -154,6 +145,23 @@
     onMounted(fetchFacilities);
 
     const selectedPrice = ref([])
+
+    //飯店
+    // 引用和函数定义
+    const hotels = ref([]);
+
+    async function fetchHotels() {
+        try {
+            const response = await axios.get('https://localhost:7113/api/Hotels');
+            hotels.value = response.data;
+        } catch (error) {
+            console.error('Failed to fetch hotels:', error);
+        }
+    }
+
+    // 在组件挂载时获取酒店列表
+    onMounted(fetchHotels);
+
 
     //價格篩選
     const searchMix = ref('')
@@ -191,27 +199,27 @@
     ]
 
     //飯店標題
-    const hotels = ref([
-        {
-            id: 1,
-            name: '阿里山英迪格酒店 - IHG 旗下飯店頁面',
-            description: '最佳視野景觀，輕度假首選的五星國際品牌酒店。',
-            rating: '8.8',
-            imageUrl: 'https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit',
-            price: 13500,
-            originalPrice: 31185
-        },
-        {
-            id: 2,
-            name: '台北景觀101 -小木屋飯店',
-            description: '台北頂級小木屋，有清新的空氣，還看的到101。',
-            rating: '7.8',
-            imageUrl: 'https://images.trvl-media.com/lodging/1000000/20000/14200/14153/f370d8eb.jpg?impolicy=resizecrop&rw=455&ra=fit',
-            price: 12250,
-            originalPrice: 44485
-        },
-        // ...其他酒店數據
-    ]);
+    //const hotels = ref([
+    //    {
+    //        id: 1,
+    //        name: '阿里山英迪格酒店 - IHG 旗下飯店頁面',
+    //        description: '最佳視野景觀，輕度假首選的五星國際品牌酒店。',
+    //        rating: '8.8',
+    //        imageUrl: 'https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit',
+    //        price: 13500,
+    //        originalPrice: 31185
+    //    },
+    //    {
+    //        id: 2,
+    //        name: '台北景觀101 -小木屋飯店',
+    //        description: '台北頂級小木屋，有清新的空氣，還看的到101。',
+    //        rating: '7.8',
+    //        imageUrl: 'https://images.trvl-media.com/lodging/1000000/20000/14200/14153/f370d8eb.jpg?impolicy=resizecrop&rw=455&ra=fit',
+    //        price: 12250,
+    //        originalPrice: 44485
+    //    },
+    //    // ...其他酒店數據
+    //]);
     // 跳转到酒店详细页面的函数
     const goToHotelRoom = (hotelId) => {
         // 这里可以使用Vue Router或者window.location来导航
