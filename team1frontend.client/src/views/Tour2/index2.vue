@@ -1,33 +1,45 @@
 <!-- <h3>台東</h3> -->
-<template>
-
+<!-- <template>
   <div class="container h-100 py-5">
     <div class="topProduct">
       <div class="ProName">
         <p class="ProName-P">{{ detail.name }}</p>
       </div>
-
-      <!-- <script>
-export default {
-  data() {
-    return {
-      detail: {
-        name: '墾丁3天2夜' // 产品名称的默认值
-      }
-    };
-  }
-};
-</script> -->
-
       <div>
         <div class="Pro-lef d-flex">
           <img class="card-img" src="/assets/Images/台東.jpg" style="width: 500px; object-fit: cover" alt="" />
-          <div class="Pro-right">12加寬</div>
-          <div>
+           <div class="Pro-right">12加寬</div> 
+          <div class="ms-10">
+        
+            <div class="d-flex justify-center">
+
+         
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="TBborder">
+      <p class="PBack">商品介紹</p>
+    </div>
+    
+  </div>
+</template> -->
+
+<template>
+  <div class="container h-100 py-5">
+    <div class="topProduct">
+      <v-row class="align-center"> <!-- 使用 v-row 来创建栅格行，并设置 align 属性为 "center" 使内容垂直居中 -->
+        <v-col cols="6"> <!-- 使用 v-col 来创建栅格列，并设置 cols 属性为 "6" 使其占据 6 栅格宽度，即占据一半的宽度 -->
+          <img class="card-img" src="/assets/Images/台東.jpg" style="width: 100%; object-fit: cover;" alt="" />
+        </v-col>
+        <v-col cols="1"></v-col> <!-- 创建一个占据 1 栅格宽度的空列，用作左右内容之间的间隔 -->
+        <v-col cols="5"> <!-- 创建一个占据 5 栅格宽度的列，用作右边内容的容器 -->
+          <div> <!-- 这里使用了您之前提到的 ms-10 类，用于添加左边距 -->
             <table>
               <thead>
                 <tr>
-                  <th class="push-td">12345<span class="m-5 p-2"></span></th>
+                  <!-- <th class="push-td">12345<span class="m-5 p-2"></span></th> -->
                 </tr>
               </thead>
               <tbody>
@@ -43,44 +55,39 @@ export default {
                   <td>已賣 :</td>
                   <td class="td-r">{{ detail.brandName }}</td>
                 </tr>
-                <!-- <tr>
-                  <td>庫存量 :</td>
-                  <td class="td-r">{{ detail.inventory }}</td>
-                </tr> -->
+
                 <tr>
                   <td>庫存量 :</td>
                   <td class="td-r">{{ detail.inventory }}</td>
                 </tr>
                 <tr>
                   <td>價格$ :</td>
-                  <!-- <td class="td-r">{{ detail.price.toLocaleString() }}</td> -->
                 </tr>
               </tbody>
             </table>
-            <div>
-              <v-btn class="custom-btn">
+            <div class="d-flex justify-center">
+              <template v-if="MId == 0">
+                <v-btn @click="openLoginModal" size="large" width="200">
+                  <v-icon class="fa-regular fa-star"></v-icon>
+                </v-btn>
+              </template>
+              <template v-else-if="!status.upshot">
+                <v-btn @click="CallProductFavorites" size="large" width="200">
+                  <v-icon class="fa-regular fa-star"></v-icon>
+                </v-btn>
+              </template>
+              <template v-else>
+                <v-btn @click="CallUnFavorites(status.deleteId)" size="large" width="200">
+                  <v-icon class="fa-solid fa-star"></v-icon>
+                </v-btn>
+              </template>
+              <v-btn size="large" width="200">
                 購買
               </v-btn>
-
-              <!-- <button class="add-btn" @click.stop="this.toSoppingCart(detail)">
-                直接購買
-              </button> -->
-            </div>
-            <div>
-              <!-- <button class="add-btn-buy">
-                <i class="fa-solid fa-cart-shopping buy-i" @click.stop="buyDirectly(detail)"></i>
-              </button> -->
-              <button class="add-btn-like">
-                <i v-if="MId == 0" class="fa-regular fa-star like-i" data-bs-toggle="modal"
-                  data-bs-target="#loginModal"></i>
-
-                <i v-else-if="!status.upshot" @click="CallProductFavorites()" class="fa-regular fa-star like-i"></i>
-                <i v-else @click="CallUnFavorites(status.deleteId)" class="fa-solid fa-star like-i"></i>
-              </button>
             </div>
           </div>
-        </div>
-      </div>
+        </v-col>
+      </v-row>
     </div>
     <div class="TBborder">
       <p class="PBack">商品介紹</p>
@@ -89,7 +96,6 @@ export default {
       <div v-for="(item, index) in picture" :key="index">
         <img class="card-img" src="/assets/Images/台東.jpg" style="width: 100%" alt="" />
       </div>
-
       <div class="spec-Out">
         <p class="spec-name">{{ detail.name }}</p>
         <p class="Spec">
@@ -100,6 +106,8 @@ export default {
     </div>
   </div>
 </template>
+
+
 
 <script>
 import axios from "axios";
@@ -358,17 +366,16 @@ p {
   font-size: 20px;
 } */
 
-.add-btn-like {
-  margin-top: -1000px;
-  /* 向上移动按钮 */
-  margin-left: 30px;
-  margin-right: 30px;
+/* .add-btn-like {
+  margin-top: -1000px;  
+  margin-left: 30px; 
+  margin-right: 30px; 
   padding: 5px 35px 5px 35px;
   border: none;
   border-radius: 5px;
   background: rgba(221, 138, 209, 0.192);
   font-size: 20px;
-}
+} */
 
 .add-btn {
   margin-bottom: 35px;
