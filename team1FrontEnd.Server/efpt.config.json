@@ -20,7 +20,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Answer]",
+         "Name": "[dbo].[AttractionCart]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionCartItems]",
          "ObjectType": 0
       },
       {
@@ -104,7 +108,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[CartItems]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[CarTransmissions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Carts]",
          "ObjectType": 0
       },
       {
@@ -221,14 +233,6 @@
       },
       {
          "Name": "[dbo].[PointTransctions]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[QAs]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Question]",
          "ObjectType": 0
       },
       {

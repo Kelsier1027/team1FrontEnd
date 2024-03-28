@@ -10,10 +10,20 @@
     <template #default>
     
       <!-- v-for 購物清單  cart-item 預設樣式?-->
-      <div class="cart-item">123</div>
-      <div class="cart-item">123</div>
-      <div class="cart-item">123</div>
-      <div class="cart-item">123</div>
+      <div class="cart-item row">
+        <div class="item-name col-6">門票</div>
+        <div class="item-price col-3">單價</div>
+        <div class="item-qty col-3">數量</div>
+      </div>
+      <div class="cart-item row" v-for="item in cleanItem" :key="item.id">
+        
+        <div class="item-name col-6">{{item.ticketName}}</div>
+        <div class="item-price col-3">{{item.price}}</div>
+        <div class="item-qty col-3">{{item.price}}</div>
+        <div></div>
+        
+      </div>
+      <div>{{cleanItem}}</div>
      
     
     </template>
@@ -28,12 +38,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import {getCartByMemberAPI} from '@/apis/Chih/apis/get_cartByMember'
 
 
 const drawer = ref(false)
 const direction = ref('rtl')
+const cartList = ref({});
+const id = 2 ;
+const cleanItem= ref({})
+
+//get cart info
+const useCart = async ()=>{
+  const res = await getCartByMemberAPI(id);
+  cartList.value = res;
+  console.log(res);
+  cleanItem.value = res[0].cartItems.map(item=>({
+    id:item.id,
+    ticketName:item.ticketName.trim(), // 清理 ticketName 字段
+    price:item.price,
+  }))
+  console.log(cleanItem);
+  
+};
+
 
 
 function cancelClick(){
@@ -49,6 +78,9 @@ function confirmClick() {
       // catch error
     })
 }
+
+onMounted(()=>useCart())
+
 </script>
 
 
@@ -57,6 +89,18 @@ function confirmClick() {
     border: 2px solid pink;
     padding: 2px;  
 } */
+.item-name{
+
+text-align: left ;
+}
+.item-price{
+ 
+  text-align: left;
+}
+.item-qty{
+
+  text-align: center;
+}
 
 .cartIcon{
   width:100px;

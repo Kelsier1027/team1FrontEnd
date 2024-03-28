@@ -15,9 +15,11 @@ public partial class dbTeam1Context : DbContext
 
     public virtual DbSet<AdminRole> AdminRoles { get; set; }
 
-    public virtual DbSet<Answer> Answers { get; set; }
-
     public virtual DbSet<Attraction> Attractions { get; set; }
+
+    public virtual DbSet<AttractionCart> AttractionCarts { get; set; }
+
+    public virtual DbSet<AttractionCartItem> AttractionCartItems { get; set; }
 
     public virtual DbSet<AttractionCategory> AttractionCategories { get; set; }
 
@@ -58,6 +60,10 @@ public partial class dbTeam1Context : DbContext
     public virtual DbSet<CarStatus> CarStatuses { get; set; }
 
     public virtual DbSet<CarTransmission> CarTransmissions { get; set; }
+
+    public virtual DbSet<Cart> Carts { get; set; }
+
+    public virtual DbSet<CartItem> CartItems { get; set; }
 
     public virtual DbSet<City> Cities { get; set; }
 
@@ -117,10 +123,6 @@ public partial class dbTeam1Context : DbContext
 
     public virtual DbSet<PointTransction> PointTransctions { get; set; }
 
-    public virtual DbSet<Qa> Qas { get; set; }
-
-    public virtual DbSet<Question> Questions { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<RolePermission> RolePermissions { get; set; }
@@ -141,25 +143,6 @@ public partial class dbTeam1Context : DbContext
                 .HasConstraintName("FK_AdminRoles_Roles");
         });
 
-        modelBuilder.Entity<Answer>(entity =>
-        {
-            entity.ToTable("Answer");
-
-            entity.Property(e => e.AdateTime)
-                .HasColumnType("datetime")
-                .HasColumnName("ADateTime");
-            entity.Property(e => e.Answer1)
-                .IsRequired()
-                .HasMaxLength(500)
-                .HasColumnName("Answer");
-            entity.Property(e => e.Qid).HasColumnName("QId");
-
-            entity.HasOne(d => d.QidNavigation).WithMany(p => p.Answers)
-                .HasForeignKey(d => d.Qid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Answer_Question");
-        });
-
         modelBuilder.Entity<Attraction>(entity =>
         {
             entity.Property(e => e.Address).IsRequired();
@@ -172,6 +155,31 @@ public partial class dbTeam1Context : DbContext
                 .HasForeignKey(d => d.AttractionCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Attractions_AttractionCategories");
+        });
+
+        modelBuilder.Entity<AttractionCart>(entity =>
+        {
+            entity.ToTable("AttractionCart");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.AttractionCarts)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AttractionCart_Members");
+        });
+
+        modelBuilder.Entity<AttractionCartItem>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+
+            entity.HasOne(d => d.Cart).WithMany(p => p.AttractionCartItems)
+                .HasForeignKey(d => d.CartId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AttractionCartItems_AttractionCart");
+
+            entity.HasOne(d => d.ItemsNavigation).WithMany(p => p.AttractionCartItems)
+                .HasForeignKey(d => d.Items)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AttractionCartItems_AttractionTickets");
         });
 
         modelBuilder.Entity<AttractionCategory>(entity =>
@@ -440,6 +448,24 @@ public partial class dbTeam1Context : DbContext
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Cart>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Cart");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.Carts)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Cart_Members");
+        });
+
+        modelBuilder.Entity<CartItem>(entity =>
+        {
+            entity.HasOne(d => d.Cart).WithMany(p => p.CartItems)
+                .HasForeignKey(d => d.CartId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CartItems_Carts");
         });
 
         modelBuilder.Entity<City>(entity =>
@@ -895,38 +921,6 @@ public partial class dbTeam1Context : DbContext
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PointTransctions_Members");
-        });
-
-        modelBuilder.Entity<Qa>(entity =>
-        {
-            entity.ToTable("QAs");
-
-            entity.Property(e => e.AnsText).HasMaxLength(500);
-            entity.Property(e => e.Qname)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("QName");
-
-            entity.HasOne(d => d.ServiceCategory).WithMany(p => p.Qas)
-                .HasForeignKey(d => d.ServiceCategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QAs_ServiceCategories");
-        });
-
-        modelBuilder.Entity<Question>(entity =>
-        {
-            entity.ToTable("Question");
-
-            entity.Property(e => e.DateTime).HasColumnType("datetime");
-            entity.Property(e => e.Question1)
-                .IsRequired()
-                .HasMaxLength(500)
-                .HasColumnName("Question");
-
-            entity.HasOne(d => d.Member).WithMany(p => p.Questions)
-                .HasForeignKey(d => d.MemberId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Question_Members");
         });
 
         modelBuilder.Entity<Role>(entity =>

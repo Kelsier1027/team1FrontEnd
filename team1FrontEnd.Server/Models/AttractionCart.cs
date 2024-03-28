@@ -5,11 +5,13 @@ using System.Collections.Generic;
 
 namespace team1FrontEnd.Server.Models;
 
-public partial class ServiceCategory
+public partial class AttractionCart
 {
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public int MemberId { get; set; }
 
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    public virtual ICollection<AttractionCartItem> AttractionCartItems { get; set; } = new List<AttractionCartItem>();
+
+    public virtual Member Member { get; set; }
 }
