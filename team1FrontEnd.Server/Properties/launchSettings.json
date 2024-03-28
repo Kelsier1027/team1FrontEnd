@@ -20,7 +20,7 @@
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7113;https://localhost:5173"
+      "applicationUrl": "https://localhost:7113;https://localhost:5207"
     },
     "IIS Express": {
       "commandName": "IISExpress",

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using team1FrontEnd.Server.Models;
 using team1FrontEnd.Server.個人.Yen.Core.Configs;
 using team1FrontEnd.Server.個人.Yen.Exts.Members;
@@ -88,15 +87,15 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 				{
 					return Unauthorized(MemberApiMessages.EmptyAccount);
 				}
-				var claims = new List<Claim>
-		{
-			new Claim(ClaimTypes.Name, member.Account),
-            // 這裡可以根據實際情況添加更多的聲明
-        };
+				//		var claims = new List<Claim>
+				//{
+				//	new Claim(ClaimTypes.Name, member.Account),
+				//          // 這裡可以根據實際情況添加更多的聲明
+				//      };
 
-				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-				var authProperties = new AuthenticationProperties();
-				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+				//		var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+				//		var authProperties = new AuthenticationProperties();
+				//		await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 				var memberInfo = member.ToMemberInfoForFrontEndVm();
 				return Ok(memberInfo);
 			}

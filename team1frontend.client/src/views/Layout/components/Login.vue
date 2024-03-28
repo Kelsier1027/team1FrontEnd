@@ -7,8 +7,8 @@ const memberStore = useMemberStore();
 
 // 使用 ref 來創建表單數據和規則
 const form = ref({
-    account: '',
-    password: '',
+    account: 'ForTest31@gmail.com',
+    password: 'ForTest31',
 });
 const visible = ref(false);
 const loading = ref(false);
@@ -28,6 +28,7 @@ const doLogin = async () => {
         try {
             // 註冊成功後，叫用登入方法
             await memberStore.login({ account, password });
+            console.log(memberStore.memberId);
             loading.value = false;
             // 如果註冊成功，清空表單數據
             form.value.account = '';
