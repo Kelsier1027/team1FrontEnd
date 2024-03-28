@@ -2,7 +2,6 @@
    "CodeGenerationMode": 4,
    "ContextClassName": "dbTeam1Context",
    "ContextNamespace": null,
-   "DefaultDacpacSchema": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,
    "ModelNamespace": null,
@@ -17,10 +16,6 @@
    "Tables": [
       {
          "Name": "[dbo].[AdminRoles]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Answer]",
          "ObjectType": 0
       },
       {
@@ -104,7 +99,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[CartItems]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[CarTransmissions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Carts]",
          "ObjectType": 0
       },
       {
@@ -224,14 +227,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[QAs]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Question]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[RolePermissions]",
          "ObjectType": 0
       },
@@ -244,10 +239,11 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "sparkle\\sql2024.dbTeam1.dbo",
+   "UiHint": null,
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
    "UseDbContextSplitting": false,
    "UseDecimalDataAnnotationForSprocResult": true,
    "UseFluentApiOnly": true,

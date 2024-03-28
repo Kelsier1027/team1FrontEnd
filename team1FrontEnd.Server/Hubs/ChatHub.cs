@@ -22,8 +22,6 @@ namespace team1FrontEnd.Server.Hubs
 		public override Task OnConnectedAsync()
 		{
 			var id = Context.ConnectionId;
-
-			UserIdsStore.Ids.Add(id);
 			_logger.LogInformation($"Client ConnectionId=> [[{id}]] Already Connection Server！");
 			return base.OnConnectedAsync();
 		}
@@ -35,8 +33,6 @@ namespace team1FrontEnd.Server.Hubs
 		public override Task OnDisconnectedAsync(Exception exception)
 		{
 			var id = Context.ConnectionId;
-
-			UserIdsStore.Ids.Remove(id);
 			_logger.LogInformation($"Client ConnectionId=> [[{id}]] Already Close Connection Server!");
 			return base.OnDisconnectedAsync(exception);
 		}
@@ -50,9 +46,9 @@ namespace team1FrontEnd.Server.Hubs
 		public async Task SendMessage(string data)
 		{
 			Console.WriteLine("Have one Data!");
-			await Clients.All.SendAll(_common.SendAll(data));			
+			await Clients.All.SendAll(_common.SendAll(data));
 			await Clients.Caller.SendAll(_common.SendCaller());
 		}
-		
+
 	}
 }

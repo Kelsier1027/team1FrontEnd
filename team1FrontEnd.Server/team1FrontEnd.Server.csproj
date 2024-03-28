@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="EfCore.SchemaCompare" Version="8.0.1" />
+    <PackageReference Include="Google.Cloud.Dialogflow.V2" Version="4.17.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.3" />
@@ -52,6 +53,10 @@
   <ItemGroup>
     <Folder Include="個人\Yen\Files\" />
     <Folder Include="個人\Yen\Modules\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="efpt.config.json.user" />
   </ItemGroup>
 
 </Project>

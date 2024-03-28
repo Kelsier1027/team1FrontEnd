@@ -11,8 +11,6 @@ public partial class City
 
     public string Name { get; set; }
 
-    public virtual ICollection<Attraction> Attractions { get; set; } = new List<Attraction>();
-
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
     public virtual ICollection<District> Districts { get; set; } = new List<District>();

@@ -27,6 +27,10 @@ public partial class Attraction
 
     public virtual AttractionCategory AttractionCategory { get; set; }
 
+    public virtual ICollection<AttractionContentContext> AttractionContentContexts { get; set; } = new List<AttractionContentContext>();
+
+    public virtual ICollection<AttractionContentImage> AttractionContentImages { get; set; } = new List<AttractionContentImage>();
+
     public virtual ICollection<AttractionImage> AttractionImages { get; set; } = new List<AttractionImage>();
 
     public virtual ICollection<AttractionTicket> AttractionTickets { get; set; } = new List<AttractionTicket>();

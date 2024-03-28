@@ -84,7 +84,7 @@ const items = ref([
         <!-- 使用flex容器包裹右邊的兩個元件，並利用CSS控制排列 -->
         <div class="flex-right">
             <v-icon
-                v-if="memberStore.isLoggedIn"
+             
                 icon="mdi-cart-outline"
                 class="pe-6"
             />

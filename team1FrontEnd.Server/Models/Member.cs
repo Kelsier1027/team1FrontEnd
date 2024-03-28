@@ -29,6 +29,8 @@ public partial class Member
 
     public virtual ICollection<CarOrder> CarOrders { get; set; } = new List<CarOrder>();
 
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual ICollection<HotelOrder> HotelOrders { get; set; } = new List<HotelOrder>();
@@ -42,6 +44,4 @@ public partial class Member
     public virtual ICollection<PackageOrder> PackageOrders { get; set; } = new List<PackageOrder>();
 
     public virtual ICollection<PointTransction> PointTransctions { get; set; } = new List<PointTransction>();
-
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 }

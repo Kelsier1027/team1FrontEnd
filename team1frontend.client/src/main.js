@@ -15,20 +15,13 @@ import vuetify from './plugins/vuetify';
 
 // import '@/styles/common.scss';
 
-// import signalr from './utils/signalR'
-import axios from 'axios'
-
-// // 引入懒加载指令插件并且注册
-// import { lazyPlugin } from '@/directives';
-// // 引入全局组件插件
-// import { componentPlugin } from '@/components';
+import signalr from './utils/signalR'
+// import axios from 'axios'
 
 const pinia = createPinia();
 
 const app = createApp(App);
-// app.config.globalProperties.$signalr = signalr.signal;
-axios.defaults.baseURL = "http://localhost:5102"
-app.config.globalProperties.$http = axios;
+app.config.globalProperties.$signalr = signalr.signal;
 app.use(ElementPlus);
 app.use(vuetify);
 app.use(pinia);
