@@ -26,14 +26,14 @@ namespace team1FrontEnd.Server
 
 			// 加入MemberRepository服務
 			builder.Services.AddScoped<IMemberRepository, MemberEFRepository>();
-            
-			builder.Services.AddScoped<IAttractionService, AttractionService>();
-            builder.Services.AddScoped<IAttractionRepository, AttractionRepository>();
-            builder.Services.AddScoped<IAttractionTicketService, AttractionTicketService>();
-            builder.Services.AddScoped<IAttractionTicketRepository, AttractionTicketRepository>();
 
-            // 加入DbContext服務
-            builder.Services.AddDbContext<dbTeam1Context>(
+			builder.Services.AddScoped<IAttractionService, AttractionService>();
+			builder.Services.AddScoped<IAttractionRepository, AttractionRepository>();
+			builder.Services.AddScoped<IAttractionTicketService, AttractionTicketService>();
+			builder.Services.AddScoped<IAttractionTicketRepository, AttractionTicketRepository>();
+
+			// 加入DbContext服務
+			builder.Services.AddDbContext<dbTeam1Context>(
 	options => options.UseSqlServer(
 		builder.Configuration.GetConnectionString("dbTeam1Connection")
 ));
@@ -85,14 +85,14 @@ namespace team1FrontEnd.Server
 			var app = builder.Build(); // 建立應用程式
 
 			app.UseDefaultFiles(); // 使用預設檔案
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
+			app.UseStaticFiles(new StaticFileOptions
+			{
+				FileProvider = new PhysicalFileProvider(
 				Path.Combine(builder.Environment.ContentRootPath, "MyStaticFiles")),
-                RequestPath = "/StaticFiles"
+				RequestPath = "/StaticFiles"
 			}); // 使用靜態檔案
 
-            app.MapHub<ChatHub>("/ChatHub", options =>
+			app.MapHub<ChatHub>("/ChatHub", options =>
 			{
 				options.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
 			});
