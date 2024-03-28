@@ -90,7 +90,7 @@ namespace team1FrontEnd.Server
                 FileProvider = new PhysicalFileProvider(
 				Path.Combine(builder.Environment.ContentRootPath, "MyStaticFiles")),
                 RequestPath = "/StaticFiles"
-            });	// 使用靜態檔案
+			}); // 使用靜態檔案
 
             app.MapHub<ChatHub>("/ChatHub", options =>
 			{
