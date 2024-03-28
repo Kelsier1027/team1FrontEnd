@@ -20,10 +20,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Answer]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[AttractionCategories]",
          "ObjectType": 0
       },
@@ -221,14 +217,6 @@
       },
       {
          "Name": "[dbo].[PointTransctions]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[QAs]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Question]",
          "ObjectType": 0
       },
       {

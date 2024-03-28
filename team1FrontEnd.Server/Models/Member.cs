@@ -42,6 +42,4 @@ public partial class Member
     public virtual ICollection<PackageOrder> PackageOrders { get; set; } = new List<PackageOrder>();
 
     public virtual ICollection<PointTransction> PointTransctions { get; set; } = new List<PointTransction>();
-
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 }

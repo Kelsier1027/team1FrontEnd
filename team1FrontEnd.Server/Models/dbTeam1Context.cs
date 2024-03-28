@@ -15,8 +15,6 @@ public partial class dbTeam1Context : DbContext
 
     public virtual DbSet<AdminRole> AdminRoles { get; set; }
 
-    public virtual DbSet<Answer> Answers { get; set; }
-
     public virtual DbSet<Attraction> Attractions { get; set; }
 
     public virtual DbSet<AttractionCategory> AttractionCategories { get; set; }
@@ -117,10 +115,6 @@ public partial class dbTeam1Context : DbContext
 
     public virtual DbSet<PointTransction> PointTransctions { get; set; }
 
-    public virtual DbSet<Qa> Qas { get; set; }
-
-    public virtual DbSet<Question> Questions { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<RolePermission> RolePermissions { get; set; }
@@ -139,25 +133,6 @@ public partial class dbTeam1Context : DbContext
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AdminRoles_Roles");
-        });
-
-        modelBuilder.Entity<Answer>(entity =>
-        {
-            entity.ToTable("Answer");
-
-            entity.Property(e => e.AdateTime)
-                .HasColumnType("datetime")
-                .HasColumnName("ADateTime");
-            entity.Property(e => e.Answer1)
-                .IsRequired()
-                .HasMaxLength(500)
-                .HasColumnName("Answer");
-            entity.Property(e => e.Qid).HasColumnName("QId");
-
-            entity.HasOne(d => d.QidNavigation).WithMany(p => p.Answers)
-                .HasForeignKey(d => d.Qid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Answer_Question");
         });
 
         modelBuilder.Entity<Attraction>(entity =>
@@ -895,38 +870,6 @@ public partial class dbTeam1Context : DbContext
                 .HasForeignKey(d => d.MemberId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PointTransctions_Members");
-        });
-
-        modelBuilder.Entity<Qa>(entity =>
-        {
-            entity.ToTable("QAs");
-
-            entity.Property(e => e.AnsText).HasMaxLength(500);
-            entity.Property(e => e.Qname)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("QName");
-
-            entity.HasOne(d => d.ServiceCategory).WithMany(p => p.Qas)
-                .HasForeignKey(d => d.ServiceCategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QAs_ServiceCategories");
-        });
-
-        modelBuilder.Entity<Question>(entity =>
-        {
-            entity.ToTable("Question");
-
-            entity.Property(e => e.DateTime).HasColumnType("datetime");
-            entity.Property(e => e.Question1)
-                .IsRequired()
-                .HasMaxLength(500)
-                .HasColumnName("Question");
-
-            entity.HasOne(d => d.Member).WithMany(p => p.Questions)
-                .HasForeignKey(d => d.MemberId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Question_Members");
         });
 
         modelBuilder.Entity<Role>(entity =>
