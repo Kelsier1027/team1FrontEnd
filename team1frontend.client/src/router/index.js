@@ -19,6 +19,7 @@ import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
 import { onMounted } from 'vue';
 
+import Tour2 from '@/views/Tour2/index2.vue';
 
 // 建立路徑
 const routes = [
@@ -68,6 +69,11 @@ const routes = [
             {
                 path: 'tour',
                 component: Tour,
+                meta: { hideHeader: false },
+            },
+            {
+                path: 'tour2',
+                component: Tour2,
                 meta: { hideHeader: false },
             },
             {
