@@ -79,7 +79,7 @@ namespace myapi.Controllers
         {
             //判斷cart內是否有相同商品
             //這裡不能用asnotracking不然會被當成new entity而無法修改原有的資料
-            var foundItem = await _context.AttractionCartItems.FirstOrDefaultAsync(x=>x.CartId==addItemDTO.CartId && x.Items==addItemDTO.ItmeId);
+            var foundItem = await _context.AttractionCartItems.FirstOrDefaultAsync(x=>x.CartId==addItemDTO.CartId && x.Items==addItemDTO.ItemId);
             
             if(foundItem != null)
             {
@@ -91,7 +91,7 @@ namespace myapi.Controllers
                 _context.AttractionCartItems.Add(new AttractionCartItem
                 {
                     CartId = addItemDTO.CartId,
-                    Items = addItemDTO.ItmeId,
+                    Items = addItemDTO.ItemId,
                     Quantity = addItemDTO.Quantity,
 
                 });

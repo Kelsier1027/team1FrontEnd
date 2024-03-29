@@ -14,7 +14,7 @@
       <div>{{ ticket.ticketDetail }}</div>
       <div class="d-flex">
         <div class="price">NT${{ ticketTotalPrice }}</div>
-        <el-button type="warning" plain @click.stop.prevent>Warning</el-button>
+        <el-button type="warning" plain @click.stop.prevent="addItem">Warning</el-button>
       </div>
       <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" @click.stop.prevent />
     </div>
@@ -24,15 +24,22 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { AddCartItemAPI } from '@/apis/Chih/apis/post_addItem';
+import { getCartByMemberAPI } from '@/apis/Chih/apis/get_cartByMember'
+import { useMemberStore } from '@/stores/memberStore';
+import { useCartStore } from '@/stores/attractionStore'
+const memberStore = useMemberStore();
+const cartStore = useCartStore();
+
 
 const showTitle = ref(true);
-
-
 
 
 function toggleTitle() {
   showTitle.value = !showTitle.value
 }
+
+const addMessage = ref()
 
 
 
@@ -41,6 +48,9 @@ const props = defineProps({
     type: Object,
     default: () => { }
   },
+  cartId: {
+    type: Number,
+  }
 
 });
 
@@ -51,13 +61,26 @@ const num = ref(1)
 
 const handleChange = (num) => {
   console.log(num);
-  console.log(totalPrice);
   console.log(props.ticket.price);
 }
 
-const ticketTotalPrice = computed(()=>props.ticket.price*num.value);
+const ticketTotalPrice = computed(() => props.ticket.price * num.value);
 
 
+
+
+
+const addItem = async () => {
+  const addItemDTO = {
+    CartId: cartStore.cartId,
+    ItemId: props.ticket.id,
+    Quantity: num.value,
+  };
+  const res = await AddCartItemAPI(addItemDTO);
+  addMessage.value = res;
+  console.log(res);
+  console.log(addItemDTO);
+}
 
 
 </script>

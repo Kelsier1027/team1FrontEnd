@@ -1,18 +1,18 @@
 <template>
   <v-main>
-    <Cart/>
+    <Cart />
     <div>{{ memberStore.memberId }}</div>
     <v-container class="container">
       <AttractionAttraction />
     </v-container>
-    
+
   </v-main>
 
 </template>
 
 <script setup>
 import AttractionAttraction from './components/AttractionAttraction.vue';
-import Cart from '../component/cart.vue'
+import Cart from '../components/cart.vue'
 import { useMemberStore } from '@/stores/memberStore';
 
 const memberStore = useMemberStore();
@@ -24,8 +24,6 @@ console.log(memberStore);
 </script>
 
 <style scoped>
-
-
 /* ul{
 border:2px solid black;
   }
