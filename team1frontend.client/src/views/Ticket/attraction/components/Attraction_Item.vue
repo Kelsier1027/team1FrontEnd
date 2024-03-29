@@ -9,6 +9,7 @@
           <h5 class="card-title">{{ attraction.name }}</h5>
           <p class="card-text">{{ attraction.description }}</p>
         </div>
+        <div class="price">NT${{ attraction.lowPrice }}起</div>
       </div>
     </div>
   </Router-link>
@@ -25,7 +26,6 @@ defineProps({
     type: Object,
     default: () => { }
   }
-
 })
 
 
@@ -33,18 +33,18 @@ defineProps({
 </script>
 
 <style scoped>
-.col {
-  display: flex;
-}
+
 
 .card-img-top {
+  
   height: 100%;
   width: 100%;
 }
 
 .card {
   border: 2px solid black;
-
+  justify-content: center;
+  align-items: center;
 
 
 }
@@ -69,14 +69,16 @@ defineProps({
 .router-link:hover {
   background-image: linear-gradient(45deg, #93A5CF, #E4EfE9);
 }
+.card-div{
+  display: flex;
+  width: 200px;
+  height: 150px;
+  
+}
+.card-body{
+  width: 200px;
+  height: 150px;
+}
 
-/* .card-div{
 
-    height: 140px;
-    width: 200px;
-  } */
-/* .img{
-    height: 100%;
-    width: 100%;
-  }  */
 </style>

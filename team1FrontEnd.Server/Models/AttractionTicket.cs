@@ -25,6 +25,8 @@ public partial class AttractionTicket
 
     public virtual Attraction Attraction { get; set; }
 
+    public virtual ICollection<AttractionCartItem> AttractionCartItems { get; set; } = new List<AttractionCartItem>();
+
     public virtual ICollection<AttractionTicketStock> AttractionTicketStocks { get; set; } = new List<AttractionTicketStock>();
 
     public virtual AttractionTicketType AttractionTicketType { get; set; }

@@ -9,6 +9,7 @@ using myapi._01_BLL.IBILL;
 using myapi._03_Infrastructure.DTOs;
 using myapi.Models;
 using team1FrontEnd.Server.Models;
+using team1FrontEnd.Server.個人.Chih._03_Infrastructure.DTOs;
 
 namespace myapi.Controllers
 {
@@ -29,6 +30,43 @@ namespace myapi.Controllers
         public async Task<IEnumerable<AttractionTicketDTO>> GetTicketById(int id)
         {
             return await  _service.GetTicketContent(id);
+        }
+
+        [HttpGet("GetCartItems")]
+        public async Task<IEnumerable<CartItemsDTO>> GetCartItems(int memberid)
+        {
+            //check是否有符合id資料
+            var exist = await _context.AttractionCarts.AsNoTracking().AnyAsync(e => e.MemberId == memberid);
+            //創建條件false
+
+            if (!exist)
+            {
+                var newCart = new AttractionCart
+                {
+                    MemberId = memberid,
+                    AttractionCartItems = new List<AttractionCartItem>(),
+                };
+                _context.AttractionCarts.Add(newCart);
+                await _context.SaveChangesAsync();
+            }
+           
+            //return member cart
+            var cartItem = await _context.AttractionCarts.AsNoTracking().Where(c=>c.MemberId==memberid)
+                    .Include(c => c.AttractionCartItems)
+                    .ThenInclude(item => item.ItemsNavigation)
+                    .Select(c => new CartItemsDTO
+                    {
+                        CartId = c.Id,
+                        MemberId = c.MemberId,
+                        CartItems = c.AttractionCartItems.Select(item=>item.ItemsNavigation).Select(x=>new CartTicketDTO
+                        {
+                            Price= x.Price,
+                            TicketName= x.TicketTitle,
+                            Id= x.Id,
+                        }).ToList(),
+                    }).ToListAsync();
+            return cartItem;
+              
         }
 
 

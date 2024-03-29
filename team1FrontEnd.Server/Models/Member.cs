@@ -25,9 +25,13 @@ public partial class Member
 
     public bool? IsEmailVerified { get; set; }
 
+    public virtual ICollection<AttractionCart> AttractionCarts { get; set; } = new List<AttractionCart>();
+
     public virtual ICollection<AttractionOrder> AttractionOrders { get; set; } = new List<AttractionOrder>();
 
     public virtual ICollection<CarOrder> CarOrders { get; set; } = new List<CarOrder>();
+
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
@@ -42,6 +46,4 @@ public partial class Member
     public virtual ICollection<PackageOrder> PackageOrders { get; set; } = new List<PackageOrder>();
 
     public virtual ICollection<PointTransction> PointTransctions { get; set; } = new List<PointTransction>();
-
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 }

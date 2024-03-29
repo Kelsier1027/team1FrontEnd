@@ -13,7 +13,7 @@
     <div @click.stop.prevent>
       <div>{{ ticket.ticketDetail }}</div>
       <div class="d-flex">
-        <div class="price">NT${{ ticket.price }}</div>
+        <div class="price">NT${{ ticketTotalPrice }}</div>
         <el-button type="warning" plain @click.stop.prevent>Warning</el-button>
       </div>
       <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" @click.stop.prevent />
@@ -23,9 +23,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const showTitle = ref(true);
+
+
 
 
 function toggleTitle() {
@@ -43,10 +45,19 @@ const props = defineProps({
 });
 
 
+
+
 const num = ref(1)
+
 const handleChange = (num) => {
   console.log(num);
+  console.log(totalPrice);
+  console.log(props.ticket.price);
 }
+
+const ticketTotalPrice = computed(()=>props.ticket.price*num.value);
+
+
 
 
 </script>

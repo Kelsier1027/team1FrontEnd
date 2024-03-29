@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace team1FrontEnd.Server.Models;
 
-public partial class Answer
+public partial class AttractionCartItem
 {
     public int Id { get; set; }
 
-    public int Qid { get; set; }
+    public int CartId { get; set; }
 
-    public DateTime AdateTime { get; set; }
+    public int Items { get; set; }
 
-    public string Answer1 { get; set; }
+    public virtual AttractionCart Cart { get; set; }
 
-    public virtual Question QidNavigation { get; set; }
+    public virtual AttractionTicket ItemsNavigation { get; set; }
 }
