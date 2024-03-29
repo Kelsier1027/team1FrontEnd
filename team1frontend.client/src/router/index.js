@@ -45,7 +45,8 @@ const routes = [
             {
                 path: 'hotel/list',
                 component: HotelList,
-            },
+            }, 
+            
             {
                 path: '/hotel-room/:id', // :id 是動態路徑參數
                 name: 'HotelRoom',
@@ -119,6 +120,7 @@ const routes = [
                     },
                 ],
             },
+           
         ],
     },
 ];
