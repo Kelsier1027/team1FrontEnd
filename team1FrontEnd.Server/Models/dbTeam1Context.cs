@@ -15,6 +15,18 @@ public partial class dbTeam1Context : DbContext
 
     public virtual DbSet<AdminRole> AdminRoles { get; set; }
 
+    public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+
+    public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+
+    public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+
+    public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+
+    public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+
+    public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+
     public virtual DbSet<Attraction> Attractions { get; set; }
 
     public virtual DbSet<AttractionCart> AttractionCarts { get; set; }
@@ -42,6 +54,10 @@ public partial class dbTeam1Context : DbContext
     public virtual DbSet<AttrationOrderItem> AttrationOrderItems { get; set; }
 
     public virtual DbSet<Beadmin> Beadmins { get; set; }
+
+    public virtual DbSet<Bill> Bills { get; set; }
+
+    public virtual DbSet<BillItem> BillItems { get; set; }
 
     public virtual DbSet<Car> Cars { get; set; }
 
@@ -143,6 +159,78 @@ public partial class dbTeam1Context : DbContext
                 .HasConstraintName("FK_AdminRoles_Roles");
         });
 
+        modelBuilder.Entity<AspNetRole>(entity =>
+        {
+            entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
+                .IsUnique()
+                .HasFilter("([NormalizedName] IS NOT NULL)");
+
+            entity.Property(e => e.Name).HasMaxLength(256);
+            entity.Property(e => e.NormalizedName).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<AspNetRoleClaim>(entity =>
+        {
+            entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
+
+            entity.Property(e => e.RoleId).IsRequired();
+
+            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
+        });
+
+        modelBuilder.Entity<AspNetUser>(entity =>
+        {
+            entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
+
+            entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                .IsUnique()
+                .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+            entity.Property(e => e.Email).HasMaxLength(256);
+            entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+            entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+            entity.Property(e => e.UserName).HasMaxLength(256);
+
+            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "AspNetUserRole",
+                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
+                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "RoleId");
+                        j.ToTable("AspNetUserRoles");
+                        j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
+                    });
+        });
+
+        modelBuilder.Entity<AspNetUserClaim>(entity =>
+        {
+            entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
+
+            entity.Property(e => e.UserId).IsRequired();
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<AspNetUserLogin>(entity =>
+        {
+            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+            entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
+
+            entity.Property(e => e.UserId).IsRequired();
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<AspNetUserToken>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+        });
+
         modelBuilder.Entity<Attraction>(entity =>
         {
             entity.Property(e => e.Address).IsRequired();
@@ -160,16 +248,12 @@ public partial class dbTeam1Context : DbContext
         modelBuilder.Entity<AttractionCart>(entity =>
         {
             entity.ToTable("AttractionCart");
-
-            entity.HasOne(d => d.Member).WithMany(p => p.AttractionCarts)
-                .HasForeignKey(d => d.MemberId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AttractionCart_Members");
         });
 
         modelBuilder.Entity<AttractionCartItem>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
 
             entity.HasOne(d => d.Cart).WithMany(p => p.AttractionCartItems)
                 .HasForeignKey(d => d.CartId)
@@ -324,6 +408,31 @@ public partial class dbTeam1Context : DbContext
             entity.Property(e => e.VerificationCode)
                 .HasMaxLength(36)
                 .IsFixedLength();
+        });
+
+        modelBuilder.Entity<Bill>(entity =>
+        {
+            entity.ToTable("Bill");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.DateTime).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Member).WithMany(p => p.Bills)
+                .HasForeignKey(d => d.MemberId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Bill_Members");
+        });
+
+        modelBuilder.Entity<BillItem>(entity =>
+        {
+            entity.ToTable("BillItem");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.HasOne(d => d.Bill).WithMany(p => p.BillItems)
+                .HasForeignKey(d => d.BillId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BillItem_Bill");
         });
 
         modelBuilder.Entity<Car>(entity =>

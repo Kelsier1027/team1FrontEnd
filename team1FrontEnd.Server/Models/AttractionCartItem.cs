@@ -13,6 +13,8 @@ public partial class AttractionCartItem
 
     public int Items { get; set; }
 
+    public int Quantity { get; set; }
+
     public virtual AttractionCart Cart { get; set; }
 
     public virtual AttractionTicket ItemsNavigation { get; set; }

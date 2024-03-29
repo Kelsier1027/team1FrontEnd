@@ -56,23 +56,50 @@ namespace myapi.Controllers
                     .ThenInclude(item => item.ItemsNavigation)
                     .Select(c => new CartItemsDTO
                     {
+                        
                         CartId = c.Id,
                         MemberId = c.MemberId,
-                        CartItems = c.AttractionCartItems.Select(item=>item.ItemsNavigation).Select(x=>new CartTicketDTO
+                        CartItems = c.AttractionCartItems.Select(x=>new CartTicketDTO
                         {
-                            Price= x.Price,
-                            TicketName= x.TicketTitle,
-                            Id= x.Id,
+                           Id = x.Id,   
+                           TicketName=x.ItemsNavigation.TicketTitle,
+                           Price=x.ItemsNavigation.Price,
+                           Qty=x.Quantity,
                         }).ToList(),
+                        Total=c.AttractionCartItems
+                             .Sum(item=>item.ItemsNavigation.Price*item.Quantity)
+                            
                     }).ToListAsync();
             return cartItem;
               
         }
 
+        [HttpPost("AddCartItem")]
+        public async Task<String> AddCartItem([FromBody]AddItemDTO addItemDTO)
+        {
+            //判斷cart內是否有相同商品
+            //這裡不能用asnotracking不然會被當成new entity而無法修改原有的資料
+            var foundItem = await _context.AttractionCartItems.FirstOrDefaultAsync(x=>x.CartId==addItemDTO.CartId && x.Items==addItemDTO.ItmeId);
+            
+            if(foundItem != null)
+            {
+                foundItem.Quantity+=addItemDTO.Quantity;
+               
+            }
+            else
+            {
+                _context.AttractionCartItems.Add(new AttractionCartItem
+                {
+                    CartId = addItemDTO.CartId,
+                    Items = addItemDTO.ItmeId,
+                    Quantity = addItemDTO.Quantity,
 
+                });
+            }
+           await _context.SaveChangesAsync();
+            return "新增成功";
 
-
-
+        }
         ////-----------------------------------------------------------------------------------------//
         //// GET: api/AttractionTickets
         //[HttpGet]

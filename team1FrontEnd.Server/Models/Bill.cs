@@ -5,13 +5,17 @@ using System.Collections.Generic;
 
 namespace team1FrontEnd.Server.Models;
 
-public partial class AttractionCart
+public partial class Bill
 {
     public int Id { get; set; }
 
     public int MemberId { get; set; }
 
+    public DateTime DateTime { get; set; }
+
     public int Total { get; set; }
 
-    public virtual ICollection<AttractionCartItem> AttractionCartItems { get; set; } = new List<AttractionCartItem>();
+    public virtual ICollection<BillItem> BillItems { get; set; } = new List<BillItem>();
+
+    public virtual Member Member { get; set; }
 }

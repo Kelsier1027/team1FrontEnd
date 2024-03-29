@@ -25,9 +25,9 @@ public partial class Member
 
     public bool? IsEmailVerified { get; set; }
 
-    public virtual ICollection<AttractionCart> AttractionCarts { get; set; } = new List<AttractionCart>();
-
     public virtual ICollection<AttractionOrder> AttractionOrders { get; set; } = new List<AttractionOrder>();
+
+    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
     public virtual ICollection<CarOrder> CarOrders { get; set; } = new List<CarOrder>();
 

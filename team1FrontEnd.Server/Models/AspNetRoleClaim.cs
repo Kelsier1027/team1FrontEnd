@@ -5,17 +5,15 @@ using System.Collections.Generic;
 
 namespace team1FrontEnd.Server.Models;
 
-public partial class CartItem
+public partial class AspNetRoleClaim
 {
     public int Id { get; set; }
 
-    public int CartId { get; set; }
+    public string RoleId { get; set; }
 
-    public int ItemId { get; set; }
+    public string ClaimType { get; set; }
 
-    public int Quantity { get; set; }
+    public string ClaimValue { get; set; }
 
-    public int ServicerCategoryId { get; set; }
-
-    public virtual Cart Cart { get; set; }
+    public virtual AspNetRole Role { get; set; }
 }
