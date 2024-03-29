@@ -44,7 +44,8 @@ const routes = [
             {
                 path: 'hotel/list',
                 component: HotelList,
-            },
+            }, 
+            
             {
                 path: '/hotel-room/:id', // :id 是動態路徑參數
                 name: 'HotelRoom',
@@ -68,6 +69,11 @@ const routes = [
             {
                 path: 'tour',
                 component: Tour,
+                meta: { hideHeader: false },
+            },
+            {
+                path: 'tour2',
+                component: Tour2,
                 meta: { hideHeader: false },
             },
             {
@@ -113,6 +119,7 @@ const routes = [
                     },
                 ],
             },
+           
         ],
     },
 ];
