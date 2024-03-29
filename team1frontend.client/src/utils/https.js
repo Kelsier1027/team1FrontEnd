@@ -1,10 +1,14 @@
 // axios 基礎的配置
 import axios from 'axios';
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true; // 跨域請求時發送 cookies
 import { useMemberStore } from '../stores/memberStore.js';
 const httpInstance = axios.create({
     baseURL: 'https://localhost:7113',
-    withCredentials: true,
+    // 將回應標頭中的 Access-Control-Allow-Origin: 設定為 https://localhost:7113
+    headers: {
+        'Access-Control-Allow-Origin': 'https://localhost:7113',
+    },
+    withCredentials: true, // 跨域請求時發送 cookies
     // timeout: 5000,
 });
 

@@ -45,8 +45,12 @@ export const logoutAPI = () => {
 export const getLoginInfo = () => {
     console.log('getLoginInfo');
     return http({
+        headers: {
+            'Access-Control-Allow-Origin': 'https://localhost:7113', // 將回應標頭中的 Access-Control-Allow-Origin: 設定為 https://localhost:7113
+        },
         url: '/api/Members/getLoginInfo',
         method: 'GET',
+        // 強制帶入 cookies
         withCredentials: true,
     });
 };

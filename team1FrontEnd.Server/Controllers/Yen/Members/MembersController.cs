@@ -43,7 +43,7 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 
 		// 登出，清除登入的 Cookie，在這裡使用了 SignInManager.SignOutAsync 方法，來自於 Microsoft.AspNetCore.Identity 命名空間，其為登入管理員，用於登入、登出，能夠做到登入、登出的功能以及其他一些與登入相關的操作。
 		[HttpPost("logout")]
-		[Authorize] // 確保僅授權用戶可以訪問此端點 
+		//[Authorize] // 確保僅授權用戶可以訪問此端點 
 		public async Task<IActionResult> Logout([FromBody] object empty)
 		{
 			if (empty != null)
@@ -57,7 +57,7 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 
 		// 透過 cookie 取得登入者資訊
 		[HttpGet("getLoginInfo")]
-		[Authorize] // 確保僅授權用戶可以訪問此端點
+		//[Authorize] // 確保僅授權用戶可以訪問此端點
 		public async Task<IActionResult> GetLoginInfo()
 		{
 			//檢查 User 是否為 null，以及Identity是否為null
@@ -83,7 +83,7 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 
 		// 將通過Identity註冊的用戶資訊轉換成MemberInfoForFrontEndVm，並註冊到客製化的MemberRepository中
 		[HttpGet("registerToMember")]
-		[Authorize]
+		//[Authorize]
 		public async Task<IActionResult> registerToMember()
 		{
 			var user = await _signInManager.UserManager.GetUserAsync(User);
@@ -112,6 +112,31 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 			}
 		}
 
+		// 叫用 IdentityUser 發送 sameSite設定為 none 的 cookie
+		[HttpGet("sendSameSiteNoneCookie")]
+		public async Task<IActionResult> SendSameSiteNoneCookie()
+		{
+			var user = await _signInManager.UserManager.GetUserAsync(User);
+
+			// 檢查user是否為null
+			if (user == null)
+			{
+				return Unauthorized();
+			}
+
+			var cookie = await _signInManager.UserManager.GenerateUserTokenAsync(user, "Default", "SameSiteNone");
+			// 將 cookie 設定為 .AspNetCore.Identity.Application
+			Response.Cookies.Append(".AspNetCore.Identity.Application", cookie, new CookieOptions
+			{
+				SameSite = SameSiteMode.None,
+				HttpOnly = true,
+				Secure = true,
+				Expires = DateTimeOffset.Now.AddMinutes(30),
+			});
+
+
+			return Ok();
+		}
 
 	}
 }

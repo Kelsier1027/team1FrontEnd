@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Connections;
+﻿using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -23,7 +24,9 @@ namespace team1FrontEnd.Server
 	{
 		public static void Main(string[] args)
 		{
+
 			var builder = WebApplication.CreateBuilder(args);
+
 
 			// Add services to the container.
 			builder.Services.AddControllers(); // 加入Controller服務
@@ -46,15 +49,18 @@ namespace team1FrontEnd.Server
 			// CORS policy 設定
 			builder.Services.AddCors(options =>
 			{
+				// 設定為允許跨域請求攜帶cookies ， 接收跨域請求的網址攜帶cookies
 				options.AddPolicy("AllowAll",
 					builder => builder
 						//.AllowAnyOrigin() // 允許任何來源
 						// 設定允許跨域請求攜帶cookies
-						.WithOrigins(http, httpPort) // 允許特定來源
+						.WithOrigins(http, httpPort) // 允許跨域請求的網址
 						.AllowAnyHeader() // 允許任何標頭
 						.AllowAnyMethod() // 允許任何方法
 						.WithExposedHeaders("Set-Cookie") // 允許公開標頭
 						.AllowCredentials() // 允許cookie，讓瀏覽器可以儲存cookie，並且在跨域請求時發送cookie
+
+
 						);
 
 			});
@@ -86,7 +92,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 				});
 			builder.Services.TryAddSingleton(typeof(CommonService));
 
-			//builder.Services.AddMyJWTBearerAuth();
+			builder.Services.AddMyJWTBearerAuth();
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer(); // 加入API探索服務
@@ -102,7 +108,20 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 				options.OperationFilter<SecurityRequirementsOperationFilter>();
 			});
 
+			builder.Services.Configure<CookiePolicyOptions>(options =>
+			{
+				options.MinimumSameSitePolicy = SameSiteMode.None;
+				options.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.None; // 允许跨域请求携带 cookie
+				options.Secure = CookieSecurePolicy.Always;
 
+				options.OnAppendCookie = cookieContext =>
+				{
+					if (cookieContext.CookieName == ".AspNetCore.Identity.Application")
+					{
+						cookieContext.CookieOptions.SameSite = SameSiteMode.None;
+					}
+				};
+			});
 
 			builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<DataContext>();
 
@@ -129,6 +148,20 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 			app.UseCors("AllowAll"); // 使用CORS
 
+			// 配置 SameSite 策略
+			app.UseCookiePolicy(new CookiePolicyOptions
+			{
+				MinimumSameSitePolicy = SameSiteMode.None,
+				HttpOnly = HttpOnlyPolicy.None, // 為了讓前端可以讀取cookie，所以設定為None
+				Secure = CookieSecurePolicy.Always, // CookieSecurePolicy.Always 表示只有在https下才能傳送cookie，如果憑證無效需使用CookieSecurePolicy.None
+				OnAppendCookie = cookieContext =>
+				{
+					if (cookieContext.CookieName == ".AspNetCore.Identity.Application")
+					{
+						cookieContext.CookieOptions.SameSite = SameSiteMode.None;
+					}
+				}
+			});
 
 			app.MapIdentityApi<IdentityUser>(); // 對應Identity API，使用IdentityUser，用來管理使用者，包括註冊、登入、登出等功能
 
