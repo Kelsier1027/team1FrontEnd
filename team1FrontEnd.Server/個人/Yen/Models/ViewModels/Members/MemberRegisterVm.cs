@@ -3,7 +3,7 @@ using team1FrontEnd.Server.個人.Yen.Core.Configs;
 
 namespace team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member
 {
-	public class MemberRegisterAndLoginVm
+	public class MemberRegisterVm
 	{
 #nullable disable
 		[Required(ErrorMessage = ValidationMessages.EmptyAccount)]

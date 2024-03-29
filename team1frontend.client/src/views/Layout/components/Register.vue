@@ -9,8 +9,8 @@ const memberStore = useMemberStore();
 
 // 使用 ref 來創建表單數據和規則
 const form = ref({
-    account: '',
-    password: '',
+    email: 'ForTest31@gmail.com',
+    password: 'ForTest31!',
     checkbox: false,
 });
 const loading = ref(false);
@@ -21,7 +21,7 @@ const errorMessage = ref('');
 // 取得表單實例
 const formRef = ref(null);
 const register = async () => {
-    const { account, password } = form.value;
+    const { email, password } = form.value;
     // 驗證表單 v-form 是否通過
     const valid = await formRef.value.validate();
     // console.log(valid.valid);
@@ -29,18 +29,19 @@ const register = async () => {
         try {
             loading.value = true;
             // 如果表單驗證通過，執行註冊操作
-            await memberStore.register({ account, password });
+            console.log('註冊中...');
+            await memberStore.register({ email, password });
+            console.log('註冊成功');
             loading.value = false;
-            // 註冊成功後，叫用登入方法
-            await memberStore.login({ account, password });
+
             // 如果註冊成功，清空表單數據
-            form.value.account = '';
+            form.value.email = '';
             form.value.password = '';
             form.value.checkbox = false;
             // 觸發父組件監聽的事件
             emit('register-success');
         } catch (error) {
-            // console.log(error.response.data);
+            console.log(error);
             if (error != null || undefined) {
                 if (error.response != null || undefined) {
                     if (error.response.data != null || undefined) {
@@ -71,7 +72,7 @@ const passwordLowerCase = (v) =>
     /[a-z]/.test(v) || '密碼需包含至少一個小寫字母';
 const passwordNumber = (v) => /[0-9]/.test(v) || '密碼需包含至少一個數字';
 const passwordSpecial = (v) =>
-    !/[^A-Za-z0-9]/.test(v) || '密碼不能包含特殊字符';
+    /[^A-Za-z0-9]/.test(v) || '密碼需至少包含一個特殊字符';
 
 onMounted(() => {
     const script = document.createElement('script');
@@ -94,7 +95,7 @@ function showLogin() {
     >
     <v-form ref="formRef" @submit.prevent="register">
         <v-text-field
-            v-model="form.account"
+            v-model="form.email"
             :readonly="loading"
             :rules="[required, emailFormat]"
             class="mb-2"

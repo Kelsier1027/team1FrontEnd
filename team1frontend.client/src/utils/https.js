@@ -1,8 +1,10 @@
 // axios 基礎的配置
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 import { useMemberStore } from '../stores/memberStore.js';
 const httpInstance = axios.create({
     baseURL: 'https://localhost:7113',
+    withCredentials: true,
     // timeout: 5000,
 });
 
@@ -11,14 +13,6 @@ const httpInstance = axios.create({
 // axios 請求攔截器
 httpInstance.interceptors.request.use(
     (config) => {
-        // 1. 從 pinia 中獲取 token
-        // const memberStore = useMemberStore();
-        // 2. 按照接口文檔添加 token
-        // const token = memberStore.userInfo.token;
-        // if (token) {
-        //     config.headers.Authorization = `Bearer ${token}`;
-        // }
-
         return config;
     },
     (e) => {

@@ -1,20 +1,22 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using team1FrontEnd.Server.Models;
-using team1FrontEnd.Server.個人.Yen.Core.Configs;
+using team1FrontEnd.Server.個人.Yen.Data;
+using team1FrontEnd.Server.個人.Yen.Exts.IdentityUsers;
 using team1FrontEnd.Server.個人.Yen.Exts.Members;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IServices.Member;
 using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
-using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member;
 using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 using team1FrontEnd.Server.個人.Yen.Services.Menber;
 
 namespace team1FrontEnd.Server.Controllers.Yen.Members
 {
+
+
 	[Route("api/[controller]")]
+	[Authorize] // 確保僅授權用戶可以訪問此端點
 	[ApiController]
 	public class MembersController : ControllerBase
 	{
@@ -23,29 +25,79 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 		// Repository 透過 DI 注入
 		private IMemberRepository _memberRepository;
 
-		private readonly dbTeam1Context _context;
+		private readonly DataContext _userContext;
 
-		public MembersController(dbTeam1Context context)
+		private readonly dbTeam1Context _context; // 資料庫內容
+
+		private readonly SignInManager<IdentityUser> _signInManager; // 登入管理員，用於登入、登出
+
+		public MembersController(dbTeam1Context context, SignInManager<IdentityUser> signInManager, DataContext userContext)
 		{
+			_signInManager = signInManager;
 			_memberRepository = new MemberEFRepository(context);
 			_memberService = new MemberService(_memberRepository);
 			_context = context;
+			_userContext = userContext;
 		}
 
 
-		// 註冊
-		// POST: api/Members/register
-		[HttpPost("register")]
-		public async Task<IActionResult> Register([FromBody] MemberRegisterAndLoginVm vm)
+		// 登出，清除登入的 Cookie，在這裡使用了 SignInManager.SignOutAsync 方法，來自於 Microsoft.AspNetCore.Identity 命名空間，其為登入管理員，用於登入、登出，能夠做到登入、登出的功能以及其他一些與登入相關的操作。
+		[HttpPost("logout")]
+		[Authorize] // 確保僅授權用戶可以訪問此端點 
+		public async Task<IActionResult> Logout([FromBody] object empty)
 		{
-			// 驗證 ModelState 是否通過
-			if (!ModelState.IsValid)
+			if (empty != null)
 			{
-				return BadRequest(ModelState);
+				await _signInManager.SignOutAsync();
+				return Ok();
 			}
+			return Unauthorized();
+		}
+
+
+		// 透過 cookie 取得登入者資訊
+		[HttpGet("getLoginInfo")]
+		[Authorize] // 確保僅授權用戶可以訪問此端點
+		public async Task<IActionResult> GetLoginInfo()
+		{
+			//檢查 User 是否為 null，以及Identity是否為null
+			if (User == null || User.Identity == null)
+			{
+				return Unauthorized();
+			}
+			// 透過 Identity 取得登入者username來索取客製化會員資訊
+			var username = User.Identity.Name;
+
+			// 以Dto類別傳遞
+			MemberDto memberDto = new MemberDto();
+			memberDto.Account = username;
+
+			// 透過username取得客製化會員資訊
+			var memberFromDb = await _memberService.GetMemberAsync(memberDto);
+
+			// 將客製化會員資訊轉換成MemberInfoForFrontEndVm
+			var memberVm = memberFromDb.ToMemberInfoForFrontEndVm();
+
+			return Ok(memberVm);
+		}
+
+		// 將通過Identity註冊的用戶資訊轉換成MemberInfoForFrontEndVm，並註冊到客製化的MemberRepository中
+		[HttpGet("registerToMember")]
+		[Authorize]
+		public async Task<IActionResult> registerToMember()
+		{
+			var user = await _signInManager.UserManager.GetUserAsync(User);
+
+			// 檢查user是否為null
+			if (user == null)
+			{
+				return Unauthorized();
+			}
+			// 將 IdentityUser 轉換成 RegisterAndLoginVm
+			var memberRegisterVm = user.ToMemberRegisterVm();
 
 			// 將 ViewModel 轉換成 DTO
-			var memberDto = vm.ToDto();
+			var memberDto = memberRegisterVm.ToDto();
 
 			try
 			{
@@ -60,61 +112,6 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 			}
 		}
 
-		// 登入
-		// POST: api/Members/login
-		[HttpPost("login")]
-		public async Task<IActionResult> Login([FromBody] MemberRegisterAndLoginVm vm)
-		{
-			// 驗證 ModelState 是否通過
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-			var memberDto = vm.ToDto();
-			MemberDto member = new MemberDto();
-			try
-			{
-				member = await _memberService.LoginMemberAsync(memberDto);
 
-				if (member == null)
-				{
-					// 回覆帳號或密碼錯誤
-					return Unauthorized(MemberApiMessages.AccountOrPasswordError);
-				}
-
-				// 驗證 member.Account 是否為空值
-				if (string.IsNullOrWhiteSpace(member.Account))
-				{
-					return Unauthorized(MemberApiMessages.EmptyAccount);
-				}
-				//		var claims = new List<Claim>
-				//{
-				//	new Claim(ClaimTypes.Name, member.Account),
-				//          // 這裡可以根據實際情況添加更多的聲明
-				//      };
-
-				//		var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-				//		var authProperties = new AuthenticationProperties();
-				//		await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-				var memberInfo = member.ToMemberInfoForFrontEndVm();
-				return Ok(memberInfo);
-			}
-			catch (Exception)
-			{
-				// 回覆帳號或密碼錯誤
-				return Unauthorized(MemberApiMessages.AccountOrPasswordError);
-			}
-
-		}
-
-		// 登出
-		// POST: api/Members/logout
-		[HttpPost("logout")]
-		[Authorize]
-		public async Task<IActionResult> Logout()
-		{
-			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-			return Ok("登出成功");
-		}
 	}
 }

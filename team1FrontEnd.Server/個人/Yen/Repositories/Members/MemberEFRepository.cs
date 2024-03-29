@@ -124,7 +124,11 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				Account = member.Account,
 				EncryptedPassword = member.EncryptedPassword,
 				RegistrationDate = member.RegistrationDate,
-				ActiveStatus = member.ActiveStatus
+				ActiveStatus = member.ActiveStatus,
+				FirstName = member.FirstName,
+				LastName = member.LastName,
+				IsEmailVerified = member.IsEmailVerified ?? false,
+
 			};
 			// 將Entity類別的資料轉換成Dto類別的資料
 			var memberDto = memberEntity.ToMemberDto();

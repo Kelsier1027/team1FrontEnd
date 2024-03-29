@@ -11,7 +11,7 @@ namespace team1FrontEnd.Server.個人.Yen.Interface.IServices.Member
 		Task<MemberDto> LoginMemberAsync(MemberDto memberDto);
 
 		// 取得會員資料
-		Task<MemberDto> GetMember(MemberDto memberDto);
+		Task<MemberDto> GetMemberAsync(MemberDto memberDto);
 
 		// 更新會員密碼
 		void UpdatePassword(MemberDto memberDto);

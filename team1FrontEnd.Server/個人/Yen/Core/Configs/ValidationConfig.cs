@@ -21,7 +21,7 @@
 
 		public const int PasswordMinDigitCount = 1; // 密碼最小數字數量
 
-		public const int PasswordMinSpecialCharCount = 0; // 密碼最小特殊字元數量
+		public const int PasswordMinSpecialCharCount = 1; // 密碼最小特殊字元數量
 
 		public const string PasswordSpecialChars = "!@#$%^&*"; // 密碼特殊字元
 

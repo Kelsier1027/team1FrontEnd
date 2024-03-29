@@ -7,8 +7,8 @@ const memberStore = useMemberStore();
 
 // 使用 ref 來創建表單數據和規則
 const form = ref({
-    account: 'ForTest31@gmail.com',
-    password: 'ForTest31',
+    email: 'ForTest31@gmail.com',
+    password: 'ForTest31!',
 });
 const visible = ref(false);
 const loading = ref(false);
@@ -20,33 +20,34 @@ const errorMessage = ref('');
 const formRef = ref(null);
 const doLogin = async () => {
     loading.value = true;
-    const { account, password } = form.value;
+    const { email, password } = form.value;
     // 驗證表單 v-form 是否通過
     const valid = await formRef.value.validate();
     // console.log(valid.valid);
     if (valid.valid) {
         try {
-            // 註冊成功後，叫用登入方法
-            await memberStore.login({ account, password });
+            await memberStore.login({ email, password });
             console.log(memberStore.memberId);
             loading.value = false;
+            // await memberStore.getMemberInfo();
             // 如果註冊成功，清空表單數據
-            form.value.account = '';
+            form.value.email = '';
             form.value.password = '';
             // 觸發父組件監聽的事件
             emit('login-success');
         } catch (error) {
-            if (error != null || undefined) {
-                if (error.response != null || undefined) {
-                    if (error.response.data != null || undefined) {
-                        errorMessage.value = error.response.data;
-                    }
-                } else {
-                    console.log(error.response);
-                }
-            } else {
-                console.log(error);
-            }
+            console.log(error);
+            // if (error != null || undefined) {
+            //     if (error.response != null || undefined) {
+            //         if (error.response.data != null || undefined) {
+            //             errorMessage.value = error.response.data;
+            //         }
+            //     } else {
+            //         console.log(error.response);
+            //     }
+            // } else {
+            //     console.log(error);
+            // }
         }
     }
 };
@@ -74,7 +75,7 @@ const passwordLowerCase = (v) =>
     /[a-z]/.test(v) || '密碼需包含至少一個小寫字母';
 const passwordNumber = (v) => /[0-9]/.test(v) || '密碼需包含至少一個數字';
 const passwordSpecial = (v) =>
-    !/[^A-Za-z0-9]/.test(v) || '密碼不能包含特殊字符';
+    /[^A-Za-z0-9]/.test(v) || '密碼需至少包含一個特殊字符';
 </script>
 <template>
     <v-card-title class="justify-center text-center text-h5 mt-0 mb-1"
@@ -87,7 +88,7 @@ const passwordSpecial = (v) =>
 
     <v-form ref="formRef" @submit.prevent="doLogin">
         <v-text-field
-            v-model="form.account"
+            v-model="form.email"
             :readonly="loading"
             :rules="[required, emailFormat]"
             class="mb-2"

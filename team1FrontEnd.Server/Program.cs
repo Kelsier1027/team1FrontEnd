@@ -1,15 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.OpenApi.Models;
 using myapi._01_BLL.BLL;
 using myapi._01_BLL.IBILL;
 using myapi._01_BLL.IDAL;
 using myapi._02_DAL;
+using Swashbuckle.AspNetCore.Filters;
 using team1FrontEnd.Server.Auth;
 using team1FrontEnd.Server.Hubs;
 using team1FrontEnd.Server.HubService;
 using team1FrontEnd.Server.Models;
+using team1FrontEnd.Server.個人.Yen.Data;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 
@@ -37,16 +41,20 @@ namespace team1FrontEnd.Server
 	options => options.UseSqlServer(
 		builder.Configuration.GetConnectionString("dbTeam1Connection")
 ));
-
+			string http = "https://127.0.0.1";
+			string httpPort = "https://127.0.0.1:5173";
 			// CORS policy 設定
 			builder.Services.AddCors(options =>
 			{
 				options.AddPolicy("AllowAll",
 					builder => builder
-						.AllowAnyOrigin() // 允許任何來源
+						//.AllowAnyOrigin() // 允許任何來源
+						// 設定允許跨域請求攜帶cookies
+						.WithOrigins(http, httpPort) // 允許特定來源
 						.AllowAnyHeader() // 允許任何標頭
 						.AllowAnyMethod() // 允許任何方法
 						.WithExposedHeaders("Set-Cookie") // 允許公開標頭
+						.AllowCredentials() // 允許cookie，讓瀏覽器可以儲存cookie，並且在跨域請求時發送cookie
 						);
 
 			});
@@ -55,18 +63,21 @@ namespace team1FrontEnd.Server
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("dbTeam1"));
 			});
+			builder.Services.AddDbContext<DataContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
+));
 
-			string CorsPolicy = "AllowAny";
-			builder.Services.AddCors(options =>
-			{
-				options.AddPolicy(name: CorsPolicy,
-					policy =>
-					{
-						policy.WithOrigins("*").
-						WithHeaders("*").
-						WithMethods("*");
-					});
-			});
+			//string CorsPolicy = "AllowAny";
+			//builder.Services.AddCors(options =>
+			//{
+			//	options.AddPolicy(name: CorsPolicy,
+			//		policy =>
+			//		{
+			//			policy.WithOrigins("*").
+			//			WithHeaders("*").
+			//			WithMethods("*");
+			//		});
+			//});
 
 			builder.Services.AddSignalR().
 				AddJsonProtocol(options =>
@@ -75,12 +86,25 @@ namespace team1FrontEnd.Server
 				});
 			builder.Services.TryAddSingleton(typeof(CommonService));
 
-			builder.Services.AddMyJWTBearerAuth();
+			//builder.Services.AddMyJWTBearerAuth();
 
-			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer(); // 加入API探索服務
-			builder.Services.AddSwaggerGen(); // 加入Swagger服務
+			builder.Services.AddSwaggerGen(options =>
+			{
+				options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+				{
+					In = ParameterLocation.Header,
+					Name = "Authorization",
+					Type = SecuritySchemeType.ApiKey
+				});
+
+				options.OperationFilter<SecurityRequirementsOperationFilter>();
+			});
+
+
+
+			builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<DataContext>();
 
 			var app = builder.Build(); // 建立應用程式
 
@@ -105,21 +129,19 @@ namespace team1FrontEnd.Server
 
 			app.UseCors("AllowAll"); // 使用CORS
 
-			if (app.Environment.IsDevelopment())
-			{
-				app.UseSwagger();
-				app.UseSwaggerUI();
-			}
+
+			app.MapIdentityApi<IdentityUser>(); // 對應Identity API，使用IdentityUser，用來管理使用者，包括註冊、登入、登出等功能
+
 			//app.UseCors();
 			app.UseHttpsRedirection();
-
-			app.UseAuthorization();
 
 			app.UseAuthentication();
 			app.UseAuthorization();
 
-			// 授权路径			
-			app.MapGet("generatetoken", c => c.Response.WriteAsync(MyJWTBearer.GenerateToken(c)));
+
+			app.MapGet("generatetoken", c => c.Response.WriteAsync(MyJWTBearer.GenerateToken(c))); // MapGet 是用來處理 GET 請求的方法，這裡是用來處理 /generatetoken 請求，並且回傳 MyJWTBearer.GenerateToken(c) 的結果
+
+
 
 			app.MapControllers(); // 對應控制器
 

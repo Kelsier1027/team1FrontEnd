@@ -138,7 +138,7 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 		/// <param name="memberDto"></param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException"></exception>
-		public async Task<MemberDto> GetMember(MemberDto memberDto)
+		public async Task<MemberDto> GetMemberAsync(MemberDto memberDto)
 		{
 			// 檢查帳號是否為空值
 			if (memberDto.Account == null)

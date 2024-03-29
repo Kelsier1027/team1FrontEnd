@@ -24,6 +24,11 @@ const showSearcher = computed(() => {
     return route.path.startsWith('/member');
 });
 
+// 為按鈕增加取得會員資料方法
+function getMemberInfo() {
+    memberStore.getMemberInfo();
+}
+
 // 確認是否登入
 function checkLogin() {
     // 如果為尚未登入狀態，則顯示 Options 組件， 將 showLogin 設為 false
@@ -88,6 +93,7 @@ const items = ref([
                 icon="mdi-cart-outline"
                 class="pe-6"
             />
+            <v-btn @click="getMemberInfo"> 取得會員資料 </v-btn>
             <v-btn v-if="!memberStore.isLoggedIn" @click="checkLogin">
                 <div class="font-weight-bold" style="color: gray">
                     登入/註冊
