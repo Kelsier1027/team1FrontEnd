@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { AddCartItemAPI } from '@/apis/Chih/apis/post_addItem';
 import { getCartByMemberAPI } from '@/apis/Chih/apis/get_cartByMember'
 import { useMemberStore } from '@/stores/memberStore';
@@ -71,17 +71,43 @@ const ticketTotalPrice = computed(() => props.ticket.price * num.value);
 
 
 const addItem = async () => {
+  if (memberStore.isLoggedIn == false) {
+    alert('請先登入K??');
+    return;
+  }
+
   const addItemDTO = {
     CartId: cartStore.cartId,
     ItemId: props.ticket.id,
     Quantity: num.value,
   };
-  const res = await AddCartItemAPI(addItemDTO);
-  addMessage.value = res;
-  console.log(res);
-  console.log(addItemDTO);
+  try {
+    const res = await AddCartItemAPI(addItemDTO);
+    addMessage.value = res;
+    console.log(res);
+    console.log(addItemDTO);
+  } catch (error) {
+    alert(error);
+
+  }
+
+
+
 }
 
+
+
+
+
+watch(() => memberStore.memberId, (newId, oldId) => {
+  if (newId !== oldId && newId) {//避免0 !== 1 && 0
+    (async () => {
+      await cartStore.getCart();
+      console.log(cartStore.cartId);
+    })();
+
+  }
+}, { immediate: false })
 
 </script>
 

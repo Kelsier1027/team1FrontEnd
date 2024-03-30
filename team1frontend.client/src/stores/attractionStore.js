@@ -17,8 +17,8 @@ export const useCartStore = defineStore('cart', {
 
     async getCart() {
       const memberStore = useMemberStore();
-      const res = await getCartByMemberAPI(memberStore.id)
-      this.cartId = res.cartId;
+      const res = await getCartByMemberAPI(memberStore.memberId)
+      this.cartId = res[0].cartId;
     }
   }
 

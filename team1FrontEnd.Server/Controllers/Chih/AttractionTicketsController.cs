@@ -66,8 +66,7 @@ namespace myapi.Controllers
                            Price=x.ItemsNavigation.Price,
                            Qty=x.Quantity,
                         }).ToList(),
-                        Total=c.AttractionCartItems
-                             .Sum(item=>item.ItemsNavigation.Price*item.Quantity)
+                        Total=c.Total,
                             
                     }).ToListAsync();
             return cartItem;
@@ -95,10 +94,35 @@ namespace myapi.Controllers
                     Quantity = addItemDTO.Quantity,
 
                 });
+                
+
+                
             }
-           await _context.SaveChangesAsync();
+            var cartPrice = await _context.AttractionCarts.FindAsync(addItemDTO.CartId);
+
+            if (cartPrice != null)
+            {
+                
+                cartPrice.Total = await CaculateTotal(cartPrice.Id);
+            }
+            
+            await _context.SaveChangesAsync();
             return "新增成功";
 
+        }
+
+        private async Task<decimal> CaculateTotal(int cartId)
+        {
+            var items = await _context.AttractionCartItems.Where(x => x.CartId == cartId)
+                .Include(x=>x.ItemsNavigation)
+                .ToListAsync();
+
+            decimal total = 0;
+            foreach(var item in items)
+            {
+                total += item.ItemsNavigation.Price * item.Quantity;
+            }
+            return total;
         }
         ////-----------------------------------------------------------------------------------------//
         //// GET: api/AttractionTickets

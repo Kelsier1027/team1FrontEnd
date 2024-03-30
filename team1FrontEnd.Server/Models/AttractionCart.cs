@@ -11,7 +11,7 @@ public partial class AttractionCart
 
     public int MemberId { get; set; }
 
-    public int Total { get; set; }
+    public decimal Total { get; set; }
 
     public virtual ICollection<AttractionCartItem> AttractionCartItems { get; set; } = new List<AttractionCartItem>();
 }

@@ -7,6 +7,7 @@ import HotelRoom from '@/views/Hotel/HotelRoom.vue';
 import RentCar from '@/views/RentCar/index.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
 import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
+import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue'
 import Tour from '@/views/Tour/index.vue';
 import Member from '@/views/Member/index.vue';
 import AccountSetting from '@/views/Member/components/AccountSetting.vue';
@@ -64,6 +65,10 @@ const routes = [
                 path: '/attraction_content/:id',
                 component: AttractionContent,
                 name: 'AttractionContent',
+            },
+            {
+                path: '/attraction_order',
+                component: AttractionOrder,
             },
             {
                 path: 'tour',

@@ -47,6 +47,7 @@ import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { getCartByMemberAPI } from '@/apis/Chih/apis/get_cartByMember'
 import { useMemberStore } from '@/stores/memberStore';
+
 const memberStore = useMemberStore();
 
 
@@ -94,7 +95,7 @@ function confirmClick() {
     })
 }
 
-onMounted(() => useCart())
+onMounted(async () => useCart());
 
 
 </script>

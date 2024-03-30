@@ -248,6 +248,8 @@ public partial class dbTeam1Context : DbContext
         modelBuilder.Entity<AttractionCart>(entity =>
         {
             entity.ToTable("AttractionCart");
+
+            entity.Property(e => e.Total).HasColumnType("decimal(18, 0)");
         });
 
         modelBuilder.Entity<AttractionCartItem>(entity =>
