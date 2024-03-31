@@ -1,7 +1,8 @@
 <template>
 
   <el-affix :offset="120" class="affix-container">
-    <img class="cartIcon" src="/src/assets/images/chih/shopping-cart.gif" @click="handleClick">
+    <img class="cartIcon" src="/src/assets/images/chih/shopping-cart.gif" @click="handleClick"
+      v-if="memberStore.isLoggedIn == true">
   </el-affix>
   <el-drawer v-model="drawer" :direction="direction">
     <template #header>
@@ -86,7 +87,7 @@ function cancelClick() {
 }
 
 function confirmClick() {
-  ElMessageBox.confirm(`Are you confirm to chose ${radio1.value} ?`)
+  ElMessageBox.confirm(`Are you confirm to chose?`)
     .then(() => {
       drawer2.value = false
     })
