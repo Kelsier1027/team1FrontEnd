@@ -34,7 +34,7 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				ActiveStatus = memberEntity.ActiveStatus,
 				FirstName = memberEntity.FirstName,
 				LastName = memberEntity.LastName,
-				IsEmailVerified = memberEntity.IsEmailVerified
+                EmailConfirmed = memberEntity.IsEmailVerified
 			};
 		}
 

@@ -88,7 +88,7 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				ActiveStatus = member.ActiveStatus,
 				FirstName = member.FirstName,
 				LastName = member.LastName,
-				IsEmailVerified = member.IsEmailVerified ?? false
+				IsEmailVerified = member.EmailConfirmed ?? false
 
 			};
 
@@ -127,7 +127,7 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				ActiveStatus = member.ActiveStatus,
 				FirstName = member.FirstName,
 				LastName = member.LastName,
-				IsEmailVerified = member.IsEmailVerified ?? false,
+				IsEmailVerified = member.EmailConfirmed ?? false,
 
 			};
 			// 將Entity類別的資料轉換成Dto類別的資料

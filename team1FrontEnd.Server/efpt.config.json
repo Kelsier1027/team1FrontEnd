@@ -20,6 +20,42 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[AspNetRoleClaims]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUserClaims]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUserLogins]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUserRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUsers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AspNetUserTokens]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionCart]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AttractionCartItems]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[AttractionCategories]",
          "ObjectType": 0
       },
@@ -68,6 +104,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Bill]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BillItem]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[CarBrands]",
          "ObjectType": 0
       },
@@ -100,7 +144,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[CartItems]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[CarTransmissions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Carts]",
          "ObjectType": 0
       },
       {

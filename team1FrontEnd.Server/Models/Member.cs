@@ -23,7 +23,23 @@ public partial class Member
 
     public string LastName { get; set; }
 
-    public bool? IsEmailVerified { get; set; }
+    public bool? EmailConfirmed { get; set; }
+
+    public string Email { get; set; }
+
+    public string PhoneNumber { get; set; }
+
+    public string AspNetUserId { get; set; }
+
+    public DateTime? DateOfBirth { get; set; }
+
+    public string DialCode { get; set; }
+
+    public string Country { get; set; }
+
+    public string ProfileImage { get; set; }
+
+    public bool? Gender { get; set; }
 
     public virtual ICollection<AttractionOrder> AttractionOrders { get; set; } = new List<AttractionOrder>();
 
