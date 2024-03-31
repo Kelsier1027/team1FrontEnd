@@ -186,6 +186,7 @@
                     // 可能需要额外的 API 调用或在前端处理映射
                     `设施${id}`
                 ),
+
                 image: `/public/assets/HotelImages/${room.mainImage}`
             }));
             console.log(hotelData);
@@ -195,7 +196,7 @@
         }
 
     });
-
+   
 
 </script>
 

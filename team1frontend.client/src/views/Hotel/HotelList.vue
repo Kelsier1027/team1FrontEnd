@@ -125,27 +125,6 @@
 
     const route = useRoute();
     const router = useRouter();
-    const hotelId = route.params.id;
-
-    onMounted(async () => {
-        const queryParams = route.query; // 获取查询参数
-        await fetchHotels(queryParams); // 根据查询参数获取酒店数据
-    });
-
-    async function fetchHotels(queryParams) {
-        // 构建您的 API 调用逻辑，这取决于您的后端 API 如何接收和处理查询参数
-        try {
-            let url = 'https://localhost:7113/api/Hotels';
-            // 如果有传递查询参数，添加到 URL 中
-            if (queryParams.address) {
-                url += `?address=${queryParams.address}`;
-            }
-            const response = await axios.get(url);
-            hotels.value = response.data; // 将获取的数据赋值给 hotels 变量
-        } catch (error) {
-            console.error('Failed to fetch hotels:', error);
-        }
-    }
 
     // list 页面的 script 部分，添加 handleSearch 函数处理搜索事件
     function handleSearch(searchQuery) {
