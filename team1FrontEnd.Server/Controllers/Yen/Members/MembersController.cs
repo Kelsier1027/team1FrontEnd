@@ -108,6 +108,8 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 			}
 			catch (ArgumentException ex)
 			{
+				// 如果該帳戶註冊失敗，將 IdentityUser 中相應的帳戶刪除，以供用戶再次註冊
+				await _signInManager.UserManager.DeleteAsync(user);
 				return BadRequest(ex.Message);
 			}
 		}
