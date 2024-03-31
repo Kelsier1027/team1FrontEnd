@@ -1,8 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
+import { ref, onMounted } from 'vue';
+import { useMemberStore } from '@/stores/memberStore';
+const memberStore = useMemberStore();
 
 const items = ref([
     {
@@ -108,7 +107,9 @@ const items = ref([
                                         color: #333333;
                                     "
                                 >
-                                    Guest
+                                    {{ memberStore.firstName + ' ' }}
+
+                                    {{ memberStore.lastName }}
                                 </div>
                                 <div
                                     style="
@@ -132,7 +133,7 @@ const items = ref([
                                         <div class="channel-name">
                                             <div>小白旅遊 會員</div>
                                             <div class="channel-login-id">
-                                                test@test.com
+                                                {{ memberStore.account }}
                                             </div>
                                         </div>
                                         <v-icon
