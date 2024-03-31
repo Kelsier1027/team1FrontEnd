@@ -8,6 +8,7 @@ using team1FrontEnd.Server.個人.Yen.Exts.Members;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IServices.Member;
 using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
+using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member;
 using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 using team1FrontEnd.Server.個人.Yen.Services.Menber;
 
@@ -123,31 +124,58 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 			}
 		}
 
-		// 叫用 IdentityUser 發送 sameSite設定為 none 的 cookie
-		[HttpGet("sendSameSiteNoneCookie")]
-		public async Task<IActionResult> SendSameSiteNoneCookie()
+		// 取得會員詳細資訊
+		[HttpGet("getMemberInfo")]
+		[Authorize]
+		public async Task<IActionResult> GetMemberInfo([FromBody] MemberInfoForFrontEndVm vm)
 		{
-			var user = await _signInManager.UserManager.GetUserAsync(User);
-
-			// 檢查user是否為null
-			if (user == null)
+			// 比對傳入的帳號是否與登入者帳號相同
+			if (vm.Account != User.Identity!.Name)
 			{
 				return Unauthorized();
 			}
 
-			var cookie = await _signInManager.UserManager.GenerateUserTokenAsync(user, "Default", "SameSiteNone");
-			// 將 cookie 設定為 .AspNetCore.Identity.Application
-			Response.Cookies.Append(".AspNetCore.Identity.Application", cookie, new CookieOptions
-			{
-				SameSite = SameSiteMode.None,
-				HttpOnly = true,
-				Secure = true,
-				Expires = DateTimeOffset.Now.AddMinutes(30),
-			});
+			// 將 ViewModel 轉換成 DTO
+			var memberDto = vm.ToMemberDto();
 
+			// 取得會員詳細資訊
+			var memberFromDb = await _memberService.GetMemberAsync(memberDto);
 
-			return Ok();
+			// 將 DTO 轉換成 ViewModel
+			var memberVm = memberFromDb.ToMemberProfileVm();
+
+			return Ok(memberVm);
 		}
+
+
+
+
+		// 叫用 IdentityUser 發送 sameSite設定為 none 的 cookie
+		//[HttpGet("sendSameSiteNoneCookie")]
+		//public async Task<IActionResult> SendSameSiteNoneCookie()
+		//{
+		//	var user = await _signInManager.UserManager.GetUserAsync(User);
+
+		//	// 檢查user是否為null
+		//	if (user == null)
+		//	{
+		//		return Unauthorized();
+		//	}
+
+		//	var cookie = await _signInManager.UserManager.GenerateUserTokenAsync(user, "Default", "SameSiteNone");
+		//	// 將 cookie 設定為 .AspNetCore.Identity.Application
+		//	Response.Cookies.Append(".AspNetCore.Identity.Application", cookie, new CookieOptions
+		//	{
+		//		SameSite = SameSiteMode.None,
+		//		HttpOnly = true,
+		//		Secure = true,
+		//		Expires = DateTimeOffset.Now.AddMinutes(30),
+		//	});
+
+
+		//	return Ok();
+		//}
+
 
 	}
 }

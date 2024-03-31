@@ -1,6 +1,7 @@
 ﻿using team1FrontEnd.Server.個人.Yen.Core.Entities.Members;
 using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
 using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member;
+using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Members;
 
 namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 {
@@ -45,9 +46,30 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				MemberId = memberDto.Id,
 				FirstName = memberDto.FirstName,
 				LastName = memberDto.LastName,
-				Account = memberDto.Account
+				Account = memberDto.Account,
+				Email = memberDto.Email,
+				Country = memberDto.Country,
+				DateOfBirth = memberDto.DateOfBirth,
 			};
 		}
 
+		// 將 MemberDto 轉換成 MemberProfileVm
+		public static MemberProfileVm ToMemberProfileVm(this MemberDto memberDto)
+		{
+			return new MemberProfileVm
+			{
+				MemberId = memberDto.Id,
+				FirstName = memberDto.FirstName,
+				LastName = memberDto.LastName,
+				Account = memberDto.Account,
+				Email = memberDto.Email,
+				Country = memberDto.Country,
+				DateOfBirth = memberDto.DateOfBirth,
+				DialCode = memberDto.DialCode,
+				PhoneNumber = memberDto.PhoneNumber,
+				Gender = memberDto.Gender,
+				ProfileImage = memberDto.ProfileImage
+			};
+		}
 	}
 }

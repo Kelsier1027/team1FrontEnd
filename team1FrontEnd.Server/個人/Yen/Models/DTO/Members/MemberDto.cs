@@ -22,5 +22,19 @@
 
 		public bool IsEmailVerified { get; set; }
 
+		public string? Email { get; set; }
+
+		public string? Country { get; set; }
+
+		public DateTime? DateOfBirth { get; set; }
+
+		public bool? Gender { get; set; }
+
+		public string? PhoneNumber { get; set; }
+
+		public string? DialCode { get; set; }
+
+		public string? ProfileImage { get; set; }
+
 	}
 }
