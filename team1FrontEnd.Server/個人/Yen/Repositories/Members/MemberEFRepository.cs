@@ -134,6 +134,7 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				Country = member.Country,
 				ProfileImage = member.ProfileImage,
 				IsEmailVerified = member.EmailConfirmed ?? false,
+				Gender = member.Gender
 			};
 
 			// 將Entity類別的資料轉換成Dto類別的資料

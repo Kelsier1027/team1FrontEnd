@@ -63,3 +63,11 @@ export const checkCookie = () => {
         withCredentials: true,
     });
 };
+// 更改會員密碼
+export const changePasswordAPI = (changePasswordData) => {
+    return http({
+        url: '/api/Members/changePassword',
+        method: 'POST',
+        data: { changePasswordData },
+    });
+};

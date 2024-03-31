@@ -183,7 +183,7 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 		/// </summary>
 		/// <param name="memberDto"></param>
 		/// <exception cref="NotImplementedException"></exception>
-		public void UpdatePassword(MemberDto memberDto)
+		public async Task<bool> UpdatePasswordAsync(MemberDto memberDto)
 		{
 			throw new NotImplementedException();
 		}

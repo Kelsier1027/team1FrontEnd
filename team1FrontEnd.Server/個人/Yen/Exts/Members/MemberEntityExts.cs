@@ -25,6 +25,7 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				DialCode = memberEntity.DialCode,
 				Country = memberEntity.Country,
 				ProfileImage = memberEntity.ProfileImage,
+				Gender = memberEntity.Gender
 
 
 			};

@@ -3,7 +3,7 @@
 	public static class ValidationMessages
 	{
 
-
+		public const string SamePassword = "新密碼與舊密碼相同";
 
 		public const string EmptyDialCode = "國際區碼為空值";
 

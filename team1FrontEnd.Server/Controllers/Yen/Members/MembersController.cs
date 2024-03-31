@@ -210,6 +210,7 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 				Gender = memberProfileVmString.Gender,
 				Email = memberProfileVmString.Email,
 				Country = memberProfileVmString.Country,
+				// 將 string 型別的 memberProfileVmString.DateOfBirth 轉換成 DateTime 型別
 				DateOfBirth = DateTime.TryParse(memberProfileVmString.DateOfBirth, out var dateOfBirth) ? dateOfBirth : (DateTime?)null,
 			};
 
@@ -232,5 +233,59 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 			return Ok(updatedMemberVm);
 		}
 
+		// 更新會員密碼
+		[HttpPost("updatePassword")]
+		[Authorize]
+		public async Task<IActionResult> changePassword([FromBody] UpdatePasswordVm updatePasswordVm)
+		{
+			// 比對傳入的帳號是否與登入者帳號相同
+			if (updatePasswordVm.Account != User.Identity!.Name)
+			{
+				return Unauthorized();
+			}
+
+			// 使用 _signInManager.UserManager 更新 AspNetUser 密碼
+			var user = await _signInManager.UserManager.FindByNameAsync(updatePasswordVm.Account!);
+			if (user == null)
+			{
+				return NotFound();
+			}
+			// 驗證舊密碼 新密碼 確認密碼是否為空值
+			if (updatePasswordVm.OldPassword == null || updatePasswordVm.NewPassword == null || updatePasswordVm.ConfirmPassword == null)
+			{
+				return BadRequest("Old password, new password, and confirm password cannot be empty.");
+			}
+
+			// 驗證舊密碼是否正確
+			var result = await _signInManager.UserManager.CheckPasswordAsync(user, updatePasswordVm.OldPassword);
+			if (!result)
+			{
+				return BadRequest("Old password is incorrect.");
+			}
+
+
+			// 驗證新舊密碼是否相同
+			if (updatePasswordVm.OldPassword == updatePasswordVm.NewPassword)
+			{
+				return BadRequest("New password cannot be the same as the old password.");
+			}
+
+			// 驗證新密碼是否與確認密碼相同
+			if (updatePasswordVm.NewPassword != updatePasswordVm.ConfirmPassword)
+			{
+				return BadRequest("New password and confirm password do not match.");
+			}
+
+			// 使用 _signInManager.UserManager 更新 AspNetUser 密碼
+			var updateResult = await _signInManager.UserManager.ChangePasswordAsync(user, updatePasswordVm.OldPassword, updatePasswordVm.NewPassword);
+
+			// 如果更新失敗，返回 BadRequest
+			if (!updateResult.Succeeded)
+			{
+				return BadRequest("Failed to update password.");
+			}
+
+			return Ok("密碼成功更新");
+		}
 	}
 }

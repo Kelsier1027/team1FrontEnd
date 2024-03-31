@@ -6,6 +6,7 @@ import {
     getLoginInfo,
     registerIdentityAPI,
     checkCookie,
+    
 } from '../apis/auth.js';
 
 import {
@@ -94,7 +95,7 @@ export const useMemberStore = defineStore('member', () => {
         // 將 API 回傳的資料以物件形式回傳
         return response;
     };
-    // 更新會緣詳細資訊
+    // 更新會員詳細資訊
     const updateMemberDetailInfo = async (memberDetailInfo) => {
         // const responseOfCheckCookie = await checkCookie();
         // console.log(responseOfCheckCookie);
@@ -110,6 +111,12 @@ export const useMemberStore = defineStore('member', () => {
         // 將 API 回傳的資料以物件形式回傳
         return response;
     };
+    // 更改會員密碼
+    const changePassword = async (changePasswordData) => {
+        const response = await changePasswordAPI(changePasswordData);
+        console.log(response);
+        return response;
+    };
 
     return {
         memberId,
@@ -123,5 +130,6 @@ export const useMemberStore = defineStore('member', () => {
         register,
         getMemberDetailInfo,
         updateMemberDetailInfo,
+        changePassword,
     };
 });

@@ -241,11 +241,11 @@ const genderOptions = ref([
     },
     {
         title: '男',
-        value: '男',
+        value: true,
     },
     {
         title: '女',
-        value: '女',
+        value: false,
     },
 ]);
 
@@ -341,7 +341,8 @@ const getMemberDetailInfo = async (memberAccount) => {
     firstName.value = memberDetailInfo.firstName;
     lastName.value = memberDetailInfo.lastName;
     selectedGender.value = memberDetailInfo.gender;
-    birthday.value = memberDetailInfo.dateOfBirth;
+    // 使用 memberDetailInfo.dateOfBirth (yyyy-MM-dd) 建立時間型別的物件
+    date.value = new Date(memberDetailInfo.dateOfBirth);
     selectedCountry.value = memberDetailInfo.country;
     selectedDialCode.value = memberDetailInfo.dialCode;
     phoneNumber.value = memberDetailInfo.phoneNumber;
@@ -350,7 +351,6 @@ const getMemberDetailInfo = async (memberAccount) => {
         ? memberDetailInfo.email
         : memberDetailInfo.account;
 };
-
 const saveMemberInfo = async () => {
     // 檢查表單是否通過驗證
     const validResult = await formRef.value.validate();
@@ -397,6 +397,7 @@ onMounted(() => {
         router.push('/'); // router 這個方法是 vue-router 提供的
     }
 });
+
 </script>
 
 <style scoped>

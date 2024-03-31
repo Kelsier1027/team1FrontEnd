@@ -27,7 +27,8 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				DateOfBirth = memberDto.DateOfBirth,
 				DialCode = memberDto.DialCode,
 				Country = memberDto.Country,
-				IsEmailVerified = memberDto.IsEmailVerified
+				IsEmailVerified = memberDto.IsEmailVerified,
+				Gender = memberDto.Gender,
 			};
 		}
 
