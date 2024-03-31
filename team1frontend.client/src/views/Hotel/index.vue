@@ -22,14 +22,10 @@
         // ... 你的搜索表单数据
     });
 
+    // 在 index 页面的 script 中
     function handleSearch(searchQuery) {
-        // 處理搜索邏輯
-        router.push({ path: '/hotel/list', query: searchQuery.value });
-    }
-
-    function navigateToHotelList(itemName) {
-        // 使用router.push將用戶導向HotelList頁面，並傳遞itemName作為query參數
-        router.push({ path: '/hotel/list', query: { name: itemName } });
+        // 假设 searchQuery.location 包含了用户输入的搜索地点
+        router.push({ path: '/hotel/list', query: { address: searchQuery.location } });
     }
 
     //旋轉木馬
@@ -39,9 +35,9 @@
     const items = ref([
         { name: '台中', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" },
         { name: "台北", image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
-        { name: "台北", image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
-        { name: "台北", image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
-        { name: '台中', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" }
+        { name: "宜蘭", image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
+        { name: "花蓮", image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
+        { name: '金門', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" }
         // 更多項目...
     ]);
     const currentOffset = ref(0);

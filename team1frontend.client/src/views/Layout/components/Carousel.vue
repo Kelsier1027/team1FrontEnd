@@ -35,7 +35,9 @@
 
     function navigateToHotelList(itemName) {
         router.push({ path: '/hotel/list', query: { name: itemName } });
+        console.log(itemName);
     }
+
 </script>
 
 <style scoped>

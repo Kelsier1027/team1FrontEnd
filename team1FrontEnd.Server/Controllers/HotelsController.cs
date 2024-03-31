@@ -49,6 +49,33 @@ namespace team1FrontEnd.Server.Controllers
             return hotel;
         }
 
+        // GET: api/Hotels/search?address=xxx
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> SearchHotelsByAddress(string address)
+        {
+            if (_context.Hotels == null)
+            {
+                return NotFound("No hotels found.");
+            }
+
+            if (string.IsNullOrEmpty(address))
+            {
+                return BadRequest("Address is required for searching.");
+            }
+
+            // 使用 EF.Functions.Like 来进行模糊匹配
+            var hotels = await _context.Hotels
+                .Where(hotel => EF.Functions.Like(hotel.Address, $"%{address}%"))
+                .ToListAsync();
+
+            if (hotels == null || hotels.Count == 0)
+            {
+                return NotFound($"No hotels found with address containing '{address}'.");
+            }
+
+            return hotels;
+        }
+
         // PUT: api/Hotels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

@@ -129,36 +129,35 @@
                 </div>
             </div>
 
+            <!-- list 页面的 template 部分 -->
             <div class="hotel-list">
-                <div
-                    class="hotel-card"
-                    v-for="hotel in hotels"
-                    :key="hotel.id"
-                    @click="goToHotelRoom(hotel.id)"
-                >
-                    <!--<img :src="hotel.imageUrl" alt="Hotel Image" class="hotel-image" />-->
-                    <img
-                        :src="getHotelImageUrl(hotel.mainImage)"
-                        alt="Hotel Image"
-                        class="hotel-image"
-                    />
-                    <div class="hotel-info">
-                        <h2>{{ hotel.name }}</h2>
-                        <p>{{ hotel.address }}</p>
-                        <div class="hotel-rating">
-                            <span>{{ hotel.grade }}</span>
+                <!-- 搜索消息提示 -->
+                <p v-if="searchMessage">{{ searchMessage }}</p>
+
+                <!-- 酒店列表 -->
+                <div v-else>
+                    <div class="hotel-card"
+                         v-for="hotel in hotels"
+                         :key="hotel.id"
+                         @click="goToHotelRoom(hotel.id)">
+                        <img :src="getHotelImageUrl(hotel.mainImage)" alt="Hotel Image" class="hotel-image" />
+                        <div class="hotel-info">
+                            <h2>{{ hotel.name }}</h2>
+                            <p>{{ hotel.address }}</p>
+                            <div class="hotel-rating">
+                                <span>{{ hotel.grade }}</span>
+                            </div>
+                            <div class="hotel-price">
+                                <span v-if="hotel.hotelRooms.length">NT${{ hotel.hotelRooms[0].weekendPrice }}</span>
+                            </div>
+                            <button class="booking-button">
+                                立即訂購
+                            </button>
                         </div>
-                        <div class="hotel-price">
-                            <span v-if="hotel.hotelRooms"
-                                >NT${{
-                                    hotel.hotelRooms[0]?.weekendPrice
-                                }}</span
-                            >
-                        </div>
-                        <button class="booking-button">立即訂購</button>
                     </div>
                 </div>
-            </div>
+            </div>  
+
         </div>
     </v-main>
 </template>
@@ -173,42 +172,57 @@ const route = useRoute();
 const router = useRouter();
 const hotelId = route.params.id;
 
-function navigateToHotelRoom(hotelId) {
-    console.log(hotelId);
-    router.push({ name: 'HotelRoom', params: { id: hotelId } });
-}
+    onMounted(async () => {
+        const queryParams = route.query; // 获取查询参数
+        await fetchHotels(queryParams); // 根据查询参数获取酒店数据
+    });
 
-function handleSearch(searchQuery) {
-    // 處理搜索邏輯
-}
-
-const facilities = ref([]);
-const selectedFacilities = ref([]);
-//左欄設施列表
-async function fetchFacilities() {
-    try {
-        const response = await axios.get(
-            'https://localhost:7113/api/HotelCategories'
-        );
-        facilities.value = response.data; // 假設API返回的數據直接是我們需要的設施列表
-    } catch (error) {
-        console.error('Failed to fetch facilities:', error);
+    async function fetchHotels(queryParams) {
+        // 构建您的 API 调用逻辑，这取决于您的后端 API 如何接收和处理查询参数
+        try {
+            let url = 'https://localhost:7113/api/Hotels';
+            // 如果有传递查询参数，添加到 URL 中
+            if (queryParams.address) {
+                url += `?address=${queryParams.address}`;
+            }
+            const response = await axios.get(url);
+            hotels.value = response.data; // 将获取的数据赋值给 hotels 变量
+        } catch (error) {
+            console.error('Failed to fetch hotels:', error);
+        }
     }
-}
+
+    // list 页面的 script 部分，添加 handleSearch 函数处理搜索事件
+    function handleSearch(searchQuery) {
+        // 根据新的 searchQuery 更新页面展示的数据
+        fetchHotels(searchQuery);
+    }
+ 
+    const facilities = ref([])
+    const selectedFacilities = ref([]);
+    //左欄設施列表
+    async function fetchFacilities() {
+        try {
+            const response = await axios.get('https://localhost:7113/api/HotelCategories');
+            facilities.value = response.data; // 假設API返回的數據直接是我們需要的設施列表
+        } catch (error) {
+            console.error('Failed to fetch facilities:', error);
+        }
+    }
 
 // 使用 onMounted 生命週期鉤子來在組件掛載時獲取數據
 onMounted(fetchFacilities);
 
-const selectedPrice = ref([]);
+    const selectedPrice = ref([])
 
-//處理圖片
-const getHotelImageUrl = (imagePath) => {
-    return `/assets/HotelImages/${imagePath}`;
-};
+    //處理圖片
+    const getHotelImageUrl = (imagePath) => {
+        return `/public/assets/HotelImages/${imagePath}`;
+    };
 
-//價格篩選
-const searchMix = ref('');
-const searchMin = ref('');
+    //價格篩選
+    const searchMix = ref('')
+    const searchMin = ref('')
 
 //旅客評分篩選
 const selectedRating = ref('');
@@ -254,36 +268,53 @@ const bookHotel = (hotelId) => {
     // 这里可以添加预订逻辑或跳转到预订页面
 };
 
-const hotels = ref([]);
+    const hotels = ref([]);
+    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
 
-async function fetchHotelsAndRooms() {
-    try {
-        const response = await axios.get('https://localhost:7113/api/Hotels');
-        hotels.value = response.data;
+    async function fetchHotelsAndRooms() {
+        const address = route.query.address;
+        const name = route.query.name;
+        let url = 'https://localhost:7113/api/Hotels';
 
-        // 為所有酒店同時發起請求，用 Promise.allSettled 等待所有請求完成或失敗
-        const hotelRoomsRequests = hotels.value.map((hotel) =>
-            axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotel.id}`)
-        );
+        if (address) {
+            url += `/search?address=${encodeURIComponent(address)}`;
+        } else if (name) {
+            // 如果你有一个基于name搜索酒店的API端点，你可以在这里构建URL
+            url += `/search?address=${encodeURIComponent(name)}`;
+            // 注意: 这里的'/searchByName'和查询参数'name'需要你根据实际API进行调整
+        }
+        try {
+            const response = await axios.get(url);
+            hotels.value = response.data;
+            
+            console.log('1212');
+            // 為所有酒店同時發起請求，用 Promise.allSettled 等待所有請求完成或失敗
+            const hotelRoomsRequests = hotels.value.map(hotel =>
+                axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotel.id}`)
+            );
 
         const hotelRoomsResponses = await Promise.allSettled(
             hotelRoomsRequests
         );
 
-        hotelRoomsResponses.forEach((result, index) => {
-            if (result.status === 'fulfilled' && result.value.data.length > 0) {
-                // 這裡我們只考慮至少有一個房間數據的情況
-                hotels.value[index].hotelRooms = result.value.data;
-            } else {
-                // 如果請求失敗或沒有房間數據，可以根據您的業務需求做相應處理
-                hotels.value[index].hotelRooms = { weekendPrice: 'No data' };
-            }
-        });
-        console.log(hotels.value);
-    } catch (error) {
-        console.error('Failed to fetch hotels:', error);
+            hotelRoomsResponses.forEach((result, index) => {
+                if (result.status === 'fulfilled' && result.value.data.length > 0) {
+                    // 這裡我們只考慮至少有一個房間數據的情況
+                    hotels.value[index].hotelRooms = result.value.data;
+                } else {
+                    // 如果請求失敗或沒有房間數據，可以根據您的業務需求做相應處理
+                    hotels.value[index].hotelRooms = { weekendPrice: 'No data' };
+                }
+
+            });
+            console.log(hotels.value);
+        } catch (error) {
+            // 当返回的数据为空数组时，设置提示信息
+            searchMessage.value = "沒有找到匹配的酒店，請嘗試其他搜索條件。";
+            hotels.value = []; // 清空之前的搜索结果
+            console.error('Failed to fetch hotels:', error);
+        }
     }
-}
 
 onMounted(fetchHotelsAndRooms);
 </script>
