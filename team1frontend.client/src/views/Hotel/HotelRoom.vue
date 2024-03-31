@@ -6,13 +6,8 @@
 
                 <!-- 圖片輪播 -->
                 <div class="image-gallery">
-                    <img
-                        v-for="image in hotel.hotelInfo.images"
-                        :src="image"
-                        :alt="`酒店的圖片 ${hotel.hotelInfo.name}`"
-                        :key="image"
-                        class="hotel-image"
-                    />
+                    <img v-for="image in hotel.hotelInfo.images" :src="image" :alt="`酒店的圖片 ${hotel.hotelInfo.name}`"
+                        :key="image" class="hotel-image" />
                 </div>
                 <!-- 詳細信息和地圖的容器 -->
                 <div class="details-map-container">
@@ -20,10 +15,7 @@
                     <div class="info-container">
                         <p>{{ hotel.hotelInfo.description }}</p>
                         <ul class="facilities-list">
-                            <li
-                                v-for="facility in hotel.hotelInfo.facilities"
-                                :key="facility"
-                            >
+                            <li v-for="facility in hotel.hotelInfo.facilities" :key="facility">
                                 {{ facility }}
                             </li>
                         </ul>
@@ -37,30 +29,15 @@
                     </div>
                     <!-- 地圖容器 -->
                     <div class="map-container">
-                        <iframe
-                            width="270"
-                            height="250"
-                            style="border: 0"
-                            loading="lazy"
-                            allowfullscreen
-                            referrerpolicy="no-referrer-when-downgrade"
-                            :src="mapSrc"
-                        ></iframe>
+                        <iframe width="270" height="250" style="border: 0" loading="lazy" allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade" :src="mapSrc"></iframe>
                     </div>
                 </div>
                 <!-- 房型列表 -->
                 <div class="room-types">
-                    <div
-                        class="room-type-card"
-                        v-for="roomType in hotel.roomTypes"
-                        :key="roomType.name"
-                    >
+                    <div class="room-type-card" v-for="roomType in hotel.roomTypes" :key="roomType.name">
                         <h3>{{ roomType.name }}</h3>
-                        <img
-                            :src="roomType.image"
-                            :alt="`房型圖片 ${roomType.name}`"
-                            class="room-type-image"
-                        />
+                        <img :src="roomType.image" :alt="`房型圖片 ${roomType.name}`" class="room-type-image" />
                         <p>尺寸: {{ roomType.size }}</p>
                         <p>價格: NT${{ roomType.price }}</p>
                         <!-- 其他房型信息 -->
@@ -207,14 +184,18 @@ onMounted(async () => {
                     // 可能需要额外的 API 调用或在前端处理映射
                     `设施${id}`
             ),
-            image: `/assets/HotelImages/${room.mainImage}`,
+
+            image: `/public/assets/HotelImages/${room.mainImage}`
         }));
         console.log(hotelData);
         console.log(roomTypesData);
     } catch (error) {
         console.error('Failed to fetch hotel details:', error);
     }
+
 });
+
+
 </script>
 
 <style scoped>
@@ -228,7 +209,8 @@ onMounted(async () => {
     display: flex;
     overflow-x: auto;
     gap: 10px;
-    margin-bottom: 20px; /* 為輪播圖下方添加間距 */
+    margin-bottom: 20px;
+    /* 為輪播圖下方添加間距 */
 }
 
 .hotel-image,
@@ -244,7 +226,8 @@ onMounted(async () => {
     justify-content: center;
     align-items: flex-start;
     gap: 20px;
-    margin-bottom: 20px; /* 為地圖和信息容器下方添加間距 */
+    margin-bottom: 20px;
+    /* 為地圖和信息容器下方添加間距 */
 }
 
 .info-container {
@@ -281,14 +264,17 @@ onMounted(async () => {
 
 .room-type-card {
     flex: 1;
-    min-width: 250px; /* 設置最小寬度 */
+    min-width: 250px;
+    /* 設置最小寬度 */
     margin-bottom: 20px;
 }
 
 .map-container {
     flex: 1;
-    min-width: 250px; /* 根據實際情況設置適當的寬度 */
-    height: 250px; /* 根據實際情況設置適當的高度 */
+    min-width: 250px;
+    /* 根據實際情況設置適當的寬度 */
+    height: 250px;
+    /* 根據實際情況設置適當的高度 */
 }
 
 @media (max-width: 768px) {
