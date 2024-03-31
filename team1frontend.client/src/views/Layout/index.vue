@@ -6,7 +6,7 @@ import { computed } from 'vue';
 import Dialogflow from './Service/Dialogflow.vue';
 
 import { useRoute, useRouter } from 'vue-router';
-import Service from './components/Service.vue';
+import Service from './Service/Service.vue';
 import { useMemberStore } from '@/stores/memberStore';
 const memberStore = useMemberStore();
 const router = useRouter();
