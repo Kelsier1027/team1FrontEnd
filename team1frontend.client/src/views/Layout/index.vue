@@ -3,7 +3,10 @@ import LayoutNav from './components/LayoutNav.vue';
 import LayoutHeader from './components/LayoutHeader.vue';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import Service from './components/Service.vue';
+import Service from './Service/Service.vue';
+import Dialogflow from './Service/Dialogflow.vue';
+import test from './Service/test.vue';
+import Cart from './Service/Cart.vue';
 
 const route = useRoute();
 
@@ -17,7 +20,11 @@ const showHeader = computed(() => !route.meta.hideHeader);
     <LayoutNav />
     <LayoutHeader v-if="showHeader" />
     <RouterView />
-    <Service/>
+    <!-- <Service/> -->
+    <Dialogflow/>
+    <Cart/>
+    <test/>
+    
 </template>
 
 <script></script>

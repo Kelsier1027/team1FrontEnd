@@ -5,17 +5,25 @@ using System.Collections.Generic;
 
 namespace team1FrontEnd.Server.Models;
 
+<<<<<<<< HEAD:team1FrontEnd.Server/Models/Bill.cs
 public partial class Bill
+========
+public partial class Cart
+>>>>>>>> origin/07new:team1FrontEnd.Server/Models/Cart.cs
 {
     public int Id { get; set; }
 
     public int MemberId { get; set; }
 
+<<<<<<<< HEAD:team1FrontEnd.Server/Models/Bill.cs
     public DateTime DateTime { get; set; }
 
     public int Total { get; set; }
 
     public virtual ICollection<BillItem> BillItems { get; set; } = new List<BillItem>();
+========
+    public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+>>>>>>>> origin/07new:team1FrontEnd.Server/Models/Cart.cs
 
     public virtual Member Member { get; set; }
 }

@@ -1,6 +1,5 @@
-import * as signalR from '@aspnet/signalr'
-
-const url = "http://127.0.0.1:5173/ChatHub"
+import * as signalR from '@microsoft/signalr'
+const url = "https://localhost:7113/ChatHub"
 const signal = new signalR.HubConnectionBuilder()
   .withUrl(url, {
     skipNegotiation: true,
@@ -14,24 +13,21 @@ signal.on('SendAll', (res) => {
 signal.start().then(() => {
   if (window.Notification) {
     if (Notification.permission === 'granted') {
-      console.log('允许通知')
+      console.log('允許通知')
     } else if (Notification.permission !== 'denied') {
-      console.log('需要通知权限')
-      Notification.requestPermission((permission) => { console.log("权限通知",permission) })
+      console.log('需要通知權限')
+      Notification.requestPermission((permission) => { console.log("權限通知",permission) })
     } else if (Notification.permission === 'denied') {
-      console.log('拒绝通知')
+      console.log('拒絕通知')
     }
   } else {
-    console.error('浏览器不支持Notification')
+    console.error('不支援Notification')
   }
-  console.log('连接成功')
+  console.log('聯接成功')
 })
 signal.onclose((err)=>{
-    console.log("连接已经断开 执行函数onclose",err)
+    console.log("聯接斷開 執行函數onclose",err)
 })
-signal.on('SendCustomUserMessage', (res) => {
-    console.log(res, '收到消息')
-  })
 export default {
   signal
 }

@@ -2,20 +2,31 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using team1FrontEnd.Server.Dtos;
 
 namespace team1FrontEnd.Server.Models;
 
-public partial class CartItem
+<<<<<<<< HEAD:team1FrontEnd.Server/Models/Cart.cs
+public partial class Cart
 {
+    public int Id { get; set; }
+
+    public int MemberId { get; set; }
+
+    public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
+    public virtual Member Member { get; set; }
+========
+public partial class CartItem 
+{ 
     public int Id { get; set; }
 
     public int CartId { get; set; }
 
     public int ItemId { get; set; }
 
-    public int Quantity { get; set; }
-
     public int ServicerCategoryId { get; set; }
 
     public virtual Cart Cart { get; set; }
+>>>>>>>> origin/07new:team1FrontEnd.Server/Models/CartItem.cs
 }
