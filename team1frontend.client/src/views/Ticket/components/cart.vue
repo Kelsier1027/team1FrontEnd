@@ -6,7 +6,7 @@
   </el-affix>
   <el-drawer v-model="drawer" :direction="direction">
     <template #header>
-      <h4>你媽2購物車</h4>
+      <h4>購物車</h4>
     </template>
 
     <template #default>
