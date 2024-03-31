@@ -6,7 +6,7 @@ import {
     getLoginInfo,
     registerIdentityAPI,
     checkCookie,
-    
+
 } from '../apis/auth.js';
 
 import {
@@ -14,10 +14,14 @@ import {
     updateMemberDetailInfoAPI,
 } from '../apis/Member/memberInfoApis.js';
 import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+const router = useRouter();
+const route = useRoute();
 
 export const useMemberStore = defineStore('member', () => {
     // 定義狀態和方法
-
+    const router = useRouter();
+    const route = useRoute();
     // 會員資料及登入狀態
     const memberId = ref(null); // 用戶ID
     const account = ref(null); // 用戶帳號
@@ -80,6 +84,10 @@ export const useMemberStore = defineStore('member', () => {
         lastName.value = null;
         isLoggedIn.value = false;
         await logoutAPI();
+        // 檢查目前是否在會員/member 之下的頁面，如果是則導向首頁
+        if (route.path.includes('/member')) {
+            router.push('/');
+        }
     };
     // 取得會員詳細資訊
     const getMemberDetailInfo = async (account) => {
