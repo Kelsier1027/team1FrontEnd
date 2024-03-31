@@ -30,7 +30,7 @@ const handleEdit = (index, row) => {
 
 const handleDelete = (index, row) => {
   console.log(index, row)
-  // 实际删除逻辑，如更新tableData
+
   tableData.value.splice(index, 1);
 }
 

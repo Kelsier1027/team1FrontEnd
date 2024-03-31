@@ -25,7 +25,7 @@
         <div></div>
 
       </div>
-      <div>{{ cleanItem }}</div>
+      <!-- <div>{{ cleanItem }}</div> -->
 
 
     </template>
@@ -48,9 +48,9 @@ import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { getCartByMemberAPI } from '@/apis/Chih/apis/get_cartByMember'
 import { useMemberStore } from '@/stores/memberStore';
-
+import { useRouter } from 'vue-router';
 const memberStore = useMemberStore();
-
+const router = useRouter();
 
 
 
@@ -87,9 +87,9 @@ function cancelClick() {
 }
 
 function confirmClick() {
-  ElMessageBox.confirm(`Are you confirm to chose?`)
+  ElMessageBox.confirm(`確認結帳`)
     .then(() => {
-      drawer2.value = false
+      router.push('/attraction_order');
     })
     .catch(() => {
       // catch error
