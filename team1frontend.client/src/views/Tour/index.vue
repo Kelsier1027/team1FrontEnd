@@ -1,10 +1,22 @@
 <script setup>
 //import top from './Components/topForm.vue';
-import { ref, onMounted, onUnmounted } from 'vue';
-
+import { ref,computed , onMounted, onUnmounted } from 'vue';
+import { getPackageItem } from '@/apis/package';
+import { useRoute } from 'vue-router';
+import router from '@/router'
+// 使用 useRoute 函数获取路由信息
+const route = useRoute();
+const date = route.query.date;
+const loc = route.query.selectedLocation;
+console.log(date);
+// 儲存搜尋條件的地點和日期
+const selectedLocation = ref('');
+const selectedDate = ref('');
 const images = ref(["assets/Images/輪播圖.jfif", "assets/Images/輪播圖3.jpg", "assets/Images/輪播圖1.jfif", "assets/Images/墾丁輪播."]);
 const currentIndex = ref(0);
 let intervalId;
+
+
 
 const startCarousel = () => {
     intervalId = setInterval(() => {
@@ -16,11 +28,82 @@ const stopCarousel = () => {
     clearInterval(intervalId);
 };
 
-onMounted(startCarousel);
+const PackageItem = ref([]);
+const getPackageItems = async () => {
+    const res = await getPackageItem(0);
+    PackageItem.value = res;
+}
 
+const getPackageList = () => {
+    return PackageItem.value.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        applyBeginDate:formatDate(item.applyBeginDate),
+        applyEndDate:formatDate(item.applyEndDate),
+        imageUrl: '/assets/Images/' + item.image
+    }));
+}
+const formatDate = (dateString) => {
+    const year = dateString.substr(0, 4);
+    const month = dateString.substr(5, 2);
+    const day = dateString.substr(8, 2);
+    return `${year}/${month}/${day}`;
+}
+
+let obj = ref([
+    {
+        id: 1,
+        name: 1,
+        price: 1,
+        applyBeginDate:1,
+        applyEndDate:1
+    },
+]);
+
+onMounted(async () => {
+    await getPackageItems();
+    obj.value = getPackageList();
+    // console.log(obj.value);
+    startCarousel
+});
+// onMounted(startCarousel);
+// 計算過濾後的套票列表
+const filteredPackages = computed(() => {
+  let filtered = obj.value;
+  if (loc && typeof loc === 'string') {
+    console.log(loc);
+    // 根据选定的地点进行过滤
+    filtered = filtered.filter(item => typeof item.name === 'string' && item.name.includes(loc));
+  }
+  if (date) {
+    console.log(date);
+    // 根据选定的日期范围进行过滤
+    filtered = filtered.filter(item => {
+      const beginDate = new Date(item.applyBeginDate);
+      const endDate = new Date(item.applyEndDate);
+      const selectedDate = new Date(date);
+
+      // 清除时间部分
+      beginDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      return beginDate <= selectedDate && endDate >= selectedDate;
+    });
+  }
+  return filtered;
+});
 onUnmounted(stopCarousel);
+function search() {
+            // 获取日期输入元素
+            const loc = document.querySelector('select[name="selectedLocation"]').value;
 
-
+            // 获取选定的日期值
+            const selectedDate = document.querySelector('input[name="date"]').value;
+            console.log(selectedDate);
+            router.push({ path: '/Tour', query: { date: selectedDate, loc: loc } });
+        }
 </script>
 
 @charset "UTF-8";
@@ -44,32 +127,45 @@ onUnmounted(stopCarousel);
                                 <h3>All you need to do is pack your luggage and you're ready to go.</h3>
                                 <h6 class="mb-3">Discover your next adventure</h6>
                                 <div class="flex-wrap search-wthree-field mt-md-5 mt-4">
-                                    <form action="#" method="post" class="booking-form">
+                                     <form action="Tour" method="get" class="booking-form">
                                         <div class="row book-form">
                                             <div class="form-input col-md-4 mt-md-0 mt-3">
-                                                <select name="selectpicker" class="selectpicker">
-                                                    <option value="">Destination</option>
-                                                    <option value="africa">Kaohsiung</option>
-                                                    <option value="america">Taichung</option>
-                                                    <option value="asia">Yilan</option>
-                                                    <option value="eastern-europe">Tainan</option>
-                                                    <option value="europe">Kenting</option>
-                                                    <option value="south-america">nantou</option>
-                                                    <option value="south-america">Hualien</option>
-                                                    <option value="south-america">Taitung</option>
+                                                    <select v-model="selectedLocation" name="selectedLocation" class="selectpicker">
+                                                    <option value="">地點</option>
+                                                    <option value="台北">台北</option>
+                                                    <option value="新北">新北</option>
+                                                    <option value="桃園">桃園</option>
+                                                    <option value="台中">台中</option>
+                                                    <option value="台南">台南</option>
+                                                    <option value="高雄">高雄</option>
+                                                    <option value="基隆">基隆</option>
+                                                    <option value="新竹">新竹</option>
+                                                    <option value="嘉義">嘉義</option>
+                                                    <option value="苗栗">苗栗</option>
+                                                    <option value="彰化">彰化</option>
+                                                    <option value="南投">南投</option>
+                                                    <option value="雲林">雲林</option>
+                                                    <option value="基隆">基隆</option>
+                                                    <option value="新竹">新竹</option>
+                                                    <option value="嘉義">嘉義</option>
+                                                    <option value="屏東">屏東</option>
+                                                    <option value="台東">台東</option>
+                                                    <option value="澎湖">澎湖</option>
+                                                    <option value="金門">金門</option>
+                                                    <option value="連江">連江</option>
                                                 </select>
                                             </div>
                                             <div class="form-input col-md-4 mt-md-0 mt-3">
-                                                <input type="date" name="date" placeholder="Date" required="">
-                                            </div>
-                                            <div class="bottom-btn col-md-4 mt-md-0 mt-3">
-                                                <button class="btn btn-style btn-secondary">
-                                                    <span class="fa fa-search mr-3" aria-hidden="true"></span>
-                                                    Search
-                                                </button>
-                                            </div>
+                                            <input v-model="selectedDate" type="date" name="date" placeholder="Date">
+                                              </div>
+                                             <div class="bottom-btn col-md-4 mt-md-0 mt-3">
+                                            <button @click="search" class="btn btn-style btn-secondary">
+                                            <span class="fa fa-search mr-3" aria-hidden="true"></span>
+                                            搜尋
+                                            </button>
                                         </div>
-                                    </form>
+                                        </div>
+                                     </form>
                                 </div>
                             </div>
                         </div>
@@ -111,178 +207,35 @@ onUnmounted(stopCarousel);
         <section class="w3l-grids-3 py-5">
             <div class="container py-md-5">
                 <div class="title-content text-left mb-lg-5 mb-4">
-                    <h6 class="sub-title">Visit</h6>
-                    <h3 class="hny-title">Popular Destinations</h3>
+                    <h6 class="sub-title">國內旅遊</h6>
+                    <h3 class="hny-title">熱門景點</h3>
                 </div>
                 <div class="row bottom-ab-grids">
                     <!--/row-grids-->
+                    <template v-for="item in filteredPackages">
                     <div class="col-lg-6 subject-card mt-lg-0 mt-4">
                         <div class="subject-card-header p-4">
-                            <a href="#" class="card_title p-lg-4d-block">
-                                <div class="row align-items-center">
+                            <RouterLink :to="{ name: 'Tour2', params: { id: item.id } }"  class="card_title p-lg-4d-block">
+                                    <div class="row align-items-center">
                                     <div class="col-sm-5 subject-img">
-                                        <img src="/assets/Images/宜蘭6.jpg" class="img-fluid" alt="">
+                                        <!-- <img src="{{item.imageUrl}}" class="img-fluid" alt=""> -->
+                                        <img :src="item.imageUrl"  class="img-fluid">
                                     </div>
                                     <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>Yilan</h4>
-                                        <p>2Days, 1 Nights</p>
+                                        <h4>{{item.name }}</h4>
+                                        <!-- <p>2Days, 1 Nights</p> -->
                                         <div class="dst-btm">
-                                            <h6 class=""> Start From </h6>
-                                            <span>$3000</span>
+                                            <h6 class=""> 價格: </h6>
+                                            <span>${{item.price }}</span>
 
                                         </div>
-                                        <p class="sub-para">Per person on twin sharing</p>
+                                        <p class="sub-para">販售期間:{{item.applyBeginDate}}-{{item.applyEndDate}}</p>
                                     </div>
                                 </div>
-                            </a>
+                                </RouterLink>
                         </div>
                     </div>
-                    <div class="col-lg-6 subject-card mt-lg-0 mt-4">
-                        <div class="subject-card-header p-4">
-                            <a href="#" class="card_title p-lg-4d-block">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-5 subject-img">
-                                        <img src="/assets/Images/台中.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>Taichung</h4>
-                                        <p>3Days, 2 Nights</p>
-                                        <div class="dst-btm">
-                                            <h6 class=""> Start From </h6>
-                                            <span>$5500</span>
-                                        </div>
-                                        <p class="sub-para">Per person on twin sharing</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <!--//row-grids-->
-                    <!--/row-grids-->
-                    <div class="col-lg-6 subject-card mt-4">
-                        <div class="subject-card-header p-4">
-                            <a href="#" class="card_title p-lg-4d-block">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-5 subject-img">
-                                        <img src="/assets/Images/南投2.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>nantou</h4>
-                                        <p>3Days, 2 Nights</p>
-                                        <div class="dst-btm">
-                                            <h6 class=""> Start From </h6>
-                                            <span>$8000</span>
-                                        </div>
-                                        <p class="sub-para">Per person on twin sharing</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 subject-card mt-4">
-                        <div class="subject-card-header p-4">
-                            <a href="#" class="card_title p-lg-4d-block">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-5 subject-img">
-                                        <img src="/assets/Images/台南.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>Tainan</h4>
-                                        <p>3Days, 2 Nights</p>
-                                        <div class="dst-btm">
-                                            <h6 class=""> Start From </h6>
-                                            <span>$6000</span>
-                                        </div>
-                                        <p class="sub-para">Per person on twin sharing</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <!--//row-grids-->
-                    <!--/row-grids-->
-                    <div class="col-lg-6 subject-card mt-4">
-                        <div class="subject-card-header p-4">
-                            <a href="#" class="card_title p-lg-4d-block">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-5 subject-img">
-                                        <img src="/assets/Images/高雄.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>Kaohsiung</h4>
-                                        <p>3Days, 2 Nights</p>
-                                        <div class="dst-btm">
-                                            <h6 class=""> Start From </h6>
-                                            <span>$8000</span>
-                                        </div>
-                                        <p class="sub-para">Per person on twin sharing</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 subject-card mt-4">
-                        <div class="subject-card-header p-4">
-                            <a href="#" class="card_title p-lg-4d-block">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-5 subject-img">
-                                        <img src="/assets/Images/墾丁.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>Kenting</h4>
-                                        <p>3Days, 2 Nights</p>
-                                        <div class="dst-btm">
-                                            <h6 class=""> Start From </h6>
-                                            <span>$10000</span>
-                                        </div>
-                                        <p class="sub-para">Per person on twin sharing</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <!--//row-grids-->
-                    <!--/row-grids-->
-                    <div class="col-lg-6 subject-card mt-4">
-                        <div class="subject-card-header p-4">
-                            <a href="#" class="card_title p-lg-4d-block">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-5 subject-img">
-                                        <img src="/assets/Images/花蓮.jpeg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>Hualien</h4>
-                                        <p>3Days, 2 Nights</p>
-                                        <div class="dst-btm">
-                                            <h6 class=""> Start From </h6>
-                                            <span>$7000</span>
-                                        </div>
-                                        <p class="sub-para">Per person on twin sharing</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 subject-card mt-4">
-                        <div class="subject-card-header p-4">
-                            <a href="#" class="card_title p-lg-4d-block">
-                                <div class="row align-items-center">
-                                    <div class="col-sm-5 subject-img">
-                                        <img src="/assets/Images/台東.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>Taitung</h4>
-                                        <p>3Days, 2 Nights</p>
-                                        <div class="dst-btm">
-                                            <h6 class=""> Start From </h6>
-                                            <span>$8000</span>
-                                        </div>
-                                        <p class="sub-para">Per person on twin sharing</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                </template>
                     <!--//row-grids-->
                 </div>
             </div>
@@ -863,8 +816,8 @@ mark,
 }
 
 .img-fluid {
-    max-width: 100%;
-    height: auto;
+    width: 300px;
+    height: 150px;
 }
 
 .img-thumbnail {

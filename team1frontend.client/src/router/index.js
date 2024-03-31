@@ -18,7 +18,9 @@ import Quests from '@/views/Member/components/Quests.vue';
 import Orders from '@/views/Member/components/Orders.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
+import Tour2 from '@/views/Tour2/index2.vue';
 import { onMounted } from 'vue';
+
 
 
 // 建立路徑
@@ -45,7 +47,8 @@ const routes = [
             {
                 path: 'hotel/list',
                 component: HotelList,
-            },
+            }, 
+            
             {
                 path: '/hotel-room/:id', // :id 是動態路徑參數
                 name: 'HotelRoom',
@@ -72,9 +75,17 @@ const routes = [
             },
             {
                 path: 'tour',
+                path: '/Tour',
+                name: 'Tour',
                 component: Tour,
                 meta: { hideHeader: false },
+                props: (route) => ({ selectedLocation: route.query.selectedLocation, date: route.query.date })
             },
+            {
+                path: '/Tour2/:id',
+                name: 'Tour2',
+                component: Tour2, 
+              },
             {
                 path: 'member/',
                 component: Member,
@@ -118,6 +129,7 @@ const routes = [
                     },
                 ],
             },
+           
         ],
     },
 ];
