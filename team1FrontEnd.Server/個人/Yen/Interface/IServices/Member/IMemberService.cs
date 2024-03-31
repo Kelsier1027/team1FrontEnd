@@ -22,7 +22,8 @@ namespace team1FrontEnd.Server.個人.Yen.Interface.IServices.Member
 		// 驗證帳號是否存在
 		Task<bool> IsAccountExistsAsync(string account);
 
-
+		// 更新會員資料
+		Task<MemberDto> UpdateMemberInfoAsync(MemberDto memberDto);
 
 	}
 }

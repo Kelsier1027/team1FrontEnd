@@ -18,7 +18,15 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				ActiveStatus = memberEntity.ActiveStatus,
 				FirstName = memberEntity.FirstName,
 				LastName = memberEntity.LastName,
-				IsEmailVerified = memberEntity.IsEmailVerified
+				IsEmailVerified = memberEntity.IsEmailVerified,
+				Email = memberEntity.Email,
+				PhoneNumber = memberEntity.PhoneNumber,
+				DateOfBirth = memberEntity.DateOfBirth,
+				DialCode = memberEntity.DialCode,
+				Country = memberEntity.Country,
+				ProfileImage = memberEntity.ProfileImage,
+
+
 			};
 		}
 
@@ -34,7 +42,7 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				ActiveStatus = memberEntity.ActiveStatus,
 				FirstName = memberEntity.FirstName,
 				LastName = memberEntity.LastName,
-				IsEmailVerified = memberEntity.IsEmailVerified
+				EmailConfirmed = memberEntity.IsEmailVerified
 			};
 		}
 

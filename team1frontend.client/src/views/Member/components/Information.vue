@@ -1,5 +1,9 @@
 <template>
-    <v-form style="padding: 20px 10px">
+    <v-form
+        ref="formRef"
+        @submit.prevent="saveMemberInfo"
+        style="padding: 20px 10px"
+    >
         <v-row class="start">
             <v-col>
                 <div class="fieldsRow">
@@ -208,7 +212,11 @@
         </v-row>
         <v-row justify="end" style="margin-top: 8px; margin-bottom: -2px">
             <v-col cols="auto">
-                <v-btn class="saveBtn" color="#26bec9" variant="flat"
+                <v-btn
+                    class="saveBtn"
+                    type="submit"
+                    color="#26bec9"
+                    variant="flat"
                     ><span class="saveBtnText" style="color: white">儲存</span>
                 </v-btn>
             </v-col>
@@ -217,9 +225,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { useMemberStore } from '@/stores/memberStore.js';
+import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
 import { useDate } from 'vuetify';
-import Information from './Information.vue';
+
+const router = useRouter();
+const memberStore = useMemberStore();
 
 // 性別選項
 const genderOptions = ref([
@@ -287,7 +299,8 @@ const isHoveredOnly = computed(() => {
         return isHovered.value;
     }
 });
-
+const formRef = ref(null);
+const account = ref(null);
 const firstName = ref('');
 const lastName = ref('');
 const selectedGender = ref(genderOptions.value[0].value);
@@ -319,6 +332,71 @@ const passwordLowerCase = (v) =>
 const numberOnly = (v) => /^[0-9]*$/.test(v) || '只能輸入數字';
 const passwordNumber = (v) => /[0-9]/.test(v) || '密碼需包含至少一個數字';
 const HasNoSpecialWords = (v) => !/[^A-Za-z0-9]/.test(v) || '不能包含特殊字符';
+
+const getMemberDetailInfo = async (memberAccount) => {
+    let memberDetailInfo = await memberStore.getMemberDetailInfo(memberAccount);
+    // console.log(memberDetailInfo);
+    // 將 memberDetailInfo 中的資料填入表單
+    account.value = memberDetailInfo.account;
+    firstName.value = memberDetailInfo.firstName;
+    lastName.value = memberDetailInfo.lastName;
+    selectedGender.value = memberDetailInfo.gender;
+    birthday.value = memberDetailInfo.dateOfBirth;
+    selectedCountry.value = memberDetailInfo.country;
+    selectedDialCode.value = memberDetailInfo.dialCode;
+    phoneNumber.value = memberDetailInfo.phoneNumber;
+    // 如果 memberDetailInfo.email 有值，則將值填入 email，否則填入 memberDetailInfo.account
+    email.value = memberDetailInfo.email
+        ? memberDetailInfo.email
+        : memberDetailInfo.account;
+};
+
+const saveMemberInfo = async () => {
+    // 檢查表單是否通過驗證
+    const validResult = await formRef.value.validate();
+    // console.log(validResult.valid);
+    if (validResult.valid) {
+        // console.log('表單驗證通過');
+        // 建立一個物件，將表單資料填入
+        let memberInfoForUpdate = {
+            account: account.value,
+            firstName: firstName.value,
+            lastName: lastName.value,
+            gender: selectedGender.value,
+            dateOfBirth: birthday.value,
+            country: selectedCountry.value,
+            dialCode: selectedDialCode.value,
+            phoneNumber: phoneNumber.value,
+            email: email.value,
+        };
+        // console.log(memberInfoForUpdate, 'Infomation');
+        try {
+            // 呼叫 memberStore 中的 updateMemberDetailInfo 方法
+            const updatedMemberInfo = await memberStore.updateMemberDetailInfo(
+                memberInfoForUpdate
+            );
+            // console.log(updatedMemberInfo);
+            getMemberDetailInfo(memberStore.account);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+};
+
+// 在 mounted 時執行
+onMounted(() => {
+    // 檢查 memberStore 中的 account 是否有值
+    if (memberStore.account) {
+        // 如果有值，則執行 getMemberDetailInfo
+        let accountFromPinia = memberStore.account;
+        // 去除 accountFromPinia 中的空白字元
+        accountFromPinia = accountFromPinia.replace(/\s+/g, '');
+        getMemberDetailInfo(accountFromPinia);
+    } else {
+        // 如果沒有值，則導回首頁
+        router.push('/'); // router 這個方法是 vue-router 提供的
+    }
+});
 </script>
 
 <style scoped>

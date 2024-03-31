@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using team1FrontEnd.Server.Models;
@@ -8,7 +9,7 @@ using team1FrontEnd.Server.個人.Yen.Exts.Members;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Interface.IServices.Member;
 using team1FrontEnd.Server.個人.Yen.Models.DTO.Members;
-using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Member;
+using team1FrontEnd.Server.個人.Yen.Models.ViewModels.Members;
 using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 using team1FrontEnd.Server.個人.Yen.Services.Menber;
 
@@ -44,15 +45,20 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 
 		// 登出，清除登入的 Cookie，在這裡使用了 SignInManager.SignOutAsync 方法，來自於 Microsoft.AspNetCore.Identity 命名空間，其為登入管理員，用於登入、登出，能夠做到登入、登出的功能以及其他一些與登入相關的操作。
 		[HttpPost("logout")]
-		//[Authorize] // 確保僅授權用戶可以訪問此端點 
-		public async Task<IActionResult> Logout([FromBody] object empty)
+		public async Task<IActionResult> Logout()
 		{
-			if (empty != null)
+			if (User != null)
 			{
 				await _signInManager.SignOutAsync();
 				return Ok();
 			}
-			return Unauthorized();
+			else
+			{
+				// 清除登入的 Cookie
+				await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+				return Unauthorized();
+			}
+
 		}
 
 
@@ -125,57 +131,106 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 		}
 
 		// 取得會員詳細資訊
-		[HttpGet("getMemberInfo")]
+		[HttpPost("getMemberInfo")]
 		[Authorize]
-		public async Task<IActionResult> GetMemberInfo([FromBody] MemberInfoForFrontEndVm vm)
+		public async Task<IActionResult> GetMemberInfo([FromBody] string account)
 		{
 			// 比對傳入的帳號是否與登入者帳號相同
-			if (vm.Account != User.Identity!.Name)
+			if (account != User.Identity!.Name)
 			{
 				return Unauthorized();
 			}
 
 			// 將 ViewModel 轉換成 DTO
-			var memberDto = vm.ToMemberDto();
+			var memberDto = new MemberDto
+			{
+				Account = account
+			};
 
 			// 取得會員詳細資訊
 			var memberFromDb = await _memberService.GetMemberAsync(memberDto);
 
+			// 如果會員不存在，返回 NotFound
+			if (memberFromDb == null)
+			{
+				return NotFound();
+			}
+
 			// 將 DTO 轉換成 ViewModel
 			var memberVm = memberFromDb.ToMemberProfileVm();
 
-			return Ok(memberVm);
+			// 將 MemberProfileVm 轉換成 MemberProfileVmString
+			var memberVmString = new MemberProfileVmString
+			{
+				MemberId = memberVm.MemberId,
+				Account = memberVm.Account,
+				FirstName = memberVm.FirstName,
+				LastName = memberVm.LastName,
+				PhoneNumber = memberVm.PhoneNumber,
+				DialCode = memberVm.DialCode,
+				Country = memberVm.Country,
+				Email = memberVm.Email,
+				Gender = memberVm.Gender,
+				// 將 DateOfBirth 轉換成字串
+				DateOfBirth = memberVm.DateOfBirth?.ToString("yyyy-MM-dd")
+			};
+
+			return Ok(memberVmString);
 		}
 
+		// 檢查 cookie 是否通過驗證
+		[HttpGet("checkCookie")]
+		[Authorize]
+		public IActionResult CheckCookie()
+		{
+			return Ok();
+		}
+
+		// 更新會員資訊
+		[HttpPost("updateMemberInfo")]
+		[Authorize]
+		public async Task<IActionResult> UpdateMemberInfo([FromBody] MemberProfileVmString memberProfileVmString)
+		{
+			// 比對傳入的帳號是否與登入者帳號相同
+			// 將傳入的Account去除空格
+			memberProfileVmString.Account = memberProfileVmString.Account.Trim();
+			if (memberProfileVmString.Account != User.Identity!.Name)
+			{
+				return Unauthorized();
+			}
+			// 取出傳入的 MemberProfileVmString，並轉換成 MemberProfileVm
+			var memberProfileVm = new MemberProfileVm
+			{
+				MemberId = memberProfileVmString.MemberId,
+				Account = memberProfileVmString.Account,
+				FirstName = memberProfileVmString.FirstName,
+				LastName = memberProfileVmString.LastName,
+				PhoneNumber = memberProfileVmString.PhoneNumber,
+				DialCode = memberProfileVmString.DialCode,
+				Gender = memberProfileVmString.Gender,
+				Email = memberProfileVmString.Email,
+				Country = memberProfileVmString.Country,
+				DateOfBirth = DateTime.TryParse(memberProfileVmString.DateOfBirth, out var dateOfBirth) ? dateOfBirth : (DateTime?)null,
+			};
 
 
+			// 將 ViewModel 轉換成 DTO
+			var memberDto = memberProfileVm.ToMemberDto();
 
-		// 叫用 IdentityUser 發送 sameSite設定為 none 的 cookie
-		//[HttpGet("sendSameSiteNoneCookie")]
-		//public async Task<IActionResult> SendSameSiteNoneCookie()
-		//{
-		//	var user = await _signInManager.UserManager.GetUserAsync(User);
+			// 更新會員資訊
+			var updatedMember = await _memberService.UpdateMemberInfoAsync(memberDto);
 
-		//	// 檢查user是否為null
-		//	if (user == null)
-		//	{
-		//		return Unauthorized();
-		//	}
+			// 如果會員不存在，返回 NotFound
+			if (updatedMember == null)
+			{
+				return NotFound();
+			}
 
-		//	var cookie = await _signInManager.UserManager.GenerateUserTokenAsync(user, "Default", "SameSiteNone");
-		//	// 將 cookie 設定為 .AspNetCore.Identity.Application
-		//	Response.Cookies.Append(".AspNetCore.Identity.Application", cookie, new CookieOptions
-		//	{
-		//		SameSite = SameSiteMode.None,
-		//		HttpOnly = true,
-		//		Secure = true,
-		//		Expires = DateTimeOffset.Now.AddMinutes(30),
-		//	});
+			// 將 DTO 轉換成 ViewModel
+			var updatedMemberVm = updatedMember.ToMemberProfileVm();
 
-
-		//	return Ok();
-		//}
-
+			return Ok(updatedMemberVm);
+		}
 
 	}
 }

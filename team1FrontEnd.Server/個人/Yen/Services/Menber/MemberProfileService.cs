@@ -69,7 +69,7 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 			var memberProfileEntity = memberProfileDto.ToMemberProfileEntity();
 
 			// 將 memberDtoFromMemberProfile 轉為 MemberEntity
-			var memberEntity = memberDtoFromMemberProfile.TomMemberEntity();
+			var memberEntity = memberDtoFromMemberProfile.ToMemberEntity();
 
 			// 更新 MemberProfile 中的會員資料
 			var updatedMemberProfileDto = await _memberProfileRepository.UpdateMemberProfileAsync(memberProfileEntity);

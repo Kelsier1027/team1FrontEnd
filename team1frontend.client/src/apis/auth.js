@@ -54,3 +54,12 @@ export const getLoginInfo = () => {
         withCredentials: true,
     });
 };
+// 確認cookie驗證是否有效
+export const checkCookie = () => {
+    return http({
+        url: '/api/Members/checkCookie',
+        method: 'GET',
+        // 強制帶入 cookies
+        withCredentials: true,
+    });
+};

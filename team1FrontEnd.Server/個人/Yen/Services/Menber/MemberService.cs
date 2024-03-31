@@ -116,7 +116,7 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 			if (string.IsNullOrWhiteSpace(memberDto.Account) || string.IsNullOrWhiteSpace(memberDto.EncryptedPassword) || memberDto.RegistrationDate == null) throw new ArgumentException("會員資料不完整");
 
 			// 創建 memberEntity
-			var memberEntity = memberDto.TomMemberEntity();
+			var memberEntity = memberDto.ToMemberEntity();
 
 			// 呼叫 MemberRepository 創建會員
 			var memberId = await _repo.CreateMemberAsync(memberEntity);
@@ -186,6 +186,22 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 		public void UpdatePassword(MemberDto memberDto)
 		{
 			throw new NotImplementedException();
+		}
+
+		//	更新會員資料
+		public async Task<MemberDto> UpdateMemberInfoAsync(MemberDto memberDto)
+		{
+			// 檢查帳號是否為空值
+			if (memberDto.Account == null) throw new ArgumentException(ValidationMessages.EmptyAccount);
+
+			// 根據帳號查詢會員
+			var memberDtoFromDb = await _repo.GetMembersAsync(memberDto.Account) ?? throw new ArgumentException(MemberApiMessages.AccountNotExist);
+
+			// 更新會員資料
+			var updatedMemberInfo = await _repo.UpdateMemberInfoAsync(memberDto.ToMemberEntity());
+
+			// 將會員轉換成 Dto 回傳
+			return updatedMemberInfo;
 		}
 
 		/// <summary>

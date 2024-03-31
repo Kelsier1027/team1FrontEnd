@@ -11,7 +11,7 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 	public static class MemberDtoExts
 	{
 		// 將  MemberDto 轉換成MemberEentity
-		public static MemberEntity TomMemberEntity(this MemberDto memberDto)
+		public static MemberEntity ToMemberEntity(this MemberDto memberDto)
 		{
 			return new MemberEntity
 			{
@@ -22,6 +22,11 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				ActiveStatus = memberDto.ActiveStatus,
 				FirstName = memberDto.FirstName,
 				LastName = memberDto.LastName,
+				PhoneNumber = memberDto.PhoneNumber,
+				Email = memberDto.Email,
+				DateOfBirth = memberDto.DateOfBirth,
+				DialCode = memberDto.DialCode,
+				Country = memberDto.Country,
 				IsEmailVerified = memberDto.IsEmailVerified
 			};
 		}
