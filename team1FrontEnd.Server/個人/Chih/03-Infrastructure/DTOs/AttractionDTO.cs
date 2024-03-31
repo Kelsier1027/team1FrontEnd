@@ -18,6 +18,7 @@ namespace myapi.Models.DTO
         public string Description { get; set; }
 
         public string MainImage { get; set; }
+        public decimal LowPrice { get; set; }   
         public AttractionCategoryDTO AttractionCategoryDTO { get; set; }
     }
 }

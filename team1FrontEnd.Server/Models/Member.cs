@@ -27,7 +27,11 @@ public partial class Member
 
     public virtual ICollection<AttractionOrder> AttractionOrders { get; set; } = new List<AttractionOrder>();
 
+    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
+
     public virtual ICollection<CarOrder> CarOrders { get; set; } = new List<CarOrder>();
+
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 

@@ -7,6 +7,7 @@ import HotelRoom from '@/views/Hotel/HotelRoom.vue';
 import RentCar from '@/views/RentCar/index.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
 import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
+import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue'
 import Tour from '@/views/Tour/index.vue';
 import Member from '@/views/Member/index.vue';
 import AccountSetting from '@/views/Member/components/AccountSetting.vue';
@@ -66,6 +67,10 @@ const routes = [
                 name: 'AttractionContent',
             },
             {
+                path: '/attraction_order',
+                component: AttractionOrder,
+            },
+            {
                 path: 'tour',
                 component: Tour,
                 meta: { hideHeader: false },
@@ -122,7 +127,12 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: routes,
     // 跳轉頁面時，滾動到頂部
-    scrollBehavior() {
+    scrollBehavior(to) {
+
+        if (to.path == '/attraction') {
+            return null;
+        }
+
         return {
             top: 0,
         };

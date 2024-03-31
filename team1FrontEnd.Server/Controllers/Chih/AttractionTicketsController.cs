@@ -9,6 +9,7 @@ using myapi._01_BLL.IBILL;
 using myapi._03_Infrastructure.DTOs;
 using myapi.Models;
 using team1FrontEnd.Server.Models;
+using team1FrontEnd.Server.個人.Chih._03_Infrastructure.DTOs;
 
 namespace myapi.Controllers
 {
@@ -31,10 +32,98 @@ namespace myapi.Controllers
             return await  _service.GetTicketContent(id);
         }
 
+        [HttpGet("GetCartItems")]
+        public async Task<IEnumerable<CartItemsDTO>> GetCartItems(int memberid)
+        {
+            //check是否有符合id資料
+            var exist = await _context.AttractionCarts.AsNoTracking().AnyAsync(e => e.MemberId == memberid);
+            //創建條件false
 
+            if (!exist)
+            {
+                var newCart = new AttractionCart
+                {
+                    MemberId = memberid,
+                    AttractionCartItems = new List<AttractionCartItem>(),
+                };
+                _context.AttractionCarts.Add(newCart);
+                await _context.SaveChangesAsync();
+            }
+           
+            //return member cart
+            var cartItem = await _context.AttractionCarts.AsNoTracking().Where(c=>c.MemberId==memberid)
+                    .Include(c => c.AttractionCartItems)
+                    .ThenInclude(item => item.ItemsNavigation)
+                    .Select(c => new CartItemsDTO
+                    {
+                        
+                        CartId = c.Id,
+                        MemberId = c.MemberId,
+                        CartItems = c.AttractionCartItems.Select(x=>new CartTicketDTO
+                        {
+                           Id = x.Id,   
+                           TicketName=x.ItemsNavigation.TicketTitle,
+                           Price=x.ItemsNavigation.Price,
+                           Qty=x.Quantity,
+                        }).ToList(),
+                        Total=c.Total,
+                            
+                    }).ToListAsync();
+            return cartItem;
+              
+        }
 
+        [HttpPost("AddCartItem")]
+        public async Task<String> AddCartItem([FromBody]AddItemDTO addItemDTO)
+        {
+            //判斷cart內是否有相同商品
+            //這裡不能用asnotracking不然會被當成new entity而無法修改原有的資料
+            var foundItem = await _context.AttractionCartItems.FirstOrDefaultAsync(x=>x.CartId==addItemDTO.CartId && x.Items==addItemDTO.ItemId);
+            
+            if(foundItem != null)
+            {
+                foundItem.Quantity+=addItemDTO.Quantity;
+               
+            }
+            else
+            {
+                _context.AttractionCartItems.Add(new AttractionCartItem
+                {
+                    CartId = addItemDTO.CartId,
+                    Items = addItemDTO.ItemId,
+                    Quantity = addItemDTO.Quantity,
 
+                });
+                
 
+                
+            }
+            var cartPrice = await _context.AttractionCarts.FindAsync(addItemDTO.CartId);
+
+            if (cartPrice != null)
+            {
+                
+                cartPrice.Total = await CaculateTotal(cartPrice.Id);
+            }
+            
+            await _context.SaveChangesAsync();
+            return "新增成功";
+
+        }
+
+        private async Task<decimal> CaculateTotal(int cartId)
+        {
+            var items = await _context.AttractionCartItems.Where(x => x.CartId == cartId)
+                .Include(x=>x.ItemsNavigation)
+                .ToListAsync();
+
+            decimal total = 0;
+            foreach(var item in items)
+            {
+                total += item.ItemsNavigation.Price * item.Quantity;
+            }
+            return total;
+        }
         ////-----------------------------------------------------------------------------------------//
         //// GET: api/AttractionTickets
         //[HttpGet]

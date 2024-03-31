@@ -1,15 +1,16 @@
 <template>
+
   <div class="block text-center">
-    <el-carousel height="500px">
+    <el-carousel height="500px" motion-blur>
       <div class="searchBar">
         <div style="display: flex;">
           <div class="searchBarBG">
             <el-input class="searchInput" @keyup.enter="search" v-model="keyword" style="width: 240px"
-              placeholder="Please input" />
+              placeholder="搜尋"/>
           </div>
           <div class="searchBarBG">
 
-            <el-button type="primary" icon="Search" @click="search">搜尋</el-button>
+            <el-button type="primary" icon="Search" @click="search" dir="">搜尋</el-button>
 
           </div>
         </div>
@@ -17,34 +18,43 @@
       <!-- <el-carousel-item v-for="item in 4" :key="item" :interval="1500">
       </el-carousel-item> -->
       <el-carousel-item :interval="1500">
-        <img src="@/assets/images/chih/1200px-台南_赤崁樓.jpg">
+        <img src="@/assets/images/chih/0x01.webp">
       </el-carousel-item>
       <el-carousel-item :interval="1500">
-        <img src="@/assets/images/chih/Xpark .jpg">
+        <img src="@/assets/images/chih/0x02.webp">
       </el-carousel-item>
       <el-carousel-item :interval="1500">
-        <img src="@/assets/images/chih/e0be7f74-9301-46af-af0e-468b82923f1a.jpg">
+        <img src="@/assets/images/chih/0x03.webp">
       </el-carousel-item>
       <el-carousel-item :interval="1500">
-        <img src="@/assets/images/chih/海生館.jpg">
+        <img src="@/assets/images/chih/0x04.webp">
+      </el-carousel-item>
+      <el-carousel-item :interval="1500">
+        <img src="@/assets/images/chih/0x05.webp">
       </el-carousel-item>
 
     </el-carousel>
   </div>
 
-  <el-scrollbar>
-    <div class="scrollbar-flex-content">
+  <div>
+    <div id="categoryBar" class="category_bar">
+    <el-scrollbar class="scrollbar">
+      <div class="scrollbar-flex-content">
 
-      <AttractionCategory v-for="item in categoryList" :category="item" :key="item.id" />
+        <AttractionCategory v-for="item in categoryList" :category="item" :key="item.id" @click="categoryQuery(item.id)" />
 
-    </div>
-  </el-scrollbar>
+      </div>
+    </el-scrollbar>
+  </div>
+  </div>
 
-  <div class="row row-cols-1 row-cols-md-4 g-4 card-container">
+
+  <div class="row row-cols-1 row-cols-md-5 g-4 card-container">
 
     <AttractionItem v-for="item in attractionList" :attraction="item" :key="item.id" />
     <el-empty :image-size="200" v-if="attractionList == 0" />
 
+  
   </div>
 
 
@@ -53,7 +63,7 @@
 
 <script setup>
 import { useAttraction } from '@/views/Ticket/attraction/composables/useAttraction';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref,watch } from 'vue';
 import { Calendar, Search } from '@element-plus/icons-vue'
 import AttractionItem from './Attraction_Item.vue'
 import AttractionCategoryVue from './AttractionCategory.vue';
@@ -74,18 +84,30 @@ console.log(attractionList);
 console.log(categoryList);
 
 
+function categoryQuery(id){
+  if(id===9){
+    category.value=0;
+  }
+  else{
+    category.value=id;
+  }
+  
+  search()
+}
+
 
 
 
 const search = async () => {
   try {
-    const res = await getAttractionsAPI(keyword.value);
+    const res = await getAttractionsAPI(keyword.value,category.value);
     console.log(res);
     //更新篩選後的list
     attractionList.value = res;
     //更新搜尋後的url
-    const encodeKeyword = encodeURIComponent(keyword.value)
-    router.push({ query: { keyword: encodeKeyword } });
+   
+    router.push({ query: { keyword:keyword.value ,category:category.value } });
+    categoryBar.scrollIntoView({ behavior: 'smooth' });
 
 
   } catch (error) {
@@ -94,12 +116,13 @@ const search = async () => {
   }
 }
 
-//判斷url若有keyword賦值給keyword並search()
-onMounted(() => {
-  if (route.query.keyword) {
-    keyword.value = route.query.keyword;
-    search();
-  }
+//判斷url若有keyword或Category賦值給keyword並search()
+onMounted(()=>{
+  if(route.query.keyword||route.query.category){
+  keyword.value=route.query.keyword;
+  category.value=route.query.category;
+  search();
+}
 });
 
 
@@ -109,9 +132,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 .card-container {
   display: flex;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .demonstration {
@@ -162,4 +186,7 @@ img {
 .scrollbar-flex-content {
   display: flex;
 }
+
+
+
 </style>
