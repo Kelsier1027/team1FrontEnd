@@ -31,7 +31,7 @@ const routes = [
         children: [
             {
                 path: '',
-                component: Home,
+                component: Attraction,
                 meta: { hideHeader: false },
             },
             {
@@ -49,7 +49,6 @@ const routes = [
                 name: 'HotelList',
                 component: HotelList,
             }, 
-            
             {
                 path: '/hotel-room/:id', // :id 是動態路徑參數
                 name: 'HotelRoom',

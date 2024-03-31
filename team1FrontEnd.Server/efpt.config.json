@@ -2,6 +2,7 @@
    "CodeGenerationMode": 4,
    "ContextClassName": "dbTeam1Context",
    "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,
    "ModelNamespace": null,
@@ -283,7 +284,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": null,
+   "UiHint": "sparkle\\sql2024.dbTeam1.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,

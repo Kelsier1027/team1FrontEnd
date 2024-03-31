@@ -18,7 +18,7 @@ import vuetify from './plugins/vuetify';
 // import '@/styles/common.scss';
 
 import signalr from './utils/signalR'
-// import axios from 'axios'
+ import axios from 'axios'
 
 const pinia = createPinia();
 
