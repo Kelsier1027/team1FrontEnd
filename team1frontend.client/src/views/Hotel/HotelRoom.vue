@@ -28,7 +28,6 @@
                             <p>退房時間: {{ hotel.hotelInfo.checkOutTime }}</p>
                         </div>
                         <div class="rating">評分: {{ hotel.hotelInfo.rating }}</div>
-                        <div class="price">價格: NT${{ hotel.hotelInfo.price }}</div>
                     </div>
                     <!-- 地圖容器 -->
                     <div class="map-container">
@@ -65,60 +64,80 @@
 <script setup>
     import { ref, onMounted, computed } from 'vue';
     import { useRouter, useRoute } from 'vue-router';
+    import axios from 'axios';
 
     const router = useRouter();
     const route = useRoute();
 
 
 
+    //const hotel = ref({
+    //    "hotelInfo": {
+    //        "id": "1",
+    //        "name": "阿里山英迪格酒店",
+    //        "address": "阿里山景觀大道100號",
+    //        "rating": 8.8,
+    //        "price": 13500,
+    //        "facilities": ["WiFi", "健身房", "游泳池", "Spa"],
+    //        "checkInTime": "15:00",
+    //        "checkOutTime": "11:00",
+    //        "images": [
+    //            "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
+    //            "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
+    //            "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit"
+    //        ]
+    //    },
+    //    "roomTypes": [
+    //        {
+    //            "name": "豪華房",
+    //            "size": "30坪",
+    //            "facilities": ["大床", "山景", "獨立衛浴"],
+    //            "image": "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fithttps://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
+    //            "price": 5000,
+    //            "quantity": 10
+    //        },
+    //        {
+    //            "name": "家庭套房",
+    //            "size": "50坪",
+    //            "facilities": ["兩張大床", "海景", "包含早餐"],
+    //            "image": "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
+    //            "price": 8000,
+    //            "quantity": 5
+    //        }
+    //        // ...更多房型
+    //    ]
+    //});
+
+
     const hotel = ref({
-        "hotelInfo": {
-            "id": "1",
-            "name": "阿里山英迪格酒店",
-            "address": "阿里山景觀大道100號",
-            rating: 8.8,
-            price: 13500,
-            "facilities": ["WiFi", "健身房", "游泳池", "Spa"],
-            "checkInTime": "15:00",
-            "checkOutTime": "11:00",
-            "images": [
-                "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
-                "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
-                "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit"
-            ]
-        },
-        "roomTypes": [
-            {
-                "name": "豪華房",
-                "size": "30坪",
-                "facilities": ["大床", "山景", "獨立衛浴"],
-                "image": "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fithttps://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
-                "price": 5000,
-                "quantity": 10
-            },
-            {
-                "name": "家庭套房",
-                "size": "50坪",
-                "facilities": ["兩張大床", "海景", "包含早餐"],
-                "image": "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
-                "price": 8000,
-                "quantity": 5
-            }
-            // ...更多房型
-        ]
+        "hotelInfo": {},
+        "roomTypes": []
     });
-
-    // 静态地址数据
-    const address = '阿里山英迪格酒店';
-    // 您的 Google Maps API 密钥
-    const apiKey = 'AIzaSyCHn4jLlc2mfHlmAcXBC0NkeBzOsZYrSUE';
-
-
-    // 生成地图源地址
+    // 使用计算属性动态获取酒店地址
+    const address = computed(() => hotel.value.hotelInfo.name || '默认地址');
+    // 生成地图源地址的计算属性
     const mapSrc = computed(() => {
-        const query = encodeURIComponent(address);
+        const query = encodeURIComponent(address.value); // 注意这里使用 address.value 来获取计算属性的值
+        const apiKey = 'AIzaSyCHn4jLlc2mfHlmAcXBC0NkeBzOsZYrSUE';
         return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${query}`;
     });
+
+    async function fetchFacilityNamesByIds(ids) {
+        const facilityNames = [];
+
+        for (const id of ids) {
+            try {
+                // Replace this URL with the actual API endpoint for fetching facility by ID
+                const response = await axios.get(`https://localhost:7113/api/HotelCategories/${id}`);
+                facilityNames.push(response.data.jaon); // Assume 'jaon' contains the facility name
+            } catch (error) {
+                console.error(`Failed to fetch facility with id ${id}:`, error);
+                facilityNames.push(`Unknown facility ${id}`);
+            }
+        }
+
+        return facilityNames;
+    }
 
     // 在組件掛載後，從後端獲取詳細資料
     onMounted(async () => {
@@ -128,6 +147,53 @@
         // 這裡假設你有一個API端點是 `/api/hotels/{id}`
         // const response = await fetch(`/api/hotels/${hotelId}`);
         // hotel.value = await response.json();
+        try {
+            const hotelResponse = await axios.get(`https://localhost:7113/api/Hotels/${hotelId}`);
+            const hotelData = hotelResponse.data;
+            const roomsResponse = await axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotelId}`);
+            const roomTypesData = roomsResponse.data;
+
+            // Parse the hotelFacilities JSON string to get the array of facility IDs
+            const facilityIds = JSON.parse(hotelData.hotelFacilities).FacilityIds;
+
+            // Fetch the facility names for the given IDs
+            const facilityNames = await fetchFacilityNamesByIds(facilityIds);
+
+
+            // 设置酒店信息
+            hotel.value.hotelInfo = {
+                id: hotelData.id,
+                name: hotelData.name,
+                address: hotelData.address,
+                rating: hotelData.grade, // 假设评分字段为 grade
+                facilities: facilityNames, // 假设这些信息需要另外处理
+                checkInTime: hotelData.checkinStart.split(':').slice(0, 2).join(':'),
+                checkOutTime: hotelData.checkoutEnd.split(':').slice(0, 2).join(':')
+,
+                images: [
+                    // 假设使用 mainImage 作为展示图
+                    `/public/assets/HotelImages/${hotelData.mainImage}`
+                ]
+            };
+
+            // 设置酒店房型信息，这里假设每个房型信息中包含了设施描述
+            hotel.value.roomTypes = roomTypesData.map(room => ({
+                name: room.name,
+                size: room.size,
+                price: room.weekdayPrice, // 或者 room.weekendPrice
+                facilities: room.roomFacilities.split(',').map(id => // 假设 roomFacilities 是逗号分隔的设施 ID
+                    // 这里需要根据实际情况将 ID 转换为设施的描述
+                    // 可能需要额外的 API 调用或在前端处理映射
+                    `设施${id}`
+                ),
+                image: `/public/assets/HotelImages/${room.mainImage}`
+            }));
+            console.log(hotelData);
+            console.log(roomTypesData);
+        } catch (error) {
+            console.error('Failed to fetch hotel details:', error);
+        }
+
     });
 
 

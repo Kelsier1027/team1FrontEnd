@@ -5,7 +5,7 @@
                 <input type="text" placeholder="要去哪？" v-model="searchQuery.location" required />
             </div>
             <div class="input-group">
-                <input type="date" v-model="searchQuery.checkInDate" required />
+                <Datepicker v-model="searchQuery.dateRange" :range="true" />
             </div>
 
             <div class="input-group input-headcount">
@@ -29,82 +29,102 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+    import { ref } from 'vue';
+    import Datepicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css';
 
-const emit = defineEmits(['search']);
+    const emit = defineEmits(['search']);
 
-const searchQuery = ref({
-  location: '',
-  checkInDate: '',
-  adults: 1,
-  children: 0,
-  infants: 0
-});
+    const searchQuery = ref({
+        location: '',
+        dateRange: {
+            start: null,
+            end: null
+        },
+        adults: 1,
+        children: 0,
+        infants: 0
+    });
 
-function submitForm() {
-  emit('search', searchQuery.value);
-}
+    function submitForm() {
+        emit('search', searchQuery.value);
+    }
 </script>
 
 <!-- 添加 CSS 樣式如果有的話 -->
 <style scoped>
-    .input-group {
-        display: flex; /* 使用flex布局 */
-        flex-wrap: wrap; /* 允许元素在需要时换行 */
-    }
-
-        .input-group input[type="text"],
-        .input-group input[type="number"],
-        .input-group input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            margin: 4px 0;
-            background-color: white;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            flex-grow: 1;
-            flex-basis: calc(33.333% - 20px); /* 分配每个输入框占行的三分之一，减去间隙 */
-            text-align: left;
-        }
-
-        .input-group button {
-            width: 100%;
-            background-color: #4CAF50;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-            .input-group button:hover {
-                background-color: #45a049;
-            }
-
     .search-panel {
-        background-color: #ffd54f; /* 您喜歡的顏色 */
+        background-color: #ffd54f;
         padding: 15px;
         border-radius: 8px;
-        max-width: 900px; /* 或者根據您的設計需求調整 */
-        margin: 20px auto; /* 讓搜索面板在頁面中間顯示 */
+        max-width: 100%; /* 调整为100%以适应父容器的宽度 */
+        margin: 20px auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .search-form {
         display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
+        align-items: center; /* 垂直居中 */
+        justify-content: space-between; /* 两端对齐 */
+        gap: 10px; /* 输入框之间的间隔 */
     }
 
     .input-group {
-        flex: 1
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 5px; /* 减少内边距以缩小框框 */
     }
 
-    .input-headcount {
-        color: black;
-        border: black;
+        .input-group > * {
+            margin: 0 5px; /* 减少间距 */
+        }
+
+    .input-group-prepend .input-group-text {
+        background-color: #e9ecef;
+        border: none;
+        padding: 5px 10px; /* 缩小预置组件的填充 */
+    }
+
+    .Datepicker, .input-group input[type="text"],
+    .input-group input[type="number"] {
+        border: none;
+        outline: none;
+        max-width: 140px; /* 限制输入框宽度 */
+        text-align: center; /* 文字居中 */
+    }
+
+    .input-group button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 15px; /* 减少填充 */
+        cursor: pointer;
+        transition: background-color 0.3s;
+        white-space: nowrap;
+    }
+
+        .input-group button:hover {
+            background-color: #45a049;
+        }
+
+    @media (max-width: 768px) {
+        .search-form {
+            flex-wrap: wrap; /* 允许换行 */
+        }
+
+        .input-group {
+            flex-basis: 100%; /* 在小屏幕上调整宽度 */
+            justify-content: center;
+            margin-bottom: 10px; /* 增加底部间距 */
+        }
+
+            .input-group button {
+                flex-basis: auto;
+            }
     }
 </style>
+

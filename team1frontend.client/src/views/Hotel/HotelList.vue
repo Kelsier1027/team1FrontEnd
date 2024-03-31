@@ -88,17 +88,18 @@
                      v-for="hotel in hotels"
                      :key="hotel.id"
                      @click="goToHotelRoom(hotel.id)">
-                    <img :src="hotel.imageUrl" alt="Hotel Image" class="hotel-image" />
+                    <!--<img :src="hotel.imageUrl" alt="Hotel Image" class="hotel-image" />-->
+                    <img :src="getHotelImageUrl(hotel.mainImage)" alt="Hotel Image" class="hotel-image" />
                     <div class="hotel-info">
                         <h2>{{ hotel.name }}</h2>
                         <p>{{ hotel.address }}</p>
                         <div class="hotel-rating">
                             <span>{{ hotel.grade }}</span>
                         </div>
-                        <!--<div class="hotel-price">
-                            <span>NT${{ hotel.price }}</span>
-                            <span class="original-price">原價 NT${{ hotel.originalPrice }}</span>
-                        </div>-->
+                        <div class="hotel-price">
+                            <span v-if="hotel.hotelRooms">NT${{ hotel.hotelRooms[0]?.weekendPrice }}</span>
+            
+        </div>
                         <button class="booking-button">
                             立即訂購
                         </button>
@@ -115,6 +116,7 @@
     import { ref, onMounted} from 'vue'
     import { useRoute, useRouter } from 'vue-router';
     import axios from 'axios';
+
 
     const route = useRoute();
     const router = useRouter();
@@ -146,21 +148,13 @@
 
     const selectedPrice = ref([])
 
-    //飯店
-    // 引用和函数定义
-    const hotels = ref([]);
 
-    async function fetchHotels() {
-        try {
-            const response = await axios.get('https://localhost:7113/api/Hotels');
-            hotels.value = response.data;
-        } catch (error) {
-            console.error('Failed to fetch hotels:', error);
-        }
-    }
 
-    // 在组件挂载时获取酒店列表
-    onMounted(fetchHotels);
+    //處理圖片
+    const getHotelImageUrl = (imagePath) => {
+        return `/public/assets/HotelImages/${imagePath}`;
+    };
+
 
 
     //價格篩選
@@ -198,28 +192,7 @@
         // ...更多住宿類型選項
     ]
 
-    //飯店標題
-    //const hotels = ref([
-    //    {
-    //        id: 1,
-    //        name: '阿里山英迪格酒店 - IHG 旗下飯店頁面',
-    //        description: '最佳視野景觀，輕度假首選的五星國際品牌酒店。',
-    //        rating: '8.8',
-    //        imageUrl: 'https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit',
-    //        price: 13500,
-    //        originalPrice: 31185
-    //    },
-    //    {
-    //        id: 2,
-    //        name: '台北景觀101 -小木屋飯店',
-    //        description: '台北頂級小木屋，有清新的空氣，還看的到101。',
-    //        rating: '7.8',
-    //        imageUrl: 'https://images.trvl-media.com/lodging/1000000/20000/14200/14153/f370d8eb.jpg?impolicy=resizecrop&rw=455&ra=fit',
-    //        price: 12250,
-    //        originalPrice: 44485
-    //    },
-    //    // ...其他酒店數據
-    //]);
+   
     // 跳转到酒店详细页面的函数
     const goToHotelRoom = (hotelId) => {
         // 这里可以使用Vue Router或者window.location来导航
@@ -232,6 +205,44 @@
         console.log('Book hotel:', hotelId);
         // 这里可以添加预订逻辑或跳转到预订页面
     };
+
+
+
+
+    const hotels = ref([]);
+
+    async function fetchHotelsAndRooms() {
+        try {
+            const response = await axios.get('https://localhost:7113/api/Hotels');
+            hotels.value = response.data;
+
+            // 為所有酒店同時發起請求，用 Promise.allSettled 等待所有請求完成或失敗
+            const hotelRoomsRequests = hotels.value.map(hotel =>
+                axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotel.id}`)
+            );
+
+            const hotelRoomsResponses = await Promise.allSettled(hotelRoomsRequests);
+
+            hotelRoomsResponses.forEach((result, index) => {
+                if (result.status === 'fulfilled' && result.value.data.length > 0) {
+                    // 這裡我們只考慮至少有一個房間數據的情況
+                    hotels.value[index].hotelRooms = result.value.data;
+                } else {
+                    // 如果請求失敗或沒有房間數據，可以根據您的業務需求做相應處理
+                    hotels.value[index].hotelRooms = { weekendPrice: 'No data' };
+                }
+
+            });
+            console.log(hotels.value);
+        } catch (error) {
+            console.error('Failed to fetch hotels:', error);
+        }
+    }
+
+    onMounted(fetchHotelsAndRooms);
+
+
+
 
 </script>
 
