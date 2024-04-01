@@ -1,4 +1,8 @@
 
+using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using team1FrontEnd.Server.ChatHubs;
+
 namespace team1FrontEnd.Server
 {
 	public class Program
@@ -14,7 +18,16 @@ namespace team1FrontEnd.Server
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
-			var app = builder.Build();
+			//¥[¤JsignalR service
+            builder.Services
+    .AddSignalR()
+    .AddJsonProtocol(options => {
+        options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+    })
+    ;
+            builder.Services.TryAddSingleton(typeof(CommonService));
+
+            var app = builder.Build();
 
 			app.UseDefaultFiles();
 			app.UseStaticFiles();
@@ -34,6 +47,11 @@ namespace team1FrontEnd.Server
 			app.MapControllers();
 
 			app.MapFallbackToFile("/index.html");
+
+			app.MapHub<ChatHub>("/ChatHub", options =>
+			{
+				options.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
+			});
 
 			app.Run();
 		}
