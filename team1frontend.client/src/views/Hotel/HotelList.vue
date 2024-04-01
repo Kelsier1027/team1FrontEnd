@@ -121,6 +121,7 @@
     import { ref, onMounted} from 'vue'
     import { useRoute, useRouter } from 'vue-router';
     import axios from 'axios';
+    import { watch } from 'vue';
 
 
     const route = useRoute();
@@ -131,6 +132,7 @@
         // 根据新的 searchQuery 更新页面展示的数据
         fetchHotels(searchQuery);
     }
+
  
     const facilities = ref([])
     const selectedFacilities = ref([]);
@@ -202,6 +204,29 @@
         console.log('Book hotel:', hotelId);
         // 这里可以添加预订逻辑或跳转到预订页面
     };
+
+    watch(selectedFacilities, (newValue, oldValue) => {
+        // 只在實際有變化時發送請求
+        if (newValue !== oldValue) {
+            fetchHotelsBasedOnFacilities(newValue);
+        }
+    });
+
+    async function fetchHotelsBasedOnFacilities(selectedFacilities) {
+        try {
+            // 構造請求 URL，這裡假設你的後端支持通過查詢參數來篩選設施
+            // 注意：這裡的 URL 和參數需要根據你的實際後端接口進行調整
+            const response = await axios.get(`https://localhost:7113/api/Hotels?facilities=${selectedFacilities.join(',')}`);
+            // 假設後端返回的是一個符合條件的飯店列表
+            hotels.value = response.data;
+            console.log("77777");
+            console.log(selectedFacilities);
+            console.log(hotels.value);
+            console.log("88888");
+        } catch (error) {
+            console.error('Failed to fetch hotels based on facilities:', error);
+        }
+    }
 
     const hotels = ref([]);
     const searchMessage = ref(""); // 用于存储搜索消息或错误消息
