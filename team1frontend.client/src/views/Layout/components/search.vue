@@ -122,9 +122,9 @@
             margin-bottom: 10px; /* 增加底部间距 */
         }
 
-            .input-group button {
-                flex-basis: auto;
-            }
+        .input-group button {
+            flex-basis: auto;
+        }
     }
 </style>
 
