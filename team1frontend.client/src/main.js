@@ -12,6 +12,25 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import thor from 'thor-x'
 // import 'thor-x/dist/index.css'
 
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+/* import specific icons */
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faCar } from '@fortawesome/free-solid-svg-icons'
+import { faGear } from '@fortawesome/free-solid-svg-icons'
+import { faGasPump } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+/* add icons to the library */
+library.add(faLocationDot)
+library.add(faCar)
+library.add(faGear)
+library.add(faGasPump)
+library.add(faCircleCheck)
+
 import 'vuetify/styles';
 import vuetify from './plugins/vuetify';
 
@@ -38,5 +57,6 @@ app.config.globalProperties.$http = axios;
 app.use(ElementPlus);
 app.use(vuetify);
 app.use(pinia);
+app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(router);
 app.mount('#app');

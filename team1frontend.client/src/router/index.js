@@ -13,6 +13,12 @@ import Favorites from '@/views/Member/components/Favorites.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
 import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
 import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue'
+import CarIndex from '@/views/CarModel/Index.vue'
+import CarSearch from '@/views/CarModel/CarSearch.vue'
+import Order from '@/views/CarModel/Order.vue'
+import Order2 from '@/views/CarModel/Order2.vue'
+import toECPay from '@/views/CarModel/toECPay.vue'
+import Success from '@/views/CarModel/Success.vue'
 
 
 // 建立路徑
@@ -78,6 +84,33 @@ const routes = [
                 path: '/attraction_order',
                 component: AttractionOrder,
             },
+            {
+                path: '/rentCar',
+                component: CarIndex
+            },
+            {
+                path: '/rentCar/car',
+                component: CarSearch
+            },
+            {
+                path: '/rentCar/order/:str',
+                name: 'order',
+                component: Order
+            },
+            {
+                path: '/rentCar/order2/:str',
+                name: 'order2',
+                component: Order2
+            },
+            {
+                path: '/rentCar/toecpay/:str',
+                name: 'toecpay',
+                component: toECPay
+            },
+            {
+                path: '/rentCar/success/',
+                component: Success
+            }
         ],
     },
 ];
