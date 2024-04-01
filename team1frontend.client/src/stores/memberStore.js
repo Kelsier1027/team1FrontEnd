@@ -7,6 +7,7 @@ import {
     registerIdentityAPI,
     checkCookie,
     
+    
 } from '../apis/auth.js';
 
 import {
@@ -62,14 +63,11 @@ export const useMemberStore = defineStore('member', () => {
         const responseOfRegisterIdentityAPI = await registerIdentityAPI(
             emailAndPassword
         );
-        // 如果註冊 IdentityUser 成功，先登入 IdentityUser 再註冊客製化會員
-        if (responseOfRegisterIdentityAPI) {
-            const responseOfLoginAPI = await loginAPI(emailAndPassword);
-            if (responseOfLoginAPI) {
-                await registerAPI();
-            }
-        }
+
     };
+    const registerToMember = async () => {
+        await registerAPI();
+    }
     const login = async (emailAndPassword) => {
         const response = await loginAPI(emailAndPassword);
         // 如果登入成功，取得用戶信息
@@ -139,5 +137,6 @@ export const useMemberStore = defineStore('member', () => {
         getMemberDetailInfo,
         updateMemberDetailInfo,
         changePassword,
+        registerToMember,
     };
 });

@@ -17,7 +17,6 @@ export const registerAPI = () => {
     return http({
         url: '/api/Members/registerToMember',
         method: 'GET',
-        data: { email, password },
     });
 };
 

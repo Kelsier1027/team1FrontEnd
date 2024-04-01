@@ -107,13 +107,13 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 			var memberDto = memberRegisterVm.ToDto();
 
 			// 註冊客製化會員，先使用帳號嘗試取得會員，檢查是否已經註冊過
-			var memberFromDb = await _memberService.GetMemberAsync(memberDto);
+			//var memberFromDb = await _memberService.GetMemberAsync(memberDto);
 
 			// 如果已經註冊過，則返回 BadRequest
-			if (memberFromDb != null)
-			{
-				return BadRequest("Member already exists.");
-			}
+			//if (memberFromDb != null)
+			//{
+			//	return BadRequest("Member already exists.");
+			//}
 
 			try
 			{

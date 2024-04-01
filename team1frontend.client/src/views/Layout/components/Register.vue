@@ -32,6 +32,13 @@ const register = async () => {
             console.log('註冊中...');
             await memberStore.register({ email, password });
             console.log('註冊成功');
+            await memberStore.login({ email, password   });
+            console.log('登入成功');
+            await memberStore.registerToMember();
+            console.log('註冊到自定義會員成功');
+            await memberStore.getMemberInfo();
+            console.log('取得會員資料成功');
+            
             loading.value = false;
 
             // 如果註冊成功，清空表單數據

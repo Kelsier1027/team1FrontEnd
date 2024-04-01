@@ -43,7 +43,11 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				Account = memberEntity.Account,
 				EncryptedPassword = memberEntity.EncryptedPassword,
 				RegistrationDate = memberEntity.RegistrationDate ?? DateTime.Now,
-				ActiveStatus = memberEntity.ActiveStatus
+				ActiveStatus = memberEntity.ActiveStatus,
+				FirstName = memberEntity.FirstName,
+				LastName = memberEntity.LastName,
+				Email = memberEntity.Email ?? memberEntity.Account,
+
 			};
 
 			// 新增資料
