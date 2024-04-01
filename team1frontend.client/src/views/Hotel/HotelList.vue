@@ -299,6 +299,9 @@
     .content {
         display: flex;
         flex: 1; /* 讓 .content 佔滿剩餘空間 */
+        max-width: 1500px; /* 設定最大寬度 */
+        margin-left: auto; /* 水平居中 */
+        margin-right: auto; /* 水平居中 */
     }
 
     .main-content {
