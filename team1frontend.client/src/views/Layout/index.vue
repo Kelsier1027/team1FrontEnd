@@ -11,8 +11,8 @@ import { useMemberStore } from '@/stores/memberStore';
 const memberStore = useMemberStore();
 const router = useRouter();
 const route = useRoute();
-import test from './Service/test.vue';
-import Cart from './Service/Cart.vue';
+//import test from './Service/test.vue';
+//import Cart from './Service/Cart.vue';
 
 
 const links = ['熱門目的地', '住宿', '景點門票', '套裝行程', '全台租車'];
