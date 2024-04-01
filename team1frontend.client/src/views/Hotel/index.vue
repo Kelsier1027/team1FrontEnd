@@ -75,7 +75,7 @@
     
 </script>
 
-<style>
+<style scoped>
     .main-container {
         max-width: 2000px; /* 設定最大寬度 */
         margin-left: auto; /* 水平居中 */
