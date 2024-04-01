@@ -57,4 +57,5 @@ app.use(ElementPlus);
 app.use(vuetify);
 app.use(pinia);
 app.use(router);
+app.component('font-awesome-icon', FontAwesomeIcon)
 app.mount('#app');
