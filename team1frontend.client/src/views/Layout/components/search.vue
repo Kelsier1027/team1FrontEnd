@@ -1,96 +1,130 @@
-<template>
-    <input type="text" placeholder="­n¥h­ş¡H" v-model="searchQuery.location" required />
+ï»¿<template>
     <div class="search-panel">
         <form class="search-form" @submit.prevent="submitForm">
             <div class="input-group">
-                <input type="text" placeholder="­n¥h­ş¡H" v-model="searchQuery.location" required />
+                <input type="text" placeholder="è¦å»å“ªï¼Ÿ" v-model="searchQuery.location" required />
             </div>
             <div class="input-group">
-                <input type="date" v-model="searchQuery.checkInDate" required />
+                <Datepicker v-model="searchQuery.dateRange" :range="true" />
             </div>
-            <div class="input-group">
-                <input type="number" placeholder="¦¨¤H" v-model.number="searchQuery.adults" min="1" required />
+
+            <div class="input-group input-headcount">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="adults-addon">æˆäºº</span>
+                </div>
+                <input type="number" class="form-control" v-model.number="searchQuery.adults" min="1" aria-label="æˆäºº" aria-describedby="adults-addon" required />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="children-addon">å°å­©</span>
+                </div>
+                <input type="number" class="form-control" v-model.number="searchQuery.children" min="0" aria-label="å°å­©" aria-describedby="children-addon" required />
             </div>
+
+
             <div class="input-group">
-                <input type="number" placeholder="¤p«Ä" v-model.number="searchQuery.children" min="0" required />
-            </div>
-            <div class="input-group">
-                <input type="number" placeholder="À¦¨à" v-model.number="searchQuery.infants" min="0" required />
-            </div>
-            <div class="input-group">
-                <button type="submit">·j´M</button>
+                <button type="submit">æœå°‹</button>
             </div>
         </form>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+    import { ref } from 'vue';
+    //import Datepicker from '@vuepic/vue-datepicker';
+    //import '@vuepic/vue-datepicker/dist/main.css';
 
-const emit = defineEmits(['search']);
+    const emit = defineEmits(['search']);
 
-const searchQuery = ref({
-  location: '',
-  checkInDate: '',
-  adults: 1,
-  children: 0,
-  infants: 0
-});
+    const searchQuery = ref({
+        location: '',
+        dateRange: {
+            start: null,
+            end: null
+        },
+        adults: 1,
+        children: 0,
+        infants: 0
+    });
 
-function submitForm() {
-  emit('search', searchQuery.value);
-}
+    function submitForm() {
+        emit('search', searchQuery.value);
+    }
 </script>
 
-<!-- ²K¥[ CSS ¼Ë¦¡¦pªG¦³ªº¸Ü -->
+<!-- æ·»åŠ  CSS æ¨£å¼å¦‚æœæœ‰çš„è©± -->
 <style scoped>
-    .input-group {
-        margin-bottom: 10px;
+    .search-panel {
+        background-color: #ffd54f;
+        padding: 15px;
+        border-radius: 8px;
+        max-width: 100%; /* è°ƒæ•´ä¸º100%ä»¥é€‚åº”çˆ¶å®¹å™¨çš„å®½åº¦ */
+        margin: 20px auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .input-group input[type="text"],
-    .input-group input[type="number"],
-    .input-group input[type="date"] {
-        width: 100%;
-        padding: 10px;
-        margin: 4px 0;
-        display: inline-block;
+    .search-form {
+        display: flex;
+        align-items: center; /* å‚ç›´å±…ä¸­ */
+        justify-content: space-between; /* ä¸¤ç«¯å¯¹é½ */
+        gap: 10px; /* è¾“å…¥æ¡†ä¹‹é—´çš„é—´éš” */
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        background-color: white;
         border: 1px solid #ccc;
         border-radius: 4px;
-        box-sizing: border-box;
+        padding: 5px; /* å‡å°‘å†…è¾¹è·ä»¥ç¼©å°æ¡†æ¡† */
+    }
+
+        .input-group > * {
+            margin: 0 5px; /* å‡å°‘é—´è· */
+        }
+
+    .input-group-prepend .input-group-text {
+        background-color: #e9ecef;
+        border: none;
+        padding: 5px 10px; /* ç¼©å°é¢„ç½®ç»„ä»¶çš„å¡«å…… */
+    }
+
+    .Datepicker, .input-group input[type="text"],
+    .input-group input[type="number"] {
+        border: none;
+        outline: none;
+        max-width: 140px; /* é™åˆ¶è¾“å…¥æ¡†å®½åº¦ */
+        text-align: center; /* æ–‡å­—å±…ä¸­ */
     }
 
     .input-group button {
-        width: 100%;
         background-color: #4CAF50;
         color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
         border: none;
         border-radius: 4px;
+        padding: 5px 15px; /* å‡å°‘å¡«å…… */
         cursor: pointer;
+        transition: background-color 0.3s;
+        white-space: nowrap;
     }
 
         .input-group button:hover {
             background-color: #45a049;
         }
 
-    .search-panel {
-        background-color: #ffd54f; /* ±z³ßÅwªºÃC¦â */
-        padding: 15px;
-        border-radius: 8px;
-        max-width: 900px; /* ©ÎªÌ®Ú¾Ú±zªº³]­p»İ¨D½Õ¾ã */
-        margin: 20px auto; /* Åı·j¯Á­±ªO¦b­¶­±¤¤¶¡Åã¥Ü */
-    }
+    @media (max-width: 768px) {
+        .search-form {
+            flex-wrap: wrap; /* å…è®¸æ¢è¡Œ */
+        }
 
-    .search-form {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-    }
+        .input-group {
+            flex-basis: 100%; /* åœ¨å°å±å¹•ä¸Šè°ƒæ•´å®½åº¦ */
+            justify-content: center;
+            margin-bottom: 10px; /* å¢åŠ åº•éƒ¨é—´è· */
+        }
 
-    .input-group {
-        flex: 1
+            .input-group button {
+                flex-basis: auto;
+            }
     }
 </style>
+
