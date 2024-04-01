@@ -27,7 +27,7 @@ const doLogin = async () => {
     if (valid.valid) {
         try {
             await memberStore.login({ email, password });
-            console.log(memberStore.memberId);
+            // console.log(memberStore.memberId);
             loading.value = false;
             await memberStore.getMemberInfo();
             // 如果註冊成功，清空表單數據
@@ -36,7 +36,7 @@ const doLogin = async () => {
             // 觸發父組件監聽的事件
             emit('login-success');
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             // if (error != null || undefined) {
             //     if (error.response != null || undefined) {
             //         if (error.response.data != null || undefined) {

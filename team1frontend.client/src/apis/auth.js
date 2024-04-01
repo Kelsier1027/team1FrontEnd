@@ -22,7 +22,7 @@ export const registerAPI = () => {
 };
 
 export const loginAPI = (emailAndPassword) => {
-    console.log(emailAndPassword);
+    // console.log(emailAndPassword);
     return http({
         // cookies
         url: '/login?useCookies=true',
@@ -43,7 +43,7 @@ export const logoutAPI = () => {
 };
 
 export const getLoginInfo = () => {
-    console.log('getLoginInfo');
+    // console.log('getLoginInfo');
     return http({
         headers: {
             'Access-Control-Allow-Origin': 'https://localhost:7113', // 將回應標頭中的 Access-Control-Allow-Origin: 設定為 https://localhost:7113

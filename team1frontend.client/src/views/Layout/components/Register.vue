@@ -29,9 +29,9 @@ const register = async () => {
         try {
             loading.value = true;
             // 如果表單驗證通過，執行註冊操作
-            console.log('註冊中...');
+            // console.log('註冊中...');
             await memberStore.register({ email, password });
-            console.log('註冊成功');
+            // console.log('註冊成功');
             loading.value = false;
 
             // 如果註冊成功，清空表單數據

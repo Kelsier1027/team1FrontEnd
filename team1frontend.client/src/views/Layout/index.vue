@@ -4,7 +4,6 @@ import LayoutNav from './components/LayoutNav.vue';
 import LayoutHeader from './components/LayoutHeader.vue';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import Service from './components/Service.vue';
 import { useMemberStore } from '@/stores/memberStore';
 const memberStore = useMemberStore();
 const router = useRouter();
@@ -34,7 +33,6 @@ onMounted(async () => {
     <LayoutNav />
     <LayoutHeader v-if="showHeader" />
     <RouterView />
-    <Service />
 </template>
 
 <script></script>

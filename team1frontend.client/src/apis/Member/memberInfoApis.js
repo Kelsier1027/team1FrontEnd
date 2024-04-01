@@ -12,7 +12,7 @@ export const getMemberInfoAPI = (memberAccount) => {
     });
 };
 export const updateMemberDetailInfoAPI = (memberDetailInfo) => {
-    console.log(memberDetailInfo);
+    // console.log(memberDetailInfo);
     return http({
         url: '/api/Members/UpdateMemberInfo',
         method: 'POST',

@@ -3,10 +3,8 @@ import { ref } from 'vue';
 import { computed } from 'vue';
 import Options from './Options.vue';
 import LoginOrRegister from './LoginOrRegister.vue';
-// import AuthForm from './AuthForm.vue';
 import { useMemberStore } from '@/stores/memberStore';
 import { useRouter, useRoute } from 'vue-router';
-
 import Searcher from './Searcher.vue';
 
 const router = useRouter();
@@ -18,7 +16,7 @@ const dialog = ref(false);
 const showLogin = ref(false); // 控制顯示哪個組件
 const email = ref('');
 
-console.log(route.path);
+// console.log(route.path);
 // 只在 member 路由顯示搜尋框
 const showSearcher = computed(() => {
     return route.path.startsWith('/member');

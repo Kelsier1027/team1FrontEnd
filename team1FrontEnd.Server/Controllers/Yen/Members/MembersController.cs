@@ -132,7 +132,7 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 
 		// 取得會員詳細資訊
 		[HttpPost("getMemberInfo")]
-		[Authorize]
+		//[Authorize]
 		public async Task<IActionResult> GetMemberInfo([FromBody] string account)
 		{
 			// 比對傳入的帳號是否與登入者帳號相同

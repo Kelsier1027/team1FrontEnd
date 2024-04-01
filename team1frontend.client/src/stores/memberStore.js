@@ -15,8 +15,7 @@ import {
 } from '../apis/Member/memberInfoApis.js';
 import { ref } from 'vue';
 import { useRouter , useRoute } from 'vue-router';
-const router = useRouter();
-const route = useRoute();
+
 
 export const useMemberStore = defineStore('member', () => {
     // 定義狀態和方法
@@ -40,7 +39,7 @@ export const useMemberStore = defineStore('member', () => {
     const getMemberInfo = async () => {
         // 先確認 cookie 驗證是否有效
         const responseOfCheckCookie = await checkCookie();
-        console.log(responseOfCheckCookie);
+        // console.log(responseOfCheckCookie);
         // if (!responseOfCheckCookie) {
         //     // 如果 cookie 驗證失敗，執行登出
         //     logout();
@@ -49,7 +48,7 @@ export const useMemberStore = defineStore('member', () => {
         // console.log('getMemberInfo');
         // 叫用後端API取得用戶信息，自動帶入 cookie 中的 token
         const response = await getLoginInfo();
-        console.log(response);
+        // console.log(response);
         memberId.value = response.id;
         // 將 account 的空格去除
         account.value = response.account.replace(/\s+/g, '');
@@ -58,7 +57,7 @@ export const useMemberStore = defineStore('member', () => {
         isLoggedIn.value = true;
     };
     const register = async (emailAndPassword) => {
-        console.log(emailAndPassword);
+        (emailAndPassword);
         const responseOfRegisterIdentityAPI = await registerIdentityAPI(
             emailAndPassword
         );
@@ -73,7 +72,7 @@ export const useMemberStore = defineStore('member', () => {
     const login = async (emailAndPassword) => {
         const response = await loginAPI(emailAndPassword);
         // 如果登入成功，取得用戶信息
-        console.log('登入成功');
+        // console.log('登入成功');
         // await getMemberInfo();
     };
     const logout = async () => {
@@ -88,6 +87,7 @@ export const useMemberStore = defineStore('member', () => {
         if (route.path.includes('/member')) {
             router.push('/');
         }
+        console.log('已登出');
     };
     // 取得會員詳細資訊
     const getMemberDetailInfo = async (account) => {
@@ -99,7 +99,7 @@ export const useMemberStore = defineStore('member', () => {
         //     return;
         // }
         const response = await getMemberInfoAPI(account);
-        console.log(response);
+        // console.log(response);
         // 將 API 回傳的資料以物件形式回傳
         return response;
     };
@@ -113,16 +113,16 @@ export const useMemberStore = defineStore('member', () => {
         //     // logout();
         //     // return;
         // }
-        console.log(memberDetailInfo, 'memberStore');
+        // console.log(memberDetailInfo, 'memberStore');
         const response = await updateMemberDetailInfoAPI(memberDetailInfo);
-        console.log(response);
+        // console.log(response);
         // 將 API 回傳的資料以物件形式回傳
         return response;
     };
     // 更改會員密碼
     const changePassword = async (changePasswordData) => {
         const response = await changePasswordAPI(changePasswordData);
-        console.log(response);
+        // console.log(response);
         return response;
     };
 
