@@ -151,7 +151,7 @@
 
     //處理圖片
     const getHotelImageUrl = (imagePath) => {
-        return `/public/assets/HotelImages/${imagePath}`;
+        return `/assets/HotelImages/${imagePath}`;
     };
 
     //價格篩選

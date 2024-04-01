@@ -172,7 +172,7 @@
 ,
                 images: [
                     // 假设使用 mainImage 作为展示图
-                    `/public/assets/HotelImages/${hotelData.mainImage}`
+                    `/assets/HotelImages/${hotelData.mainImage}`
                 ]
             };
 
@@ -187,7 +187,7 @@
                     `设施${id}`
                 ),
 
-                image: `/public/assets/HotelImages/${room.mainImage}`
+                image: `/assets/HotelImages/${room.mainImage}`
             }));
             console.log(hotelData);
             console.log(roomTypesData);
