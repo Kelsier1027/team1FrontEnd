@@ -14472,5 +14472,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="node_modules\vuetify\iconsets\" />
+    <Folder Include="src\views\RentCar\components\" />
   </ItemGroup>
 </Project>

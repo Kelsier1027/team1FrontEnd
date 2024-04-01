@@ -24,6 +24,24 @@ import axios from 'axios'
 // import { lazyPlugin } from '@/directives';
 // // 引入全局组件插件
 // import { componentPlugin } from '@/components';
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+/* import specific icons */
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faCar } from '@fortawesome/free-solid-svg-icons'
+import { faGear } from '@fortawesome/free-solid-svg-icons'
+import { faGasPump } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+/* add icons to the library */
+library.add(faLocationDot)
+library.add(faCar)
+library.add(faGear)
+library.add(faGasPump)
+library.add(faCircleCheck)
 
 const pinia = createPinia();
 

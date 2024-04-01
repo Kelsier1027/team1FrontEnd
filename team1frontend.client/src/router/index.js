@@ -4,7 +4,6 @@ import Layout from '@/views/Layout/index.vue';
 import Hotel from '@/views/Hotel/index.vue';
 import HotelList from '@/views/Hotel/HotelList.vue';
 import HotelRoom from '@/views/Hotel/HotelRoom.vue';
-import RentCar from '@/views/RentCar/index.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
 import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
 import Tour from '@/views/Tour/index.vue';
@@ -17,6 +16,12 @@ import Quests from '@/views/Member/components/Quests.vue';
 import Orders from '@/views/Member/components/Orders.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
+import RentCar from '@/views/RentCar/index.vue'
+import CarSearch from '@/views/RentCar/CarSearch.vue'
+import Order from '@/views/RentCar/Order.vue'
+import Order2 from '@/views/RentCar/Order2.vue'
+import toECPay from '@/views/RentCar/toECPay.vue'
+import Success from '@/views/RentCar/Success.vue'
 import { onMounted } from 'vue';
 
 
@@ -54,6 +59,29 @@ const routes = [
                 path: 'rentCar',
                 component: RentCar,
                 meta: { hideHeader: false },
+            },
+            {
+                path: '/rentCar/car',
+                component: CarSearch
+            },
+            {
+                path: '/rentCar/order/:str',
+                name: 'order',
+                component: Order
+            },
+            {
+                path: '/rentCar/order2/:str',
+                name: 'order2',
+                component: Order2
+            },
+            {
+                path: '/rentCartoecpay/:str',
+                name: 'toecpay',
+                component: toECPay
+            },
+            {
+                path: '/rentCar/success/',
+                component: Success
             },
             {
                 path: '/attraction',
