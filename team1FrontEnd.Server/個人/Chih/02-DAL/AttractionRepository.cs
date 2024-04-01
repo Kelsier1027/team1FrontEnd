@@ -22,6 +22,7 @@ namespace myapi._02_DAL
                                                         .Where(c => c.Id == id)
                                                         .Include(c => c.AttractionContentContexts)
                                                         .Include(c => c.AttractionContentImages)
+                                                        .Include(c => c.AttractionTickets)
                                                         .Select(c => c.ToAttractionContentDTO())
                                                         .ToListAsync();
             return attractionContentDTO;
@@ -32,7 +33,7 @@ namespace myapi._02_DAL
             //景點類型篩選
             var attractions = search.CategoryId == 0 ? _context.Attractions : _context.Attractions.Where(a => a.AttractionCategoryId == search.CategoryId);
 
-            attractions = attractions.Include(a => a.AttractionCategory);
+            attractions = attractions.Include(a => a.AttractionCategory).Include(a => a.AttractionTickets);
 
             //關鍵字搜尋
             if (!string.IsNullOrEmpty(search.Keyword))

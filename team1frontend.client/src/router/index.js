@@ -10,6 +10,9 @@ import Quests from '@/views/Member/components/Quests.vue';
 import Orders from '@/views/Member/components/Orders.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
+import Attraction from '@/views/Ticket/attraction/index.vue';
+import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
+import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue'
 
 
 // 建立路徑
@@ -18,16 +21,6 @@ const routes = [
         path: '/',
         component: Layout,
         children: [
-            {
-                path: '',
-                component: Home,
-                meta: { hideHeader: false },
-            },
-            {
-                path: 'home',
-                component: Home,
-                meta: { hideHeader: false },
-            },
             {
                 path: 'member/',
                 component: Member,
@@ -70,6 +63,20 @@ const routes = [
                         component: Favorites,
                     },
                 ],
+            },
+            {
+                path: '',
+                component: Attraction,
+                meta: { hideHeader: false },
+            },
+            {
+                path: '/attraction_content/:id',
+                component: AttractionContent,
+                name: 'AttractionContent',
+            },
+            {
+                path: '/attraction_order',
+                component: AttractionOrder,
             },
         ],
     },

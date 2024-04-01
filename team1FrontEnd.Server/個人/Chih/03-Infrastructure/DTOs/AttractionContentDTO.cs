@@ -8,6 +8,8 @@
         public string Latitude { get; set; }
         public string Longitude { get; set; }
 
+        public decimal LowPrice { get; set; }
+
         public List<AttractionContentImageDTO> AttractionContentImageDTO {  get; set; }
         public List<AttractionContentContextDTO> AttractionContentContextDTO { get; set; }
 

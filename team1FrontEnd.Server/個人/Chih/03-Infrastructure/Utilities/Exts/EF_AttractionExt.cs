@@ -21,6 +21,7 @@ namespace myapi._03_Infrastructure.Utilities.Exts
                 CityId = a.CityId,
                 Description = a.Description,
                 MainImage = a.MainImage,
+                LowPrice = a.AttractionTickets.Select(t => t.Price).DefaultIfEmpty(0m).Min(),
                 AttractionCategoryDTO = new AttractionCategoryDTO
                 {
                     Id = a.AttractionCategory.Id,
@@ -38,19 +39,20 @@ namespace myapi._03_Infrastructure.Utilities.Exts
                 Address = c.Address,
                 Latitude = c.Latitude,
                 Longitude = c.Longitude,
+                LowPrice = c.AttractionTickets.Select(t => t.Price).DefaultIfEmpty(0m).Min(),
                 AttractionContentImageDTO = c.AttractionContentImages.Select(image => new AttractionContentImageDTO
                 {
                     Image = image.Image,
                     ImageType = image.ImageType,
                     Description = image.Description,
                 }).ToList(),
-                AttractionContentContextDTO=c.AttractionContentContexts.Select(context=>new AttractionContentContextDTO
+                AttractionContentContextDTO = c.AttractionContentContexts.Select(context => new AttractionContentContextDTO
                 {
                     SubTitle = context.SubTitle,
-                    Tag=context.TagContent,
-                    HightLight=context.Highlight,
-                    ActivityDescription=context.ActivityDescription,
-                    QA=context.Qa,
+                    Tag = context.TagContent,
+                    HightLight = context.Highlight,
+                    ActivityDescription = context.ActivityDescription,
+                    QA = context.Qa,
                 }).ToList(),
 
 
