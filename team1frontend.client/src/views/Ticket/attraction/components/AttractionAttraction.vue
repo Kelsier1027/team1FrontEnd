@@ -1,12 +1,16 @@
 <template>
 
   <div class="block text-center">
+
     <el-carousel height="500px" motion-blur>
+      <div class="title">
+        探索你的玩樂世界
+      </div>
       <div class="searchBar">
         <div style="display: flex;">
           <div class="searchBarBG">
             <el-input class="searchInput" @keyup.enter="search" v-model="keyword" style="width: 240px"
-              placeholder="搜尋"/>
+              placeholder="關鍵字搜尋" />
           </div>
           <div class="searchBarBG">
 
@@ -17,6 +21,7 @@
       </div>
       <!-- <el-carousel-item v-for="item in 4" :key="item" :interval="1500">
       </el-carousel-item> -->
+
       <el-carousel-item :interval="1500">
         <img src="@/assets/images/chih/0x01.webp">
       </el-carousel-item>
@@ -36,34 +41,36 @@
     </el-carousel>
   </div>
 
-  <div>
-    <div id="categoryBar" class="category_bar">
-    <el-scrollbar class="scrollbar">
-      <div class="scrollbar-flex-content">
+  <v-container class="vcontain">
+    <div>
+      <div id="categoryBar" class="category_bar">
+        <el-scrollbar class="scrollbar">
+          <div class="scrollbar-flex-content">
 
-        <AttractionCategory v-for="item in categoryList" :category="item" :key="item.id" @click="categoryQuery(item.id)" />
+            <AttractionCategory v-for="item in categoryList" :category="item" :key="item.id"
+              @click="categoryQuery(item.id)" />
 
+          </div>
+        </el-scrollbar>
       </div>
-    </el-scrollbar>
-  </div>
-  </div>
+    </div>
 
 
-  <div class="row row-cols-1 row-cols-md-5 g-4 card-container">
-
-    <AttractionItem v-for="item in attractionList" :attraction="item" :key="item.id" />
+    <transition-group name="list" tag="div" class="row row-cols-1 row-cols-md-5 g-4 card-container">
+      <AttractionItem v-for="item in attractionList" :attraction="item" :key="item.id" />
+    </transition-group>
     <el-empty :image-size="200" v-if="attractionList == 0" />
 
-  
-  </div>
 
+
+  </v-container>
 
 
 </template>
 
 <script setup>
 import { useAttraction } from '@/views/Ticket/attraction/composables/useAttraction';
-import { onMounted, ref,watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { Calendar, Search } from '@element-plus/icons-vue'
 import AttractionItem from './Attraction_Item.vue'
 import AttractionCategoryVue from './AttractionCategory.vue';
@@ -84,14 +91,14 @@ console.log(attractionList);
 console.log(categoryList);
 
 
-function categoryQuery(id){
-  if(id===9){
-    category.value=0;
+function categoryQuery(id) {
+  if (id === 9) {
+    category.value = 0;
   }
-  else{
-    category.value=id;
+  else {
+    category.value = id;
   }
-  
+
   search()
 }
 
@@ -100,14 +107,14 @@ function categoryQuery(id){
 
 const search = async () => {
   try {
-    const res = await getAttractionsAPI(keyword.value,category.value);
+    const res = await getAttractionsAPI(keyword.value, category.value);
     console.log(res);
     //更新篩選後的list
     attractionList.value = res;
     //更新搜尋後的url
-   
-    router.push({ query: { keyword:keyword.value ,category:category.value } });
-    categoryBar.scrollIntoView({ behavior: 'smooth' });
+
+    router.push({ query: { keyword: keyword.value, category: category.value } });
+    // categoryBar.scrollIntoView({ behavior: 'smooth' });
 
 
   } catch (error) {
@@ -117,12 +124,12 @@ const search = async () => {
 }
 
 //判斷url若有keyword或Category賦值給keyword並search()
-onMounted(()=>{
-  if(route.query.keyword||route.query.category){
-  keyword.value=route.query.keyword;
-  category.value=route.query.category;
-  search();
-}
+onMounted(() => {
+  if (route.query.keyword || route.query.category) {
+    keyword.value = route.query.keyword;
+    category.value = route.query.category;
+    search();
+  }
 });
 
 
@@ -132,6 +139,30 @@ onMounted(()=>{
 </script>
 
 <style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: opacity 0.5s;
+}
+
+.list-enter,
+.list-leave-to
+
+/* 在Vue 2中是.list-leave-active */
+  {
+  opacity: 0;
+}
+
+.vcontain {
+  height: 1200px;
+}
+
+.title {
+  position: relative;
+  z-index: 100;
+  font-size: 100px;
+  color: #FFFFFF;
+
+}
 
 .card-container {
   display: flex;
@@ -163,13 +194,14 @@ onMounted(()=>{
   display: flex;
   align-items: center;
   position: absolute;
-  left: 200px;
+  left: 300px;
   top: 300px;
   z-index: 99;
   padding: 3px;
   border: white solid 2px;
   background-color: white;
   border-radius: 10px;
+
 }
 
 .searchBarBG {
@@ -186,7 +218,4 @@ img {
 .scrollbar-flex-content {
   display: flex;
 }
-
-
-
 </style>

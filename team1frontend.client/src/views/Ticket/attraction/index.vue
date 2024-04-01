@@ -1,10 +1,9 @@
 <template>
   <v-main>
     <Cart />
-    <div>{{ memberStore.memberId }}</div>
-    <v-container class="container">
-      <AttractionAttraction />
-    </v-container>
+
+    <AttractionAttraction />
+
 
   </v-main>
 

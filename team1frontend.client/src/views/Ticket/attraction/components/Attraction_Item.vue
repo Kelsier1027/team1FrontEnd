@@ -1,4 +1,5 @@
 <template>
+
   <Router-link class="router-link" :to="{ name: 'AttractionContent', params: { id: attraction.id } }">
     <div class="col">
       <div class="card">
@@ -13,6 +14,8 @@
       </div>
     </div>
   </Router-link>
+
+
 
 </template>
 
@@ -33,10 +36,18 @@ defineProps({
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
 
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 
 .card-img-top {
-  
+
   height: 100%;
   width: 100%;
 }
@@ -69,16 +80,16 @@ defineProps({
 .router-link:hover {
   background-image: linear-gradient(45deg, #93A5CF, #E4EfE9);
 }
-.card-div{
+
+.card-div {
   display: flex;
   width: 200px;
   height: 150px;
-  
+
 }
-.card-body{
+
+.card-body {
   width: 200px;
   height: 150px;
 }
-
-
 </style>
