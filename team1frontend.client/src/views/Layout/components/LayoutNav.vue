@@ -28,6 +28,9 @@ const showSearcher = computed(() => {
 function getMemberInfo() {
     memberStore.getMemberInfo();
 }
+function Logout() {
+    memberStore.logout();
+};
 
 // 確認是否登入
 function checkLogin() {
@@ -93,22 +96,28 @@ const items = ref([
                 icon="mdi-cart-outline"
                 class="pe-6"
             />
-            <v-btn @click="getMemberInfo"> 取得會員資料 </v-btn>
+            <!-- <v-btn @click="getMemberInfo"> 取得會員資料 </v-btn> -->
             <v-btn v-if="!memberStore.isLoggedIn" @click="checkLogin">
                 <div class="font-weight-bold" style="color: gray">
                     登入/註冊
                 </div>
             </v-btn>
-
+            <v-btn v-if="memberStore.isLoggedIn" @click="Logout">
+                <div class="font-weight-bold" style="color: gray">
+                    登出
+                </div>
+            </v-btn>
             <!-- 只在大螢幕上顯示v-avatar，並在小螢幕上隱藏v-app-bar-nav-icon -->
-            <v-btn
+            <!-- <v-btn
                 v-if="memberStore.isLoggedIn"
                 icon="mdi-account"
                 size="small"
                 elevation="4"
             >
-            </v-btn>
+            </v-btn> -->
+            
             <v-btn
+            v-if="memberStore.isLoggedIn"
                 :to="'/member'"
                 icon="mdi-account"
                 size="small"

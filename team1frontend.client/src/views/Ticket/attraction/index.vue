@@ -1,11 +1,23 @@
 <template>
+  <v-main>
+    <Cart />
+    <div>{{ memberStore.memberId }}</div>
+    <v-container class="container">
+      <AttractionAttraction />
+    </v-container>
 
-  <AttractionAttraction />
+  </v-main>
 
 </template>
 
 <script setup>
 import AttractionAttraction from './components/AttractionAttraction.vue';
+import Cart from '../components/cart.vue'
+import { useMemberStore } from '@/stores/memberStore';
+
+const memberStore = useMemberStore();
+console.log(memberStore);
+
 
 
 

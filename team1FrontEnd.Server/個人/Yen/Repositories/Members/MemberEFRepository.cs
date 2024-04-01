@@ -88,7 +88,7 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				ActiveStatus = member.ActiveStatus,
 				FirstName = member.FirstName,
 				LastName = member.LastName,
-				IsEmailVerified = member.IsEmailVerified ?? false
+				IsEmailVerified = member.EmailConfirmed ?? false
 
 			};
 
@@ -127,9 +127,16 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				ActiveStatus = member.ActiveStatus,
 				FirstName = member.FirstName,
 				LastName = member.LastName,
-				IsEmailVerified = member.IsEmailVerified ?? false,
-
+				PhoneNumber = member.PhoneNumber,
+				Email = member.Email,
+				DateOfBirth = member.DateOfBirth,
+				DialCode = member.DialCode,
+				Country = member.Country,
+				ProfileImage = member.ProfileImage,
+				IsEmailVerified = member.EmailConfirmed ?? false,
+				Gender = member.Gender
 			};
+
 			// 將Entity類別的資料轉換成Dto類別的資料
 			var memberDto = memberEntity.ToMemberDto();
 
@@ -178,18 +185,26 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 		// 更新會員資料
 		public Task<MemberDto> UpdateMemberInfoAsync(MemberEntity memberEntity)
 		{
-
-			// 透過ID取得實體
-			var member = db.Members.Find(memberEntity.Id);
+			// 透過Account取得實體
+			var member = db.Members.Where(x => x.Account == memberEntity.Account).FirstOrDefault();
 			// 檢查是否有資料
 			if (member == null)
 			{
 				// 若無資料則傳出錯誤
-				throw new ArgumentNullException(nameof(memberEntity.Id));
+				throw new ArgumentNullException(nameof(memberEntity.Account));
 			}
 			// 更新資料
+			member.Email = memberEntity.Email;
+			member.ProfileImage = memberEntity.ProfileImage;
+			member.Country = memberEntity.Country;
+			member.DateOfBirth = memberEntity.DateOfBirth;
+			member.DialCode = memberEntity.DialCode;
 			member.FirstName = memberEntity.FirstName;
 			member.LastName = memberEntity.LastName;
+			member.PhoneNumber = memberEntity.PhoneNumber;
+			member.Gender = memberEntity.Gender;
+
+
 			db.SaveChanges();
 
 			// 將更新後的資料轉換成Entity類別的資料， 並且只保留 FirstName LastName 以及 ID
@@ -198,6 +213,15 @@ namespace team1FrontEnd.Server.個人.Yen.Repositories.Members
 				Id = member.Id,
 				FirstName = member.FirstName,
 				LastName = member.LastName,
+				Account = member.Account,
+				Email = member.Email,
+				Country = member.Country,
+				DateOfBirth = member.DateOfBirth,
+				DialCode = member.DialCode,
+				PhoneNumber = member.PhoneNumber,
+				Gender = member.Gender,
+				ProfileImage = member.ProfileImage,
+
 			};
 
 			// 將Entity類別的資料轉換成Dto類別的資料

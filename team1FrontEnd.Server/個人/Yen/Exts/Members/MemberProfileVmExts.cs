@@ -68,5 +68,24 @@ namespace team1FrontEnd.Server.個人.Yen.Exts.Members
 				DateOfBirth = vm.DateOfBirth == null ? vm2.DateOfBirth : vm.DateOfBirth,
 			};
 		}
+
+		// 將 MemberPorfileVm 轉換成 ToMemberDto
+		public static MemberDto ToMemberDto(this MemberProfileVm vm)
+		{
+			return new MemberDto
+			{
+				Id = vm.MemberId,
+				Account = vm.Account,
+				Email = vm.Email,
+				Country = vm.Country,
+				DateOfBirth = vm.DateOfBirth,
+				DialCode = vm.DialCode,
+				FirstName = vm.FirstName,
+				LastName = vm.LastName,
+				PhoneNumber = vm.PhoneNumber,
+				Gender = vm.Gender,
+
+			};
+		}
 	}
 }

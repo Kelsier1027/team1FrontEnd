@@ -6,6 +6,7 @@ import HotelList from '@/views/Hotel/HotelList.vue';
 import HotelRoom from '@/views/Hotel/HotelRoom.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
 import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
+import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue'
 import Tour from '@/views/Tour/index.vue';
 import Member from '@/views/Member/index.vue';
 import AccountSetting from '@/views/Member/components/AccountSetting.vue';
@@ -22,7 +23,9 @@ import Order from '@/views/RentCar/Order.vue'
 import Order2 from '@/views/RentCar/Order2.vue'
 import toECPay from '@/views/RentCar/toECPay.vue'
 import Success from '@/views/RentCar/Success.vue'
+import Tour2 from '@/views/Tour2/index2.vue';
 import { onMounted } from 'vue';
+
 
 
 // 建立路徑
@@ -48,8 +51,10 @@ const routes = [
             },
             {
                 path: 'hotel/list',
+                name: 'HotelList',
                 component: HotelList,
-            },
+            }, 
+            
             {
                 path: '/hotel-room/:id', // :id 是動態路徑參數
                 name: 'HotelRoom',
@@ -94,10 +99,22 @@ const routes = [
                 name: 'AttractionContent',
             },
             {
+                path: '/Tour',
+                name: 'Tour',
+                path: '/attraction_order',
+                component: AttractionOrder,
+            },
+            {
                 path: 'tour',
                 component: Tour,
                 meta: { hideHeader: false },
+                props: (route) => ({ selectedLocation: route.query.selectedLocation, date: route.query.date })
             },
+            {
+                path: '/Tour2/:id',
+                name: 'Tour2',
+                component: Tour2, 
+              },
             {
                 path: 'member/',
                 component: Member,
@@ -141,6 +158,7 @@ const routes = [
                     },
                 ],
             },
+           
         ],
     },
 ];
@@ -150,7 +168,12 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: routes,
     // 跳轉頁面時，滾動到頂部
-    scrollBehavior() {
+    scrollBehavior(to) {
+
+        if (to.path == '/attraction') {
+            return null;
+        }
+
         return {
             top: 0,
         };

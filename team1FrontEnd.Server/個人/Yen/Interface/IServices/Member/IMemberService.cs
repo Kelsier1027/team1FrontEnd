@@ -14,7 +14,7 @@ namespace team1FrontEnd.Server.個人.Yen.Interface.IServices.Member
 		Task<MemberDto> GetMemberAsync(MemberDto memberDto);
 
 		// 更新會員密碼
-		void UpdatePassword(MemberDto memberDto);
+		Task<bool> UpdatePasswordAsync(MemberDto memberDto);
 
 		// 刪除會員
 		void DeleteMember(MemberDto memberDto);
@@ -22,7 +22,8 @@ namespace team1FrontEnd.Server.個人.Yen.Interface.IServices.Member
 		// 驗證帳號是否存在
 		Task<bool> IsAccountExistsAsync(string account);
 
-
+		// 更新會員資料
+		Task<MemberDto> UpdateMemberInfoAsync(MemberDto memberDto);
 
 	}
 }

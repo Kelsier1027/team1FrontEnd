@@ -29,7 +29,7 @@ const doLogin = async () => {
             await memberStore.login({ email, password });
             console.log(memberStore.memberId);
             loading.value = false;
-            // await memberStore.getMemberInfo();
+            await memberStore.getMemberInfo();
             // 如果註冊成功，清空表單數據
             form.value.email = '';
             form.value.password = '';
