@@ -9,12 +9,16 @@
                 <div class="facility-list">
                     <div class="facility-item"
                          v-for="(facility, index) in facilities"
-                         :key="index">
+                         :key="facility.id">
+                        <!-- 使用 facility.id 作為 key -->
+                        <!-- 修正為模板字符串，正確繫結 id -->
+                        <!-- 用 facility.id 作為 value -->
+                        <!-- 確保 selectedFacilities 是一個陣列 -->
                         <input type="checkbox"
-                               :id="`facility-${index}`"
-                               :value="facility.name"
+                               :id="facility.id"
+                               :value="facility.id"
                                v-model="selectedFacilities" />
-                        <label :for="`facility-${index}`">{{ facility.name }}</label>
+                        <label :for="facility.id">{{ facility.jaon }}</label>
                     </div>
                 </div>
                 <!--金額搜尋-->
@@ -79,29 +83,34 @@
                 </div>
             </div>
 
+            <!-- list 页面的 template 部分 -->
             <div class="hotel-list">
-                <div class="hotel-card"
-                     v-for="hotel in hotels"
-                     :key="hotel.id"
-                     @click="goToHotelRoom(hotel.id)">
-                    <img :src="hotel.imageUrl" alt="Hotel Image" class="hotel-image" />
-                    <div class="hotel-info">
-                        <h2>{{ hotel.name }}</h2>
-                        <p>{{ hotel.description }}</p>
-                        <div class="hotel-rating">
-                            <span>{{ hotel.rating }}</span>
+                <!-- 搜索消息提示 -->
+                <p v-if="searchMessage">{{ searchMessage }}</p>
+
+                <!-- 酒店列表 -->
+                <div v-else>
+                    <div class="hotel-card"
+                         v-for="hotel in hotels"
+                         :key="hotel.id"
+                         @click="goToHotelRoom(hotel.id)">
+                        <img :src="getHotelImageUrl(hotel.mainImage)" alt="Hotel Image" class="hotel-image" />
+                        <div class="hotel-info">
+                            <h2>{{ hotel.name }}</h2>
+                            <p>{{ hotel.address }}</p>
+                            <div class="hotel-rating">
+                                <span>{{ hotel.grade }}</span>
+                            </div>
+                            <div class="hotel-price">
+                                <span v-if="hotel.hotelRooms.length">NT${{ hotel.hotelRooms[0].weekendPrice }}</span>
+                            </div>
+                            <button class="booking-button">
+                                立即訂購
+                            </button>
                         </div>
-                        <div class="hotel-price">
-                            <span>NT${{ hotel.price }}</span>
-                            <span class="original-price">原價 NT${{ hotel.originalPrice }}</span>
-                        </div>
-                        <button class="booking-button"
-                                @click.stop="bookHotel(hotel.id)">
-                            立即訂購
-                        </button>
                     </div>
                 </div>
-            </div>
+            </div>  
 
         </div>
     </v-main>
@@ -109,23 +118,41 @@
 
 <script setup>
     import Search from '../Layout/components/search.vue';
+    import { ref, onMounted} from 'vue'
+    import { useRoute, useRouter } from 'vue-router';
+    import axios from 'axios';
 
+
+    const route = useRoute();
+    const router = useRouter();
+
+    // list 页面的 script 部分，添加 handleSearch 函数处理搜索事件
     function handleSearch(searchQuery) {
-        // 處理搜索邏輯
+        // 根据新的 searchQuery 更新页面展示的数据
+        fetchHotels(searchQuery);
     }
-    import { ref } from 'vue'
-    import { useRouter } from 'vue-router';
-    //飯店設施
-    const facilities = ref([
-        { name: '健身房' },
-        { name: '游泳池' },
-        { name: '免费早餐' },
-        { name: '免费早餐' },
-        { name: '免费早餐' },
-        // 更多设施...
-    ])
+ 
+    const facilities = ref([])
+    const selectedFacilities = ref([]);
+    //左欄設施列表
+    async function fetchFacilities() {
+        try {
+            const response = await axios.get('https://localhost:7113/api/HotelCategories');
+            facilities.value = response.data; // 假設API返回的數據直接是我們需要的設施列表
+        } catch (error) {
+            console.error('Failed to fetch facilities:', error);
+        }
+    }
+
+    // 使用 onMounted 生命週期鉤子來在組件掛載時獲取數據
+    onMounted(fetchFacilities);
 
     const selectedPrice = ref([])
+
+    //處理圖片
+    const getHotelImageUrl = (imagePath) => {
+        return `/public/assets/HotelImages/${imagePath}`;
+    };
 
     //價格篩選
     const searchMix = ref('')
@@ -162,28 +189,7 @@
         // ...更多住宿類型選項
     ]
 
-    //飯店標題
-    const hotels = ref([
-        {
-            id: 1,
-            name: '阿里山英迪格酒店 - IHG 旗下飯店頁面',
-            description: '最佳視野景觀，輕度假首選的五星國際品牌酒店。',
-            rating: '8.8',
-            imageUrl: 'https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit',
-            price: 13500,
-            originalPrice: 31185
-        },
-        {
-            id: 2,
-            name: '台北景觀101 -小木屋飯店',
-            description: '台北頂級小木屋，有清新的空氣，還看的到101。',
-            rating: '7.8',
-            imageUrl: 'https://images.trvl-media.com/lodging/1000000/20000/14200/14153/f370d8eb.jpg?impolicy=resizecrop&rw=455&ra=fit',
-            price: 12250,
-            originalPrice: 44485
-        },
-        // ...其他酒店數據
-    ]);
+   
     // 跳转到酒店详细页面的函数
     const goToHotelRoom = (hotelId) => {
         // 这里可以使用Vue Router或者window.location来导航
@@ -196,6 +202,57 @@
         console.log('Book hotel:', hotelId);
         // 这里可以添加预订逻辑或跳转到预订页面
     };
+
+    const hotels = ref([]);
+    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
+
+    async function fetchHotelsAndRooms() {
+        const address = route.query.address;
+        const name = route.query.name;
+        let url = 'https://localhost:7113/api/Hotels';
+
+        if (address) {
+            url += `/search?address=${encodeURIComponent(address)}`;
+        } else if (name) {
+            // 如果你有一个基于name搜索酒店的API端点，你可以在这里构建URL
+            url += `/search?address=${encodeURIComponent(name)}`;
+            // 注意: 这里的'/searchByName'和查询参数'name'需要你根据实际API进行调整
+        }
+        try {
+            const response = await axios.get(url);
+            hotels.value = response.data;
+            
+            console.log('1212');
+            // 為所有酒店同時發起請求，用 Promise.allSettled 等待所有請求完成或失敗
+            const hotelRoomsRequests = hotels.value.map(hotel =>
+                axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotel.id}`)
+            );
+
+            const hotelRoomsResponses = await Promise.allSettled(hotelRoomsRequests);
+
+            hotelRoomsResponses.forEach((result, index) => {
+                if (result.status === 'fulfilled' && result.value.data.length > 0) {
+                    // 這裡我們只考慮至少有一個房間數據的情況
+                    hotels.value[index].hotelRooms = result.value.data;
+                } else {
+                    // 如果請求失敗或沒有房間數據，可以根據您的業務需求做相應處理
+                    hotels.value[index].hotelRooms = { weekendPrice: 'No data' };
+                }
+
+            });
+            console.log(hotels.value);
+        } catch (error) {
+            // 当返回的数据为空数组时，设置提示信息
+            searchMessage.value = "沒有找到匹配的酒店，請嘗試其他搜索條件。";
+            hotels.value = []; // 清空之前的搜索结果
+            console.error('Failed to fetch hotels:', error);
+        }
+    }
+
+    onMounted(fetchHotelsAndRooms);
+
+
+
 
 </script>
 

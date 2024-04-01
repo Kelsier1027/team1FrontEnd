@@ -46,6 +46,7 @@ const routes = [
             },
             {
                 path: 'hotel/list',
+                name: 'HotelList',
                 component: HotelList,
             }, 
             

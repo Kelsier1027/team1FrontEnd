@@ -66,6 +66,7 @@ namespace team1FrontEnd.Server
 
 			});
 
+
 			builder.Services.AddDbContext<dbTeam1Context>(options =>
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("dbTeam1"));
