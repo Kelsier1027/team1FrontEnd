@@ -76,6 +76,35 @@ namespace team1FrontEnd.Server.Controllers
             return hotels;
         }
 
+        // GET: api/Hotels/facilities?facilityIds=1,2,3
+        [HttpGet("facilities")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotelsByFacilities([FromQuery] List<int> facilityIds)
+        {
+            if (_context.Hotels == null)
+            {
+                return NotFound("No hotels found.");
+            }
+
+            if (facilityIds == null || facilityIds.Count == 0)
+            {
+                return BadRequest("Facility IDs are required for searching.");
+            }
+
+            var hotels = await _context.Hotels
+                .Where(hotel => hotel.HotelFacilities != null && facilityIds.All(fId => hotel.GetFacilityIds().Contains(fId)))
+                .ToListAsync();
+
+            if (hotels.Count == 0)
+            {
+                return NotFound("No hotels found with the specified facilities.");
+            }
+
+            return hotels;
+        }
+
+
+
+
         // PUT: api/Hotels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
