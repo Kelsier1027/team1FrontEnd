@@ -9,7 +9,7 @@ const memberStore = useMemberStore();
 
 // 使用 ref 來創建表單數據和規則
 const form = ref({
-    email: 'ForTest31@gmail.com',
+    email: '@gmail.com',
     password: 'ForTest31!',
     checkbox: false,
 });
