@@ -568,7 +568,6 @@ public partial class dbTeam1Context : DbContext
 
             entity.HasOne(d => d.Admin).WithMany(p => p.HotelOrders)
                 .HasForeignKey(d => d.AdminId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_HotelOrders_Admins");
 
             entity.HasOne(d => d.HotelOrderCancelReason).WithMany(p => p.HotelOrders)

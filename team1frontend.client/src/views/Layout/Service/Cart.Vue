@@ -1,7 +1,12 @@
 <template>
-    <div class="cart" @mouseover="showCartContent = true" @mouseleave="showCartContent = false">
+    <!-- <div class="cart" 
+    @mouseover="showCartContent = true" @mouseleave="showCartContent = false"
+    > -->
+    <div class="cart" 
+   
+    >
       <div class="cart-icon">通知跟購物車</div>
-      <div v-if="showCartContent" class="cart-content">
+      <div v-if="cartStore.showCartContent" class="cart-content">
         <div v-for="(item, index) in cartItems" :key="index" class="cart-item">
           <span>{{ item.name }}</span>
           <span>{{ item.price }}</span>
@@ -13,6 +18,9 @@
   
   <script setup>
   import { ref, computed } from 'vue';
+  import { useCartStore } from '@/stores/CartStore';
+
+  const cartStore = useCartStore();
   
   const cartItems = ref([
     { id: 1, name: '測試 1 price ', price: 10 },
@@ -26,8 +34,7 @@
   const showCartContent = ref(false);
   </script>
   
-  <style>
-  /* 样式可以自定义 */
+  <style>  
   .cart {
     position: relative;
     display: inline-block;

@@ -72,7 +72,7 @@ namespace team1FrontEnd.Server.Controllers.huang
         // POST: api/CartItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<string> PostCartItem(int memberId ,int itemId, int categoryId)
+        public async Task<string> PostCartItem(int memberId ,int itemId, int categoryId,int quantity)
         {
             Cart cart;
 
@@ -84,6 +84,7 @@ namespace team1FrontEnd.Server.Controllers.huang
             {
                 CartId = cart.Id,
                 ItemId = itemId,
+                Quantity = quantity,
                 ServicerCategoryId = categoryId,
             };
             _context.CartItems.Add(item);
@@ -108,14 +109,111 @@ namespace team1FrontEnd.Server.Controllers.huang
             return "刪除成功";
         }
 
+		[HttpDelete("{cartId}")]
+		public async Task<string> DeleteCartAllItem(int cartId)
+		{
+			var cartAllItem = await _context.CartItems.Where(x => x.CartId == cartId).ToListAsync();
+			if (cartAllItem == null)
+			{
+				return "結帳失敗";
+			}
+
+			_context.CartItems.RemoveRange(cartAllItem);
+			await _context.SaveChangesAsync();
+
+			return "結帳成功";
+		}
+
+		private async Task CreatOrder(int categoryId, int orderId, IEnumerable<CartItem> cartItems)
+		{
+            switch (categoryId)
+            {
+                case 1: // 景點訂單
+                        //var attractionOrder = await _context.AttractionOrders.FindAsync(orderId);
+
+                    // 如果訂單不存在，則新建一個
+                    var attractionOrder = new AttractionOrder
+                    {
+                        MemberId = cartItems.First().Cart.MemberId,
+                        OrderDate = DateTime.Now,
+                        TicketTotalPrice = cartItems.Select(x => _context.AttractionTickets.Find(x.ItemId).Price).Aggregate((sum, x) => sum += x),
+                        AttractionOrderStatusId = 1,
+                    };
+                    _context.AttractionOrders.Add(attractionOrder);
+                    await _context.SaveChangesAsync();
+
+                    foreach (var item in cartItems)
+                    {
+                        var attration = new AttrationOrderItem
+                        {
+                            AttractionOrderId = attractionOrder.Id,
+                            AttractionTicketId = item.ItemId,
+                            Qty = item.Quantity,
+                            UnitPrice = _context.AttractionTickets.Find(item.ItemId).Price,
+                        };
+                        attractionOrder.AttrationOrderItems.Add(attration);
+						await _context.SaveChangesAsync();
+					}
+                    break;
+                case 2: // 房間訂單
+                        //var hotelOrder = await _context.HotelOrders.FindAsync(orderId);
+
+                    var hotelOrder = new HotelOrder
+                    {
+                        OrderSn = "123",
+                        NumberOfPeople = 1,
+                        Breakfast = true,
+                        HotelOrderStatusId = 1,
+                        Phone = "0932112383",
+                        CreditCard = "8786-7576-5372-8908",
+                        MemberId = cartItems.First().Cart.MemberId,
+                        Price = cartItems.Select(x => _context.HotelRooms.Find(x.ItemId).Price).Aggregate((sum, x) => sum += x),
+                        Checkin = DateTime.Now,
+                        Checkout = DateTime.Now,
+                    };
+                    _context.HotelOrders.Add(hotelOrder);
+                    await _context.SaveChangesAsync();
+                    foreach (var item in cartItems)
+                    {
+                        var hotel = new HotelOrderItem
+                        {
+                            HotelRoomId = item.Id,
+                            HotelOrderId = hotelOrder.Id,
+                        };
+						hotelOrder.HotelOrderItems.Add(hotel);
+						await _context.SaveChangesAsync();
+					}
+                    
+                    break;
+                case 3: // 套裝行程訂單
+                    foreach (var item in cartItems)
+                    {
+						var packageOrder = new PackageOrder
+						{
+							OrderDate = DateTime.Now,
+							PackageId = item.Id,
+                            PackageOrdeStatusId = 1,
+                            MemberId = cartItems.First().Cart.MemberId,
+                            Quantity = item.Quantity,
+                            TotalAmt = cartItems.Select(x => _context.Packages.Find(x.ItemId).Price).Aggregate((sum, x) => sum += x),
+						};
+						_context.PackageOrders.Add(packageOrder);
+						await _context.SaveChangesAsync();
+					}                                                                                      
+                    break;            
+			}
+			// 儲存對資料庫的更改
+			await _context.SaveChangesAsync();
+		}
+
 		private ICartItem GetItem(int categoryId, int orderId)
 		{
 
-			if (categoryId == 2) _context.AttractionOrders.Find(orderId); //景點
+			if (categoryId == 1) _context.AttractionOrders.Find(orderId); //景點
 
-			if (categoryId == 3) _context.HotelOrders.Find(orderId);//房間
+			if (categoryId == 2) _context.HotelOrders.Find(orderId);//房間
 
-			if (categoryId == 4) _context.PackageOrders.Find(orderId);//套裝行程
+			if (categoryId == 3) _context.PackageOrders.Find(orderId);//套裝行程
 			throw new Exception();
 		}
 

@@ -2,17 +2,18 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using team1FrontEnd.Server.Dtos;
 
 namespace team1FrontEnd.Server.Models;
 
-public partial class CartItem 
-{ 
+public partial class CartItem
+{
     public int Id { get; set; }
 
     public int CartId { get; set; }
 
     public int ItemId { get; set; }
+
+    public int Quantity { get; set; }
 
     public int ServicerCategoryId { get; set; }
 

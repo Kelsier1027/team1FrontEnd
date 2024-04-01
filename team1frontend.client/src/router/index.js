@@ -16,6 +16,7 @@ import Quests from '@/views/Member/components/Quests.vue';
 import Orders from '@/views/Member/components/Orders.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
+import CartList from '@/views/Cart/CartList.vue';
 
 
 // 建立路徑
@@ -105,6 +106,11 @@ const routes = [
                         component: Favorites,
                     },
                 ],
+            },
+            {
+                path: 'cartList',
+                component: CartList,
+                meta: { hideHeader: false },
             },
         ],
     },
