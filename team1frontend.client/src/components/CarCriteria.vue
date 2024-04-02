@@ -12,9 +12,7 @@ defineProps({
     },
 })
 
-const click = (e, str) => {
-    console.log(e.target.checked, str)
-}
+
 
 </script>
 <template>

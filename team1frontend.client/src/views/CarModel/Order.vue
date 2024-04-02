@@ -1,5 +1,9 @@
 <script setup>
 import { useRoute } from 'vue-router';
+import { usetTimeSpanStore } from '@/stores/timeSpan';
+const timeSpanStore = usetTimeSpanStore();
+console.log(timeSpanStore.begin)
+const timeSpan = timeSpanStore.timeSpan[1].getDate() - timeSpanStore.timeSpan[0].getDate()
 const route = useRoute()
 const carModel = JSON.parse(route.params.str)
 </script>
@@ -141,11 +145,11 @@ const carModel = JSON.parse(route.params.str)
             <div class="col-3">
                 <div class="border border-black rounded-xl ma-4 p-5">
                     <h3 class="ma-5">取車時間</h3>
-                    <h2 class="ma-5">2022/12/28</h2>
+                    <h2 class="ma-5">{{ timeSpanStore.begin }}</h2>
                     <h3 class="ma-5">還車時間</h3>
-                    <h2 class="ma-5">2022/12/28</h2>
-                    <h2 class="ma-5 mt-8 font-weight-bold">TWD 9000</h2>
-                    <h4 class="ma-5 mt-3">共 6 天 13 小時，總費用</h4>
+                    <h2 class="ma-5">{{ timeSpanStore.end }}</h2>
+                    <h2 class="ma-5 mt-8 font-weight-bold">TWD {{ carModel.feePerDay * timeSpan }}</h2>
+                    <h4 class="ma-5 mt-3">共 {{ timeSpan }} 天，總費用</h4>
                     <v-btn :to="{ name: 'order2', params: { str: route.params.str } }"
                         class="font-weight-bold text-h5 text-white bg-blue" rounded="xl" size="x-large"
                         block>我要租車</v-btn>

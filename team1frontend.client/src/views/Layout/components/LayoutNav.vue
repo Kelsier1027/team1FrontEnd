@@ -51,7 +51,7 @@ function closeDialog() {
 
 // 使用 router to 跳轉到指定路由
 function toHome() {
-    router.push('/home');
+    router.push('/');
 }
 
 const drawer = ref(false);
@@ -69,31 +69,19 @@ const items = ref([
         <!-- 將標題放在最左邊 -->
         <v-app-bar-title>
             <v-row>
-                <v-col
-                    cols="2"
-                    class="font-weight-bold text-h4 webSiteTitle"
-                    style="color: RGB(38, 190, 201)"
-                    @click="toHome"
-                >
+                <v-col cols="2" class="font-weight-bold text-h4 webSiteTitle" style="color: RGB(38, 190, 201)"
+                    @click="toHome">
                     小白旅遊
                 </v-col>
-                <v-col
-                    cols="4"
-                    style="height: 64px; padding-left: 0"
-                    v-if="showSearcher"
-                >
-                    <Searcher
-                /></v-col>
+                <v-col cols="4" style="height: 64px; padding-left: 0" v-if="showSearcher">
+                    <Searcher />
+                </v-col>
             </v-row>
         </v-app-bar-title>
 
         <!-- 使用flex容器包裹右邊的兩個元件，並利用CSS控制排列 -->
         <div class="flex-right">
-            <v-icon
-                v-if="memberStore.isLoggedIn"
-                icon="mdi-cart-outline"
-                class="pe-6"
-            />
+            <v-icon v-if="memberStore.isLoggedIn" icon="mdi-cart-outline" class="pe-6" />
             <!-- <v-btn @click="getMemberInfo"> 取得會員資料 </v-btn> -->
             <v-btn v-if="!memberStore.isLoggedIn" @click="checkLogin">
                 <div class="font-weight-bold" style="color: gray">
@@ -113,16 +101,9 @@ const items = ref([
                 elevation="4"
             >
             </v-btn> -->
-            
-            <v-btn
-            v-if="memberStore.isLoggedIn"
-                :to="'/member'"
-                icon="mdi-account"
-                size="small"
-                elevation="0"
-                border="1"
-                color="gray"
-            >
+
+            <v-btn v-if="memberStore.isLoggedIn" :to="'/member'" icon="mdi-account" size="small" elevation="0"
+                border="1" color="gray">
             </v-btn>
             <!-- <v-avatar
                 v-if="memberStore.isLoggedIn"
@@ -148,17 +129,12 @@ const items = ref([
     </v-navigation-drawer>
 
     <!-- 註冊及登入彈出窗口 -->
-    <v-dialog
-        v-model="dialog"
-        transition="dialog-top-transition"
-        class="dialog-vertical-top overflow-y-auto"
-        max-width="450px"
-    >
+    <v-dialog v-model="dialog" transition="dialog-top-transition" class="dialog-vertical-top overflow-y-auto"
+        max-width="450px">
         <template v-slot:default="{ isActive }">
             <v-card class="d-flex overflow-hidden rounded-2" elevation="8">
                 <template v-slot:append>
-                    <div
-                        style="
+                    <div style="
                             background-color: RGB(38, 190, 201);
                             width: 450px;
                             position: absolute;
@@ -166,24 +142,15 @@ const items = ref([
                             left: 0;
                             z-index: 1000;
                             height: 10px;
-                        "
-                    ></div>
+                        "></div>
                     <div class="">
-                        <v-btn
-                            icon="$close"
-                            size="large"
-                            variant="text"
-                            @click="isActive.value = false"
-                        ></v-btn>
+                        <v-btn icon="$close" size="large" variant="text" @click="isActive.value = false"></v-btn>
                     </div>
                 </template>
                 <div class="overflow-y-auto mt-0">
                     <v-container class="w-75 h-100 pa-0 align-center">
                         <!-- 根據 showLogin 的值決定顯示哪個組件 -->
-                        <Options
-                            v-if="!showLogin"
-                            @show-login="toggleShowLogin"
-                        />
+                        <Options v-if="!showLogin" @show-login="toggleShowLogin" />
                         <LoginOrRegister v-else @close-dialog="closeDialog" />
                     </v-container>
                 </div>
@@ -206,50 +173,63 @@ const items = ref([
     align-items: flex-start;
     justify-content: center;
 }
+
 .app-bar-flex {
     /* height: 64px; */
-    padding-left: 360px; /* 起始點設置較大的間距 */
+    padding-left: 360px;
+    /* 起始點設置較大的間距 */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    justify-content: center; /* 保留一個justify-content設定 */
+    justify-content: center;
+    /* 保留一個justify-content設定 */
 }
 
 .flex-right {
-    padding-right: 380px; /* 起始點設置較大的間距 */
+    padding-right: 380px;
+    /* 起始點設置較大的間距 */
     display: flex;
     align-items: center;
 }
 
 /* 根據螢幕大小動態調整間距 */
 @media (max-width: 1800px) {
+
     .app-bar-flex,
     .flex-right {
         padding-left: 260px;
         padding-right: 290px;
     }
+
     :deep(.webSiteTitle) {
         margin-right: 60px;
     }
 }
+
 @media (max-width: 1600px) {
+
     .app-bar-flex,
     .flex-right {
         padding-left: 165px;
         padding-right: 190px;
     }
+
     :deep(.webSiteTitle) {
         margin-right: 35px;
     }
 }
+
 @media (max-width: 1300px) {
+
     .app-bar-flex,
     .flex-right {
         padding-left: 105px;
         padding-right: 140px;
     }
 }
+
 @media (max-width: 1200px) {
+
     .app-bar-flex,
     .flex-right {
         padding-left: 40px;
@@ -258,6 +238,7 @@ const items = ref([
 }
 
 @media (max-width: 992px) {
+
     .app-bar-flex,
     .flex-right {
         padding-left: 80px;
@@ -266,6 +247,7 @@ const items = ref([
 }
 
 @media (max-width: 768px) {
+
     .app-bar-flex,
     .flex-right {
         padding-left: 50px;
@@ -274,6 +256,7 @@ const items = ref([
 }
 
 @media (max-width: 678px) {
+
     .app-bar-flex,
     .flex-right {
         padding-left: 0px;

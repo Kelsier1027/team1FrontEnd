@@ -7,7 +7,7 @@ import MembershipBenefits from '@/views/Member/components/MembershipBenefits.vue
 import DiscountCoupons from '@/views/Member/components/DiscountCoupons.vue';
 import Coins from '@/views/Member/components/Coins.vue';
 import Quests from '@/views/Member/components/Quests.vue';
-import Orders from '@/views/Member/components/Orders.vue';
+//import Orders from '@/views/Member/components/Orders.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
@@ -19,6 +19,7 @@ import Order from '@/views/CarModel/Order.vue'
 import Order2 from '@/views/CarModel/Order2.vue'
 import toECPay from '@/views/CarModel/toECPay.vue'
 import Success from '@/views/CarModel/Success.vue'
+import Orders from '@/views/Orders/Orders.vue'
 
 
 // 建立路徑
@@ -71,7 +72,7 @@ const routes = [
                 ],
             },
             {
-                path: '/attraction',
+                path: '/',
                 component: Attraction,
                 meta: { hideHeader: false },
             },
@@ -110,7 +111,11 @@ const routes = [
             {
                 path: '/rentCar/success/',
                 component: Success
-            }
+            },
+            {
+                path: '/orders/',
+                component: Orders
+            },
         ],
     },
 ];
@@ -121,7 +126,7 @@ const router = createRouter({
     routes: routes,
     // 跳轉頁面時，滾動到頂部
     scrollBehavior(to) {
-        if (to.path == '/attraction' && Object.keys(to.query).length) {
+        if (to.path == '/' && Object.keys(to.query).length) {
             return null;
         }
         return {

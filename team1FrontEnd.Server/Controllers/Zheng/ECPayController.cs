@@ -12,7 +12,7 @@ namespace team1FrontEnd.Server.Controllers.Zheng
     public class ECPayController : ControllerBase
     {
         [HttpPost]
-        public ActionResult<Dictionary<string, string>> GetECPayOrder([FromBody] OrderVm vm)
+        public ActionResult<Dictionary<string, string>> GetECPayOrder([FromBody]OrderVm vm)
         {
             Random rnd = new Random();
 
@@ -21,12 +21,12 @@ namespace team1FrontEnd.Server.Controllers.Zheng
                 //綠界需要的參數
                 { "MerchantTradeNo",  rnd.Next().ToString()},
                 { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
-                { "TotalAmount",  "100"},
-                { "TradeDesc",  "無"},
+                { "TotalAmount",  vm.Total.ToString()},
+                { "TradeDesc",  "abc"},
                 { "ItemName",  "租車"},
                 { "CustomField1",  vm.GetDesc()},
-                { "ReturnURL",  "https://localhost:7193/api/ecpayorders"},
-                { "OrderResultURL", "https://localhost:7193/api/ecpayorders"},
+                { "ReturnURL",  "https://localhost:7113/api/ecpayorders"},
+                { "OrderResultURL", "https://localhost:7113/api/ecpayorders"},
                 { "MerchantID",  "3002607"},
                 { "PaymentType",  "aio"},
                 { "ChoosePayment",  "ALL"},

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import SearchForm from '@/components/IndexForm.vue'
 import Criteria from '@/components/CarCriteria.vue'
 import Card from '@/components/Card.vue'
@@ -24,8 +24,22 @@ const getCarEnergyTypes = async () => {
 }
 const GetCarModels = async () => {
     carModelList.value = await GetCarModelAPI();
-    console.log(carModelList.value.filter(x => x))
 }
+
+const carModelWithCriteria = computed(() => {
+    let result = carModelList.value;
+    if (criteriaStore.brandCriteria.length != 0) {
+        if (carModelList.value.filter(x => criteriaStore.brandCriteria.includes(x.carBrand.name)) != 0)
+            result = result.filter(x => criteriaStore.brandCriteria.includes(x.carBrand.name))
+        if (carModelList.value.filter(x => criteriaStore.brandCriteria.includes(x.carTransmission.name)) != 0)
+            result = result.filter(x => criteriaStore.brandCriteria.includes(x.carTransmission.name))
+        if (carModelList.value.filter(x => criteriaStore.brandCriteria.includes(x.carEnergyType.name)) != 0)
+            result = result.filter(x => criteriaStore.brandCriteria.includes(x.carEnergyType.name))
+        return result
+    }
+    return result
+})
+
 
 onMounted(() => getCarBrands())
 onMounted(() => getCarTransmissions())
@@ -44,7 +58,9 @@ onMounted(() => GetCarModels())
                             <SearchForm></SearchForm>
                         </div>
                         <div class="border rounded-4 p-4 d-flex justify-end">
-                            <span class="me-12 align-self-end text-h5 text-decoration-underline">篩選條件</span>
+                            <span class="me-12  align-self-end text-h5 text-decoration-underline">篩選條件</span>
+                            <button @click="() => criteriaStore.brandCriteria = []"
+                                class="me-12 align-self-end text-h5">清除所有</button>
                             <div class="me-12">
                                 <Criteria title="廠牌" :list=brandList></Criteria>
                             </div>
@@ -64,7 +80,7 @@ onMounted(() => GetCarModels())
                         </div class>
                         <v-divider></v-divider>
                         <div class="d-flex flex-wrap">
-                            <div v-for="item in carModelList" class="mb-6" style="width:calc(50%)">
+                            <div v-for="item in carModelWithCriteria" class="mb-6" style="width:calc(50%)">
                                 <Card :car-model="item"></Card>
                             </div>
                         </div>

@@ -4,7 +4,10 @@ import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useField, useForm } from 'vee-validate'
 import { GetOrderAPI } from '@/apis/CarModel/Order'
+import { usetTimeSpanStore } from '@/stores/timeSpan';
 
+const timeSpanStore = usetTimeSpanStore()
+const timeSpan = timeSpanStore.timeSpan[1].getDate() - timeSpanStore.timeSpan[0].getDate()
 const carModel = JSON.parse(useRoute().params.str)
 const { handleSubmit, handleReset } = useForm({
     validationSchema: {
@@ -21,10 +24,10 @@ const { handleSubmit, handleReset } = useForm({
         licenceId(value) {
             if (value?.length > 9 && /[0-9-]+/.test(value)) return true
 
-            return 'Phone number needs to be at least 9 digits.'
+            return 'Phone number needs to be at least 10 digits.'
         },
         email(value) {
-            if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
+            if (/^[a-z.-.0-9]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
 
             return 'Must be a valid e-mail.'
         },
@@ -33,11 +36,6 @@ const { handleSubmit, handleReset } = useForm({
 
             return 'Select an item.'
         },
-        checkbox(value) {
-            if (value === '1') return true
-
-            return 'Must be checked.'
-        },
     },
 })
 const name = useField('name')
@@ -45,20 +43,37 @@ const phone = useField('phone')
 const email = useField('email')
 const licenceId = useField('licenceId')
 const select = useField('select')
-const checkbox = useField('checkbox')
+const canSubmit = ref(true)
+
+const autoMemberInfo = function (e) {
+    if (e.target.checked) {
+        name.value.value = "Guest";
+        phone.value.value = "0912345678";
+        licenceId.value.value = "V4441532563";
+        email.value.value = "ForTest31@gmail.com";
+        select.value.value = '男'
+    } else {
+        name.value.value = "";
+        phone.value.value = "";
+        licenceId.value.value = "";
+        email.value.value = "";
+        select.value.value = ""
+    }
+}
+
 
 const items = ref([
     '男',
     '女',
     '不方便',
-    'Item 4',
 ])
 var data = {}
 const submit = handleSubmit(values => {
     values.carBrand = carModel.carBrand.name
     values.carModel = carModel.name
+    values.total = carModel.feePerDay * timeSpan
     data = Object.assign({}, values);
-    alert(JSON.stringify(values, null, 2))
+    canSubmit.value = false
 })
 const router = useRouter()
 const click = async () => {
@@ -72,6 +87,7 @@ const click = async () => {
         }
     })
 }
+
 </script>
 
 <template>
@@ -94,10 +110,9 @@ const click = async () => {
                         <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value"
                             label="E-mail" variant="underlined" class="my-6"></v-text-field>
                         <v-select v-model="select.value.value" :error-messages="select.errorMessage.value"
-                            :items="items" label="Select" variant="underlined" class="my-6"></v-select>
-                        <v-checkbox v-model="checkbox.value.value" :error-messages="checkbox.errorMessage.value"
-                            label="Option" type="checkbox" value="1" variant="underlined" class="my-6"></v-checkbox>
-
+                            :items="items" label="性別" variant="underlined" class="my-6"></v-select>
+                        <v-checkbox label="使用當前會員資料" type="checkbox" value="1" class="my-6"
+                            @click="e => autoMemberInfo(e)"></v-checkbox>
                         <v-btn class="me-4 bg-blue" type="submit" rounded="xl" block>
                             繼續
                         </v-btn>
@@ -123,11 +138,11 @@ const click = async () => {
                     <div class="d-flex flex-wrap mb-6">
                         <div class="w-50">
                             <h5 class="font-weight-thin">取車時間</h5>
-                            <h4>2020/06/14</h4>
+                            <h4>{{ timeSpanStore.begin }}</h4>
                         </div>
                         <div>
                             <h5 class="font-weight-thin">還車時間</h5>
-                            <h4>2020/06/14</h4>
+                            <h4>{{ timeSpanStore.end }}</h4>
                         </div>
                     </div>
                     <div class="mb-10">
@@ -136,11 +151,12 @@ const click = async () => {
                         <h5>竊盜險</h5>
                     </div>
                     <div class="mb-4">
-                        <h2 class="font-weight-black">TWD 105,343</h2>
-                        <h5>共 6 天 13 小時，總費用</h5>
+                        <h2 class="font-weight-black">TWD {{ carModel.feePerDay * timeSpan }}</h2>
+                        <h5>共 {{ timeSpan }} 天，總費用
+                        </h5>
                     </div>
                     <div>
-                        <v-btn class="me-4 bg-blue" type="button" rounded="xl" @click="click" block>
+                        <v-btn class="me-4 bg-blue" type="button" rounded="xl" @click="click" block :disabled=canSubmit>
                             付款
                         </v-btn>
                     </div>
