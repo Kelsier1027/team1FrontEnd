@@ -10,7 +10,7 @@
           <h5 class="card-title">{{ attraction.name }}</h5>
           <p class="card-text">{{ attraction.description }}</p>
         </div>
-        <div class="price">NT${{ attraction.lowPrice }}起</div>
+        <div class="priceX">NT${{ attraction.lowPrice }}起</div>
       </div>
     </div>
   </Router-link>
@@ -36,6 +36,8 @@ defineProps({
 </script>
 
 <style scoped>
+@import url('/src/assets/font/font.css');
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -92,4 +94,11 @@ defineProps({
   width: 200px;
   height: 150px;
 }
+.priceX{
+  text-align: center;
+  font-size: 20px;
+  font-family:MATRIX;
+}
+
+
 </style>
