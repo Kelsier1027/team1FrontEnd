@@ -69,6 +69,23 @@ onMounted(() => loadContent());
 
 
 <style scoped>
+.imageBox1{
+  margin-bottom:4px;
+}
+.leftBox{
+  margin-right: 4px;
+}
+.leftBox img{
+ border-top-left-radius: 20px;
+ border-bottom-left-radius: 20px;
+}
+.imageBox1 img{
+  border-top-right-radius: 20px;
+}
+.imageBox2 img{
+  border-bottom-right-radius: 20px;
+}
+
 img {
   width: 100%;
   height: 100%;
@@ -78,10 +95,10 @@ img {
   display: flex;
 }
 
-.pictureBox {
-  height: 500px;
-  width: 1200px;
 
+.pictureBox {
+  height: 505px;
+  width: 1200px;
   display: flex;
 }
 

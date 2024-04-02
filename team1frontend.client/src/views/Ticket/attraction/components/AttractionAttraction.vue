@@ -41,7 +41,7 @@
     </el-carousel>
   </div>
 
-  <v-container class="vcontain">
+  <div class="attraction_body">
     <div>
       <div id="categoryBar" class="category_bar">
         <el-scrollbar class="scrollbar">
@@ -61,9 +61,9 @@
     </transition-group>
     <el-empty :image-size="200" v-if="attractionList == 0" />
 
+  </div>
 
 
-  </v-container>
 
 
 </template>
@@ -139,6 +139,15 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.attraction_body{
+  padding-top:10px;
+  padding-left: 150px;
+  padding-right: 150px;
+  padding-bottom: 20px;
+  height: auto;
+}
+
+
 .list-enter-active,
 .list-leave-active {
   transition: opacity 0.5s;

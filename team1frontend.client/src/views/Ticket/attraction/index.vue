@@ -1,10 +1,7 @@
 <template>
   <v-main>
     <Cart />
-
     <AttractionAttraction />
-
-
   </v-main>
 
 </template>

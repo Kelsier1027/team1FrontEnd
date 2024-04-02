@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace team1FrontEnd.Server.Models;
 
-public partial class dbTeam1        Context : DbContext
+public partial class dbTeam1Context : DbContext
 {
     public dbTeam1Context(DbContextOptions<dbTeam1Context> options)
         : base(options)

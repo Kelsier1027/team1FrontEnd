@@ -23,7 +23,6 @@
     "thor-x": "^0.0.81",
     "vee-validate": "^4.12.6",
     "vue": "^3.4.21",
-    "vue-carousel-3d": "^1.0.1",
     "vue-router": "^4.3.0",
     "vue3-google-map": "^0.20.0",
     "vuetify": "^3.5.8"

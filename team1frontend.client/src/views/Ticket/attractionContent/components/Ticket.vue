@@ -1,22 +1,24 @@
 <template>
-  <el-collapse-item :name="ticket.id" @click.stop.prevent="toggleTitle" :class=foldStatus>
+  <el-collapse-item :name="ticket.id" @click.stop.prevent="toggleTitle" :class=foldStatus class="collapseDiv"> 
     <template #title>
       <div class="titleBox">
         <div>{{ ticket.ticketTitle }}</div>
 
-        <div v-if="showTitle">NT${{ ticket.price }}</div>
+        <div v-if="showTitle" class="outprice">NT${{ ticket.price }}</div>
       </div>
 
     </template>
 
 
     <div @click.stop.prevent>
-      <div>{{ ticket.ticketDetail }}</div>
-      <div class="d-flex">
-        <div class="price">NT${{ ticketTotalPrice }}</div>
-        <el-button type="warning" plain @click.stop.prevent="addItem">Warning</el-button>
+      <div class="ticketdetail">{{ ticket.ticketDetail }}</div>
+      <div class="row">
+        <div class="col-md-6 offset-md-6 buyblock">
+        <div class="innerprice">NT${{ ticketTotalPrice }}</div>
+        <div class="cal"><el-input-number v-model="num" :min="1" :max="77" @change="handleChange" @click.stop.prevent /></div>
+        <div class="addbtn"><el-button type="warning" plain @click.stop.prevent="addItem"><el-icon><ShoppingCart /></el-icon>加入購物車</el-button></div>
       </div>
-      <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" @click.stop.prevent />
+    </div>
     </div>
   </el-collapse-item>
 
@@ -112,6 +114,45 @@ watch(() => memberStore.memberId, (newId, oldId) => {
 </script>
 
 <style>
+@import url('/src/assets/font/font.css');
+*{
+  
+}
+.collapseDiv{
+  font-family: MSJHBD;
+}
+
+.outprice{
+  font-family: MATRIX;
+}
+
+.ticketdetail{
+  margin-bottom: 30px;
+  
+}
+
+.innerprice{
+  margin-right:36px;
+  font-size: 25px;
+  font-family: MATRIX;
+}
+
+.cal{
+  margin-right:5px;
+
+}
+
+.buyblock{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.d-flex{
+  margin-top:30px;
+  
+}
+
 .el-breadcrumb {
   margin: 10px;
   font-size: 20px;
@@ -136,10 +177,11 @@ watch(() => memberStore.memberId, (newId, oldId) => {
 
 .el-button {
   margin: auto;
+
 }
 
 .price {
-  margin-right: 7px;
+  margin-left: 60px;
   font-size: 20px;
 }
 
@@ -148,4 +190,6 @@ watch(() => memberStore.memberId, (newId, oldId) => {
 button {
   margin-top: 20px;
 }
+
+
 </style>
