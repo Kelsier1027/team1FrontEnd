@@ -71,7 +71,7 @@ const routes = [
                 ],
             },
             {
-                path: '',
+                path: '/attraction',
                 component: Attraction,
                 meta: { hideHeader: false },
             },
@@ -120,7 +120,10 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: routes,
     // 跳轉頁面時，滾動到頂部
-    scrollBehavior() {
+    scrollBehavior(to) {
+        if (to.path == '/attraction' && Object.keys(to.query).length) {
+            return null;
+        }
         return {
             top: 0,
         };

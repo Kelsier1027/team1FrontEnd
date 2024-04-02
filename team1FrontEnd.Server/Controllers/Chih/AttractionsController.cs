@@ -32,6 +32,14 @@ namespace myapi.Controllers
         public async Task<IEnumerable<AttractionContentDTO>> GetAttractionContent([FromQuery]int id)
         {
             var attractionContent = await _attractionService.GetAttractionContent(id);
+            foreach (var item in attractionContent)
+            {
+                foreach(var image in item.AttractionContentImageDTO)
+                {
+                    image.Image= $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/StaticFiles/images/chih/AttractionContent/{image.Image}";
+                }
+            }
+
             return attractionContent;
         }
         [HttpGet("/api/Attractions/Search")]
@@ -47,7 +55,8 @@ namespace myapi.Controllers
         [HttpGet("/api/Attractions/GetCategories")]
         public async Task<IEnumerable<AttractionCategory>> GetCategories()
         {
-            var categories = await _context.AttractionCategories.ToListAsync();
+            var categories = await _context.AttractionCategories.OrderByDescending(c => c.Id)
+                                                                .ToListAsync();
             categories.ForEach(c =>
             {
                 c.Icon = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/StaticFiles/images/chih/CategoryIcon/{c.Icon}";

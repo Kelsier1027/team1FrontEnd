@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using team1FrontEnd.Server.Models;
+using team1FrontEnd.Server.個人.Chih._03_Infrastructure.DTOs;
 
 namespace team1FrontEnd.Server.Controllers.Chih
 {
@@ -17,25 +18,25 @@ namespace team1FrontEnd.Server.Controllers.Chih
         }
 
         [HttpGet]
-        public async Task<string> CreateOrder(int userId)
+        public async Task<string>CreateOrder(int userId)
         {
             //檢查購物車的商品是否為空
             var userCart = await _dbTeam1Context.AttractionCarts
-                                                        .Where(x => x.MemberId == userId)
-                                                        .Include(x => x.AttractionCartItems)
-                                                        .SelectMany(x => x.AttractionCartItems)//壓平集合?
+                                                        .Where(x=>x.MemberId== userId)
+                                                        .Include(x=>x.AttractionCartItems)
+                                                        .SelectMany(x=>x.AttractionCartItems)//壓平集合?
                                                         .AnyAsync();
-            if (!userCart)
+            if (!userCart) 
             {
                 return "請新增商品";
             }
 
-            var order = _dbTeam1Context.AttractionOrders.Add(new AttractionOrder
+            var order =_dbTeam1Context.AttractionOrders.Add(new AttractionOrder
             {
                 MemberId = userId,
                 OrderDate = DateTime.Now,
                 TicketTotalPrice = 0,
-                AttractionOrderStatusId = 1,
+                AttractionOrderStatusId=1,
             });
 
             await _dbTeam1Context.SaveChangesAsync();
@@ -51,24 +52,24 @@ namespace team1FrontEnd.Server.Controllers.Chih
             {
                 var ticket = await _dbTeam1Context.AttractionTickets.Where(x => x.Id == item.Items)
                                                                     .FirstOrDefaultAsync();
-
+                                                                    
                 var orderItem = new AttrationOrderItem()
                 {
-                    AttractionTicketId = item.Items,
-                    AttractionOrderId = orderId,
-                    Qty = item.Quantity,
-                    UnitPrice = ticket.Price,
+                    AttractionTicketId=item.Items,
+                    AttractionOrderId= orderId,
+                    Qty=item.Quantity,
+                    UnitPrice=ticket.Price,
                 };
 
                 _dbTeam1Context.AttrationOrderItems.Add(orderItem);
-                ticketTotalPrice += item.Quantity * ticket.Price;
+                ticketTotalPrice+=item.Quantity*ticket.Price;
 
             }
             await _dbTeam1Context.SaveChangesAsync();
 
             var updateOrder = await _dbTeam1Context.AttractionOrders.FindAsync(orderId);
-
-            if (updateOrder != null)
+            
+            if(updateOrder != null)
             {
                 updateOrder.TicketTotalPrice = ticketTotalPrice;
                 await _dbTeam1Context.SaveChangesAsync();
