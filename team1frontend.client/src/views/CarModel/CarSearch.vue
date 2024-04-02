@@ -24,8 +24,8 @@ const getCarEnergyTypes = async () => {
 }
 const GetCarModels = async () => {
     carModelList.value = await GetCarModelAPI();
+    console.log(carModelList.value.filter(x => x))
 }
-
 
 onMounted(() => getCarBrands())
 onMounted(() => getCarTransmissions())
