@@ -71,7 +71,7 @@ const routes = [
                 ],
             },
             {
-                path: '',
+                path: '/attraction',
                 component: Attraction,
                 meta: { hideHeader: false },
             },
