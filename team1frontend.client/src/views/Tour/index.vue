@@ -1,6 +1,6 @@
 <script setup>
 //import top from './Components/topForm.vue';
-import { ref,computed , onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getPackageItem } from '@/apis/package';
 import { useRoute } from 'vue-router';
 import router from '@/router'
@@ -39,8 +39,8 @@ const getPackageList = () => {
         id: item.id,
         name: item.name,
         price: item.price,
-        applyBeginDate:formatDate(item.applyBeginDate),
-        applyEndDate:formatDate(item.applyEndDate),
+        applyBeginDate: formatDate(item.applyBeginDate),
+        applyEndDate: formatDate(item.applyEndDate),
         imageUrl: '/assets/Images/' + item.image
     }));
 }
@@ -56,8 +56,8 @@ let obj = ref([
         id: 1,
         name: 1,
         price: 1,
-        applyBeginDate:1,
-        applyEndDate:1
+        applyBeginDate: 1,
+        applyEndDate: 1
     },
 ]);
 
@@ -70,40 +70,40 @@ onMounted(async () => {
 // onMounted(startCarousel);
 // 計算過濾後的套票列表
 const filteredPackages = computed(() => {
-  let filtered = obj.value;
-  if (loc && typeof loc === 'string') {
-    console.log(loc);
-    // 根据选定的地点进行过滤
-    filtered = filtered.filter(item => typeof item.name === 'string' && item.name.includes(loc));
-  }
-  if (date) {
-    console.log(date);
-    // 根据选定的日期范围进行过滤
-    filtered = filtered.filter(item => {
-      const beginDate = new Date(item.applyBeginDate);
-      const endDate = new Date(item.applyEndDate);
-      const selectedDate = new Date(date);
+    let filtered = obj.value;
+    if (loc && typeof loc === 'string') {
+        console.log(loc);
+        // 根据选定的地点进行过滤
+        filtered = filtered.filter(item => typeof item.name === 'string' && item.name.includes(loc));
+    }
+    if (date) {
+        console.log(date);
+        // 根据选定的日期范围进行过滤
+        filtered = filtered.filter(item => {
+            const beginDate = new Date(item.applyBeginDate);
+            const endDate = new Date(item.applyEndDate);
+            const selectedDate = new Date(date);
 
-      // 清除时间部分
-      beginDate.setHours(0, 0, 0, 0);
-      endDate.setHours(0, 0, 0, 0);
-      selectedDate.setHours(0, 0, 0, 0);
+            // 清除时间部分
+            beginDate.setHours(0, 0, 0, 0);
+            endDate.setHours(0, 0, 0, 0);
+            selectedDate.setHours(0, 0, 0, 0);
 
-      return beginDate <= selectedDate && endDate >= selectedDate;
-    });
-  }
-  return filtered;
+            return beginDate <= selectedDate && endDate >= selectedDate;
+        });
+    }
+    return filtered;
 });
 onUnmounted(stopCarousel);
 function search() {
-            // 获取日期输入元素
-            const loc = document.querySelector('select[name="selectedLocation"]').value;
+    // 获取日期输入元素
+    const loc = document.querySelector('select[name="selectedLocation"]').value;
 
-            // 获取选定的日期值
-            const selectedDate = document.querySelector('input[name="date"]').value;
-            console.log(selectedDate);
-            router.push({ path: '/Tour', query: { date: selectedDate, loc: loc } });
-        }
+    // 获取选定的日期值
+    const selectedDate = document.querySelector('input[name="date"]').value;
+    console.log(selectedDate);
+    router.push({ path: '/Tour', query: { date: selectedDate, loc: loc } });
+}
 </script>
 
 @charset "UTF-8";
@@ -127,10 +127,11 @@ function search() {
                                 <h3>All you need to do is pack your luggage and you're ready to go.</h3>
                                 <h6 class="mb-3">Discover your next adventure</h6>
                                 <div class="flex-wrap search-wthree-field mt-md-5 mt-4">
-                                     <form action="Tour" method="get" class="booking-form">
+                                    <form action="Tour" method="get" class="booking-form">
                                         <div class="row book-form">
                                             <div class="form-input col-md-4 mt-md-0 mt-3">
-                                                    <select v-model="selectedLocation" name="selectedLocation" class="selectpicker">
+                                                <select v-model="selectedLocation" name="selectedLocation"
+                                                    class="selectpicker">
                                                     <option value="">地點</option>
                                                     <option value="台北">台北</option>
                                                     <option value="新北">新北</option>
@@ -156,16 +157,17 @@ function search() {
                                                 </select>
                                             </div>
                                             <div class="form-input col-md-4 mt-md-0 mt-3">
-                                            <input v-model="selectedDate" type="date" name="date" placeholder="Date">
-                                              </div>
-                                             <div class="bottom-btn col-md-4 mt-md-0 mt-3">
-                                            <button @click="search" class="btn btn-style btn-secondary">
-                                            <span class="fa fa-search mr-3" aria-hidden="true"></span>
-                                            搜尋
-                                            </button>
+                                                <input v-model="selectedDate" type="date" name="date"
+                                                    placeholder="Date">
+                                            </div>
+                                            <div class="bottom-btn col-md-4 mt-md-0 mt-3">
+                                                <button @click="search" class="btn btn-style btn-secondary">
+                                                    <span class="fa fa-search mr-3" aria-hidden="true"></span>
+                                                    搜尋
+                                                </button>
+                                            </div>
                                         </div>
-                                        </div>
-                                     </form>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -175,72 +177,80 @@ function search() {
 
         </body>
 
-        <!-- /main-slider -->
-        <!-- //banner-slider-->
-
-        <!-- <v-carousel cycle interval="3000" height="900">
-            ;
-            <v-carousel-item
-                src="https://today-obs.line-scdn.net/0hI23LxmErFh0ONQMVnIxpSjZjGmw9UwwULAEJKSgyH38iGQNDMFRFfiNiQDEqBlhNLlJYeiJnTiklV1RDNQ/w644"
-                cover></v-carousel-item>
-
-            <v-carousel-item
-                src="https://zh-tw.skyticket.com/guide/wp-content/uploads/2021/03/bf21f916adb824745c3e23b44cd2d373-e1615372163906.jpg"
-                cover></v-carousel-item>
-
-            <v-carousel-item src="https://bunnyann.com/wp-content/uploads/S__18096166.jpg" cover></v-carousel-item>
-        </v-carousel> -->
-
-        <!-- <v-bottom-navigation :elevation="0">
-            <v-btn value="favorites">
-                <v-icon>mdi-heart</v-icon>
-
-                <span>Favorites</span>
-            </v-btn>
-        </v-bottom-navigation> -->
-
-        <!-- <v-select clearable chips label="Select"
-            :items="['Kaohsiung', 'Taichung', 'Yilan', 'Tainan', 'Kenting', 'nantou', 'Hualien', 'Taitung']" multiple
-            variant="solo-filled"></v-select> -->
-
-        <!--/grids-->
         <section class="w3l-grids-3 py-5">
             <div class="container py-md-5">
                 <div class="title-content text-left mb-lg-5 mb-4">
                     <h6 class="sub-title">國內旅遊</h6>
                     <h3 class="hny-title">熱門景點</h3>
                 </div>
-                <div class="row bottom-ab-grids">
-                    <!--/row-grids-->
-                    <template v-for="item in filteredPackages">
-                    <div class="col-lg-6 subject-card mt-lg-0 mt-4">
-                        <div class="subject-card-header p-4">
-                            <RouterLink :to="{ name: 'Tour2', params: { id: item.id } }"  class="card_title p-lg-4d-block">
-                                    <div class="row align-items-center">
-                                    <div class="col-sm-5 subject-img">
-                                        <!-- <img src="{{item.imageUrl}}" class="img-fluid" alt=""> -->
-                                        <img :src="item.imageUrl"  class="img-fluid">
-                                    </div>
-                                    <div class="col-sm-7 subject-content mt-sm-0 mt-4">
-                                        <h4>{{item.name }}</h4>
-                                        <!-- <p>2Days, 1 Nights</p> -->
-                                        <div class="dst-btm">
-                                            <h6 class=""> 價格: </h6>
-                                            <span>${{item.price }}</span>
 
-                                        </div>
-                                        <p class="sub-para">販售期間:{{item.applyBeginDate}}-{{item.applyEndDate}}</p>
-                                    </div>
-                                </div>
-                                </RouterLink>
-                        </div>
-                    </div>
-                </template>
-                    <!--//row-grids-->
+                <div>
+                    <v-row>
+                        <template v-for="item in filteredPackages" :key="item.id">
+                            <v-col cols="12" md="6" class="mt-4">
+                                <v-card elevation="12" class="rounded-xl">
+                                    <v-card-title>
+                                        <router-link :to="{ name: 'Tour2', params: { id: item.id } }"
+                                            class="card_title">
+                                            <v-row class="align-center">
+                                                <v-col cols="5">
+                                                    <v-img :src="item.imageUrl" class="img-fluid"></v-img>
+                                                </v-col>
+                                                <v-col cols="7">
+                                                    <h4>{{ item.name }}</h4>
+                                                    <div class="dst-btm">
+                                                        <h6>價格:</h6>
+                                                        <span>${{ item.price }}</span>
+                                                    </div>
+                                                    <p>販售期間:{{ item.applyBeginDate }}-{{
+                    item.applyEndDate }}</p>
+                                                </v-col>
+                                            </v-row>
+                                        </router-link>
+                                    </v-card-title>
+                                </v-card>
+                            </v-col>
+                        </template>
+                    </v-row>
                 </div>
+
+
+
+
+
+                <!-- <div class="row bottom-ab-grids">
+                
+                    <template v-for="item in filteredPackages">
+                        <div class="col-lg-6 subject-card mt-lg-0 mt-4 bordered-box">
+                            <div class="subject-card-header">
+                                <RouterLink :to="{ name: 'Tour2', params: { id: item.id } }"
+                                    class="card_title p-lg-4d-block">
+                                    <div class="row align-items-center">
+                                        <div class="col-sm-5 subject-img">
+                                          
+                                            <img :src="item.imageUrl" class="img-fluid">
+                                        </div>
+                                        <div class="col-sm-7 subject-content mt-sm-0 mt-4">
+                                            <h4>{{ item.name }}</h4>
+                                        
+                                            <div class="dst-btm">
+                                                <h6 class=""> 價格: </h6>
+                                                <span>${{ item.price }}</span>
+
+                                            </div>
+                                            <p class="sub-para">販售期間:{{ item.applyBeginDate }}-{{ item.applyEndDate }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </RouterLink>
+                            </div>
+                        </div>
+                    </template>
+               
+                </div> -->
             </div>
         </section>
-        <!--//grids-->
+
 
     </v-main>
     <v-pagination :length="2"></v-pagination>
@@ -248,12 +258,14 @@ function search() {
 
 
 <style scoped>
-/*!
- * Bootstrap v4.4.1 (https://getbootstrap.com/)
- * Copyright 2011-2019 The Bootstrap Authors
- * Copyright 2011-2019 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
+/* .custom-border {
+    border: 10px solid #000000;
+    padding: 10px;
+} */
+:deep(.container1) {
+    padding: 20px 0;
+}
+
 :root {
     --blue: #007bff;
     --indigo: #6610f2;
@@ -884,7 +896,7 @@ pre code {
     overflow-y: scroll;
 }
 
-.container {
+.container1 {
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
@@ -893,34 +905,34 @@ pre code {
 }
 
 @media (min-width: 576px) {
-    .container {
+    .container1 {
         max-width: 540px;
     }
 }
 
 @media (min-width: 768px) {
-    .container {
+    .container1 {
         max-width: 720px;
     }
 }
 
 @media (min-width: 992px) {
-    .container {
+    .container1 {
         max-width: 960px;
     }
 }
 
 @media (min-width: 1200px) {
-    .container {
+    .container1 {
         max-width: 1140px;
     }
 }
 
-.container-fluid,
-.container-sm,
-.container-md,
-.container-lg,
-.container-xl {
+.container1-fluid,
+.container1-sm,
+.container1-md,
+.container1-lg,
+.container1-xl {
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
@@ -930,38 +942,38 @@ pre code {
 
 @media (min-width: 576px) {
 
-    .container,
-    .container-sm {
+    .container1,
+    .container1-sm {
         max-width: 540px;
     }
 }
 
 @media (min-width: 768px) {
 
-    .container,
-    .container-sm,
-    .container-md {
+    .container1,
+    .container1-sm,
+    .container1-md {
         max-width: 720px;
     }
 }
 
 @media (min-width: 992px) {
 
-    .container,
-    .container-sm,
-    .container-md,
-    .container-lg {
+    .container1,
+    .container1-sm,
+    .container1-md,
+    .container1-lg {
         max-width: 960px;
     }
 }
 
 @media (min-width: 1200px) {
 
-    .container,
-    .container-sm,
-    .container-md,
-    .container-lg,
-    .container-xl {
+    .container1,
+    .container1-sm,
+    .container1-md,
+    .container1-lg,
+    .container1-xl {
         max-width: 1140px;
     }
 }
@@ -4835,12 +4847,12 @@ input[type="button"].btn-block {
     padding: 0.5rem 1rem;
 }
 
-.navbar .container,
-.navbar .container-fluid,
-.navbar .container-sm,
-.navbar .container-md,
-.navbar .container-lg,
-.navbar .container-xl {
+.navbar .container1,
+.navbar .container1-fluid,
+.navbar .container1-sm,
+.navbar .container1-md,
+.navbar .container1-lg,
+.navbar .container1-xl {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -4918,12 +4930,12 @@ input[type="button"].btn-block {
 
 @media (max-width: 575.98px) {
 
-    .navbar-expand-sm>.container,
-    .navbar-expand-sm>.container-fluid,
-    .navbar-expand-sm>.container-sm,
-    .navbar-expand-sm>.container-md,
-    .navbar-expand-sm>.container-lg,
-    .navbar-expand-sm>.container-xl {
+    .navbar-expand-sm>.container1,
+    .navbar-expand-sm>.container1-fluid,
+    .navbar-expand-sm>.container1-sm,
+    .navbar-expand-sm>.container1-md,
+    .navbar-expand-sm>.container1-lg,
+    .navbar-expand-sm>.container1-xl {
         padding-right: 0;
         padding-left: 0;
     }
@@ -4948,12 +4960,12 @@ input[type="button"].btn-block {
         padding-left: 0.5rem;
     }
 
-    .navbar-expand-sm>.container,
-    .navbar-expand-sm>.container-fluid,
-    .navbar-expand-sm>.container-sm,
-    .navbar-expand-sm>.container-md,
-    .navbar-expand-sm>.container-lg,
-    .navbar-expand-sm>.container-xl {
+    .navbar-expand-sm>.container1,
+    .navbar-expand-sm>.container1-fluid,
+    .navbar-expand-sm>.container1-sm,
+    .navbar-expand-sm>.container1-md,
+    .navbar-expand-sm>.container1-lg,
+    .navbar-expand-sm>.container1-xl {
         flex-wrap: nowrap;
     }
 
@@ -4969,12 +4981,12 @@ input[type="button"].btn-block {
 
 @media (max-width: 767.98px) {
 
-    .navbar-expand-md>.container,
-    .navbar-expand-md>.container-fluid,
-    .navbar-expand-md>.container-sm,
-    .navbar-expand-md>.container-md,
-    .navbar-expand-md>.container-lg,
-    .navbar-expand-md>.container-xl {
+    .navbar-expand-md>.container1,
+    .navbar-expand-md>.container1-fluid,
+    .navbar-expand-md>.container1-sm,
+    .navbar-expand-md>.container1-md,
+    .navbar-expand-md>.container1-lg,
+    .navbar-expand-md>.container1-xl {
         padding-right: 0;
         padding-left: 0;
     }
@@ -4999,12 +5011,12 @@ input[type="button"].btn-block {
         padding-left: 0.5rem;
     }
 
-    .navbar-expand-md>.container,
-    .navbar-expand-md>.container-fluid,
-    .navbar-expand-md>.container-sm,
-    .navbar-expand-md>.container-md,
-    .navbar-expand-md>.container-lg,
-    .navbar-expand-md>.container-xl {
+    .navbar-expand-md>.container1,
+    .navbar-expand-md>.container1-fluid,
+    .navbar-expand-md>.container1-sm,
+    .navbar-expand-md>.container1-md,
+    .navbar-expand-md>.container1-lg,
+    .navbar-expand-md>.container1-xl {
         flex-wrap: nowrap;
     }
 
@@ -5020,12 +5032,12 @@ input[type="button"].btn-block {
 
 @media (max-width: 991.98px) {
 
-    .navbar-expand-lg>.container,
-    .navbar-expand-lg>.container-fluid,
-    .navbar-expand-lg>.container-sm,
-    .navbar-expand-lg>.container-md,
-    .navbar-expand-lg>.container-lg,
-    .navbar-expand-lg>.container-xl {
+    .navbar-expand-lg>.container1,
+    .navbar-expand-lg>.container1-fluid,
+    .navbar-expand-lg>.container1-sm,
+    .navbar-expand-lg>.container1-md,
+    .navbar-expand-lg>.container1-lg,
+    .navbar-expand-lg>.container1-xl {
         padding-right: 0;
         padding-left: 0;
     }
@@ -5050,12 +5062,12 @@ input[type="button"].btn-block {
         padding-left: 0.5rem;
     }
 
-    .navbar-expand-lg>.container,
-    .navbar-expand-lg>.container-fluid,
-    .navbar-expand-lg>.container-sm,
-    .navbar-expand-lg>.container-md,
-    .navbar-expand-lg>.container-lg,
-    .navbar-expand-lg>.container-xl {
+    .navbar-expand-lg>.container1,
+    .navbar-expand-lg>.container1-fluid,
+    .navbar-expand-lg>.container1-sm,
+    .navbar-expand-lg>.container1-md,
+    .navbar-expand-lg>.container1-lg,
+    .navbar-expand-lg>.container1-xl {
         flex-wrap: nowrap;
     }
 
@@ -5071,12 +5083,12 @@ input[type="button"].btn-block {
 
 @media (max-width: 1199.98px) {
 
-    .navbar-expand-xl>.container,
-    .navbar-expand-xl>.container-fluid,
-    .navbar-expand-xl>.container-sm,
-    .navbar-expand-xl>.container-md,
-    .navbar-expand-xl>.container-lg,
-    .navbar-expand-xl>.container-xl {
+    .navbar-expand-xl>.container1,
+    .navbar-expand-xl>.container1-fluid,
+    .navbar-expand-xl>.container1-sm,
+    .navbar-expand-xl>.container1-md,
+    .navbar-expand-xl>.container1-lg,
+    .navbar-expand-xl>.container1-xl {
         padding-right: 0;
         padding-left: 0;
     }
@@ -5101,12 +5113,12 @@ input[type="button"].btn-block {
         padding-left: 0.5rem;
     }
 
-    .navbar-expand-xl>.container,
-    .navbar-expand-xl>.container-fluid,
-    .navbar-expand-xl>.container-sm,
-    .navbar-expand-xl>.container-md,
-    .navbar-expand-xl>.container-lg,
-    .navbar-expand-xl>.container-xl {
+    .navbar-expand-xl>.container1,
+    .navbar-expand-xl>.container1-fluid,
+    .navbar-expand-xl>.container1-sm,
+    .navbar-expand-xl>.container1-md,
+    .navbar-expand-xl>.container1-lg,
+    .navbar-expand-xl>.container1-xl {
         flex-wrap: nowrap;
     }
 
@@ -5125,12 +5137,12 @@ input[type="button"].btn-block {
     justify-content: flex-start;
 }
 
-.navbar-expand>.container,
-.navbar-expand>.container-fluid,
-.navbar-expand>.container-sm,
-.navbar-expand>.container-md,
-.navbar-expand>.container-lg,
-.navbar-expand>.container-xl {
+.navbar-expand>.container1,
+.navbar-expand>.container1-fluid,
+.navbar-expand>.container1-sm,
+.navbar-expand>.container1-md,
+.navbar-expand>.container1-lg,
+.navbar-expand>.container1-xl {
     padding-right: 0;
     padding-left: 0;
 }
@@ -5148,12 +5160,12 @@ input[type="button"].btn-block {
     padding-left: 0.5rem;
 }
 
-.navbar-expand>.container,
-.navbar-expand>.container-fluid,
-.navbar-expand>.container-sm,
-.navbar-expand>.container-md,
-.navbar-expand>.container-lg,
-.navbar-expand>.container-xl {
+.navbar-expand>.container1,
+.navbar-expand>.container1-fluid,
+.navbar-expand>.container1-sm,
+.navbar-expand>.container1-md,
+.navbar-expand>.container1-lg,
+.navbar-expand>.container1-xl {
     flex-wrap: nowrap;
 }
 
@@ -11179,7 +11191,7 @@ a.text-dark:focus {
         min-width: 992px !important;
     }
 
-    .container {
+    .container1 {
         min-width: 992px !important;
     }
 
@@ -14421,7 +14433,7 @@ p.white {
 }
 
 /*-- container --*/
-.container {
+.container1 {
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
@@ -14430,7 +14442,7 @@ p.white {
 }
 
 @media (min-width: 5147px) {
-    .container {
+    .container1 {
         max-width: 100%;
         padding-right: 30px;
         padding-left: 30px;
@@ -14440,7 +14452,7 @@ p.white {
 }
 
 @media (min-width: 1478px) {
-    .container {
+    .container1 {
         max-width: 100%;
         padding-right: 25px;
         padding-left: 25px;
@@ -14450,7 +14462,7 @@ p.white {
 }
 
 @media (min-width: 992px) {
-    .container {
+    .container1 {
         max-width: 960px;
         margin-right: auto;
         margin-left: auto;
@@ -14458,7 +14470,7 @@ p.white {
 }
 
 @media (min-width: 1200px) {
-    .container {
+    .container1 {
         max-width: 1140px;
         margin-right: auto;
         margin-left: auto;
@@ -14466,7 +14478,7 @@ p.white {
 }
 
 @media (min-width: 1280px) {
-    .container {
+    .container1 {
         max-width: 1200px;
     }
 }
@@ -17148,6 +17160,11 @@ p.count-text {
     }
 }
 
+.bordered-box {
+    border: 2px solid black;
+    border-radius: 3px;
+    /* margin: 5px; */
+}
 
 /*# sourceMappingURL=style-freedom.css.map */
 </style>

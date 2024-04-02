@@ -45,8 +45,8 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
 const target = env.ASPNETCORE_HTTPS_PORT
     ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
     : env.ASPNETCORE_URLS
-    ? env.ASPNETCORE_URLS.split(';')[0]
-    : 'https://localhost:7113';
+        ? env.ASPNETCORE_URLS.split(';')[0]
+        : 'https://localhost:7113';
 
 // console.log(keyFilePath, '|||||', certFilePath);
 // console.log(target);
@@ -80,6 +80,5 @@ export default defineConfig({
             cert: fs.readFileSync(certFilePath),
         },
     },
-
     css: ['https://cdn.jsdelivr.net/npm/vuetify@3.5.8/dist/vuetify-labs.css'],
 });
