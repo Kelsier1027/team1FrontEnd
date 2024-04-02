@@ -1,24 +1,26 @@
 <template>
-    <el-collapse-item :name="ticket.id" @click.stop.prevent="toggleTitle" :class=foldStatus>
-        <template #title>
-            <div class="titleBox">
-                <div>{{ ticket.ticketTitle }}</div>
+  <el-collapse-item :name="ticket.id" @click.stop.prevent="toggleTitle" :class=foldStatus class="collapseDiv"> 
+    <template #title>
+      <div class="titleBox">
+        <div>{{ ticket.ticketTitle }}</div>
 
-                <div v-if="showTitle">NT${{ ticket.price }}</div>
-            </div>
+        <div v-if="showTitle" class="outprice">NT${{ ticket.price }}</div>
+      </div>
 
-        </template>
+    </template>
 
 
-        <div @click.stop.prevent>
-            <div>{{ ticket.ticketDetail }}</div>
-            <div class="d-flex">
-                <div class="price">NT${{ ticketTotalPrice }}</div>
-                <el-button type="warning" plain @click.stop.prevent="addItem">Warning</el-button>
-            </div>
-            <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" @click.stop.prevent />
-        </div>
-    </el-collapse-item>
+    <div @click.stop.prevent>
+      <div class="ticketdetail">{{ ticket.ticketDetail }}</div>
+      <div class="row">
+        <div class="col-md-6 offset-md-6 buyblock">
+        <div class="innerprice">NT${{ ticketTotalPrice }}</div>
+        <div class="cal"><el-input-number v-model="num" :min="1" :max="77" @change="handleChange" @click.stop.prevent /></div>
+        <div class="addbtn"><el-button type="warning" plain @click.stop.prevent="addItem"><el-icon><ShoppingCart /></el-icon>加入購物車</el-button></div>
+      </div>
+    </div>
+    </div>
+  </el-collapse-item>
 
 </template>
 
@@ -36,7 +38,7 @@ const showTitle = ref(true);
 
 
 function toggleTitle() {
-    showTitle.value = !showTitle.value
+  showTitle.value = !showTitle.value
 }
 
 const addMessage = ref()
@@ -44,13 +46,13 @@ const addMessage = ref()
 
 
 const props = defineProps({
-    ticket: {
-        type: Object,
-        default: () => { }
-    },
-    cartId: {
-        type: Number,
-    }
+  ticket: {
+    type: Object,
+    default: () => { }
+  },
+  cartId: {
+    type: Number,
+  }
 
 });
 
@@ -60,8 +62,8 @@ const props = defineProps({
 const num = ref(1)
 
 const handleChange = (num) => {
-    console.log(num);
-    console.log(props.ticket.price);
+  console.log(num);
+  console.log(props.ticket.price);
 }
 
 const ticketTotalPrice = computed(() => props.ticket.price * num.value);
@@ -71,25 +73,25 @@ const ticketTotalPrice = computed(() => props.ticket.price * num.value);
 
 
 const addItem = async () => {
-    if (memberStore.isLoggedIn == false) {
-        alert('請先登入K??');
-        return;
-    }
+  if (memberStore.isLoggedIn == false) {
+    alert('請先登入K??');
+    return;
+  }
 
-    const addItemDTO = {
-        CartId: cartStore.cartId,
-        ItemId: props.ticket.id,
-        Quantity: num.value,
-    };
-    try {
-        const res = await AddCartItemAPI(addItemDTO);
-        addMessage.value = res;
-        console.log(res);
-        console.log(addItemDTO);
-    } catch (error) {
-        alert(error);
+  const addItemDTO = {
+    CartId: cartStore.cartId,
+    ItemId: props.ticket.id,
+    Quantity: num.value,
+  };
+  try {
+    const res = await AddCartItemAPI(addItemDTO);
+    addMessage.value = res;
+    console.log(res);
+    console.log(addItemDTO);
+  } catch (error) {
+    alert(error);
 
-    }
+  }
 
 
 
@@ -100,52 +102,94 @@ const addItem = async () => {
 
 
 watch(() => memberStore.memberId, (newId, oldId) => {
-    if (newId !== oldId && newId) {//避免0 !== 1 && 0
-        (async () => {
-            await cartStore.getCart();
-            console.log(cartStore.cartId);
-        })();
+  if (newId !== oldId && newId) {//避免0 !== 1 && 0
+    (async () => {
+      await cartStore.getCart();
+      console.log(cartStore.cartId);
+    })();
 
-    }
+  }
 }, { immediate: false })
 
 </script>
 
 <style>
+@import url('/src/assets/font/font.css');
+*{
+  
+}
+.collapseDiv{
+  font-family: MSJHBD;
+}
+
+.outprice{
+  font-family: MATRIX;
+}
+
+.ticketdetail{
+  margin-bottom: 30px;
+  
+}
+
+.innerprice{
+  margin-right:36px;
+  font-size: 25px;
+  font-family: MATRIX;
+}
+
+.cal{
+  margin-right:5px;
+
+}
+
+.buyblock{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.d-flex{
+  margin-top:30px;
+  
+}
+
 .el-breadcrumb {
-    margin: 10px;
-    font-size: 20px;
+  margin: 10px;
+  font-size: 20px;
 }
 
 .el-collapse-item__header {
-    display: flex;
-    height: auto;
-    font-size: 20px;
+  display: flex;
+  height: auto;
+  font-size: 20px;
 
 }
 
 .el-tag {
-    margin: 5px;
-    width: 80px;
-    height: 30px;
+  margin: 5px;
+  width: 80px;
+  height: 30px;
 }
 
 .el-collapse {
-    --el-collapse-border-color: red;
+  --el-collapse-border-color: red;
 }
 
 .el-button {
-    margin: auto;
+  margin: auto;
+
 }
 
 .price {
-    margin-right: 7px;
-    font-size: 20px;
+  margin-left: 60px;
+  font-size: 20px;
 }
 
-
+.el-collapse-item__content {}
 
 button {
-    margin-top: 20px;
+  margin-top: 20px;
 }
+
+
 </style>

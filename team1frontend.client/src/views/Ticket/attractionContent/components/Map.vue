@@ -1,11 +1,11 @@
 <template>
-    <GoogleMap api-key="AIzaSyAJNn4sB8zDRMpbD1GrRzN6dsGfSPuFiSg" style="width: 100%; height: 500px" :center="center"
-        :zoom="17">
+  <GoogleMap api-key="AIzaSyAJNn4sB8zDRMpbD1GrRzN6dsGfSPuFiSg" style="width: 100%; height: 500px" :center="center"
+    :zoom="17">
 
 
 
-        <Marker :options="{ position: center }" />
-    </GoogleMap>
+    <Marker :options="{ position: center }" />
+  </GoogleMap>
 </template>
 
 
@@ -13,17 +13,17 @@
 import { computed } from 'vue'
 import { GoogleMap, Marker } from 'vue3-google-map'
 const props = defineProps({
-    lat: {
-        type: Number
-    },
-    lng: {
-        type: Number
-    }
+  lat: {
+    type: Number
+  },
+  lng: {
+    type: Number
+  }
 })
 
 const center = computed(() => ({
-    lat: parseFloat(props.lat),
-    lng: parseFloat(props.lng)
+  lat: parseFloat(props.lat),
+  lng: parseFloat(props.lng)
 }))
 
 console.log(center);
