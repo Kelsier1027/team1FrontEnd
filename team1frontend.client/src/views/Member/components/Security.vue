@@ -74,7 +74,7 @@
     <hr style="color: gray" />
     <div class="validateLoginEmailTitle fontFamily">驗證登入信箱</div>
     <div>
-        <span>dnfd@sdfs.com</span
+        <span>{{ memberStore.account }}</span
         ><span
             style="
                 background-color: darkgrey;
@@ -92,7 +92,7 @@
     <div class="deleteAccountTitle fontFamily">刪除會員</div>
     <v-row justify="space-between">
         <v-col cols="6">
-            <span>dnfd@sdfs.com</span>
+            <span>{{ memberStore.account }}</span>
         </v-col>
         <v-col cols="2" justify="start">
             <v-btn class="saveBtn" size="large" color="#26bec9" variant="flat"

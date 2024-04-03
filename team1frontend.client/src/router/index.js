@@ -12,17 +12,16 @@ import Quests from '@/views/Member/components/Quests.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
-import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
-import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue'
-import CarIndex from '@/views/CarModel/Index.vue'
-import CarSearch from '@/views/CarModel/CarSearch.vue'
-import Order from '@/views/CarModel/Order.vue'
-import Order2 from '@/views/CarModel/Order2.vue'
-import toECPay from '@/views/CarModel/toECPay.vue'
-import Success from '@/views/CarModel/Success.vue'
-import Orders from '@/views/Orders/Orders.vue'
-
-
+import AttractionContent from '@/views/Ticket/attractionContent/index.vue';
+import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue';
+import CarIndex from '@/views/CarModel/Index.vue';
+import CarSearch from '@/views/CarModel/CarSearch.vue';
+import Order from '@/views/CarModel/Order.vue';
+import Order2 from '@/views/CarModel/Order2.vue';
+import toECPay from '@/views/CarModel/toECPay.vue';
+import Success from '@/views/CarModel/Success.vue';
+import Orders from '@/views/Orders/Orders.vue';
+import { useMemberStore } from '@/stores/memberStore.js';
 
 // 建立路徑
 const routes = [
@@ -36,7 +35,10 @@ const routes = [
                 name: 'Tour',
                 component: Tour,
                 meta: { hideHeader: false },
-                props: (route) => ({ selectedLocation: route.query.selectedLocation, date: route.query.date })
+                props: (route) => ({
+                    selectedLocation: route.query.selectedLocation,
+                    date: route.query.date,
+                }),
             },
             {
                 path: '/Tour2/:id',
@@ -46,7 +48,7 @@ const routes = [
             {
                 path: 'member/',
                 component: Member,
-                meta: { hideHeader: true },
+                meta: { hideHeader: true, requiresAuth: true },
                 children: [
                     {
                         path: '',
@@ -90,6 +92,7 @@ const routes = [
                 path: '/',
                 component: Attraction,
                 meta: { hideHeader: false },
+                name: 'Home',
             },
             {
                 path: '/attraction_content/:id',
@@ -102,34 +105,35 @@ const routes = [
             },
             {
                 path: '/rentCar',
-                component: CarIndex
+                component: CarIndex,
             },
             {
                 path: '/rentCar/car',
-                component: CarSearch
+                component: CarSearch,
             },
             {
                 path: '/rentCar/order/:str',
                 name: 'order',
-                component: Order
+                component: Order,
             },
             {
                 path: '/rentCar/order2/:str',
                 name: 'order2',
-                component: Order2
+                component: Order2,
             },
             {
                 path: '/rentCar/toecpay/:str',
                 name: 'toecpay',
-                component: toECPay
+                component: toECPay,
             },
             {
                 path: '/rentCar/success/',
-                component: Success
+                component: Success,
             },
             {
                 path: '/orders/',
-                component: Orders
+                meta: { requiresAuth: true },
+                component: Orders,
             },
         ],
     },
@@ -148,6 +152,36 @@ const router = createRouter({
             top: 0,
         };
     },
+});
+
+//在每一次跳轉頁面時，確認是否有登入
+router.beforeEach(async (to, from, next) => {
+    const memberStore = useMemberStore();
+
+    // 如果路由需要登录验证
+    if (to.meta.requiresAuth) {
+        // 如果用户未登录
+        if (!memberStore.isLoggedIn) {
+            // 尝试获取用户信息
+            if (await memberStore.isCookieValid()) {
+                await memberStore.getMemberInfo();
+                next(); // 继续路由跳转
+            } else {
+                await memberStore.logout(); // 登出
+                // 如果在会员页面，跳转到首页
+                if (to.path.includes('/member')) {
+                    next('/');
+                } else {
+                    // 跳轉回上一頁
+                    next('/');
+                }
+            }
+        } else {
+            next(); // 已登录，继续路由跳转
+        }
+    } else {
+        next(); // 不需要登录验证的路由，直接跳转
+    }
 });
 
 export default router;

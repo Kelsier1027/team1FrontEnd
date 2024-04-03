@@ -90,7 +90,6 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 
 		// 將通過Identity註冊的用戶資訊轉換成MemberInfoForFrontEndVm，並註冊到客製化的MemberRepository中
 		[HttpGet("registerToMember")]
-		//[Authorize]
 		public async Task<IActionResult> registerToMember()
 		{
 			var user = await _signInManager.UserManager.GetUserAsync(User);
@@ -106,15 +105,6 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 			// 將 ViewModel 轉換成 DTO
 			var memberDto = memberRegisterVm.ToDto();
 
-			// 註冊客製化會員，先使用帳號嘗試取得會員，檢查是否已經註冊過
-			var memberFromDb = await _memberService.GetMemberAsync(memberDto);
-
-			// 如果已經註冊過，則返回 BadRequest
-			if (memberFromDb != null)
-			{
-				return BadRequest("Member already exists.");
-			}
-
 			try
 			{
 				var registeredMember = await _memberService.RegisterMemberAsync(memberDto);
@@ -128,11 +118,13 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 				await _signInManager.UserManager.DeleteAsync(user);
 				return BadRequest(ex.Message);
 			}
+
+
+
 		}
 
 		// 取得會員詳細資訊
 		[HttpPost("getMemberInfo")]
-		//[Authorize]
 		public async Task<IActionResult> GetMemberInfo([FromBody] string account)
 		{
 			// 比對傳入的帳號是否與登入者帳號相同
@@ -180,10 +172,11 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 
 		// 檢查 cookie 是否通過驗證
 		[HttpGet("checkCookie")]
-		[Authorize]
+		[AllowAnonymous]
 		public IActionResult CheckCookie()
 		{
-			return Ok();
+			// 確認 cookie 是否通過驗證，回傳 true 或 false
+			return Ok(User.Identity!.IsAuthenticated);
 		}
 
 		// 更新會員資訊
@@ -236,7 +229,7 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 		// 更新會員密碼
 		[HttpPost("updatePassword")]
 		[Authorize]
-		public async Task<IActionResult> changePassword([FromBody] UpdatePasswordVm updatePasswordVm)
+		public async Task<IActionResult> ChangePassword([FromBody] UpdatePasswordVm updatePasswordVm)
 		{
 			// 比對傳入的帳號是否與登入者帳號相同
 			if (updatePasswordVm.Account != User.Identity!.Name)
@@ -286,6 +279,37 @@ namespace team1FrontEnd.Server.Controllers.Yen.Members
 			}
 
 			return Ok("密碼成功更新");
+		}
+
+		// 接收 email 以發送重設密碼的郵件
+		[HttpPost("getResetPasswordEmail")]
+		[AllowAnonymous]
+		public IActionResult GetResetPasswordEmail([FromBody] string email)
+		{
+			// 檢查 email 是否為空值
+			if (email == null)
+			{
+				return BadRequest("Email cannot be empty.");
+			}
+
+			// 檢查 email 是否存在
+			var user = _signInManager.UserManager.FindByNameAsync(email).Result;
+			if (user == null)
+			{
+				return NotFound("Account does not exist.");
+			}
+
+			// 產生重設密碼的 Token
+			var token = _signInManager.UserManager.GeneratePasswordResetTokenAsync(user).Result;
+
+			// 產生重設密碼的連結
+			var resetPasswordLink = Url.Action("ResetPassword", "Members", new { token, email }, Request.Scheme);
+			return Ok(resetPasswordLink);
+
+			// 寄送重設密碼的郵件
+			//_emailService.SendResetPasswordEmail(email, resetPasswordLink);
+
+			//return Ok("重設密碼的郵件已寄出");
 		}
 	}
 }

@@ -36,6 +36,8 @@ const doLogin = async () => {
             // 觸發父組件監聽的事件
             emit('login-success');
         } catch (error) {
+            // 顯示帳號或密碼錯誤
+            errorMessage.value = '帳號或密碼錯誤';
             // console.log(error);
             // if (error != null || undefined) {
             //     if (error.response != null || undefined) {
