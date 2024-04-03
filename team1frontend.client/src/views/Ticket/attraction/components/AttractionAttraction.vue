@@ -61,6 +61,7 @@
     </transition-group>
     <el-empty :image-size="200" v-if="attractionList == 0" />
 
+  
   </div>
 
 
@@ -227,4 +228,7 @@ img {
 .scrollbar-flex-content {
   display: flex;
 }
+
+
+
 </style>

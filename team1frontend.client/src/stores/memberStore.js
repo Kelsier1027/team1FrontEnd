@@ -6,7 +6,7 @@ import {
     getLoginInfo,
     registerIdentityAPI,
     checkCookie,
-    
+
 } from '../apis/auth.js';
 
 import {
@@ -87,7 +87,6 @@ export const useMemberStore = defineStore('member', () => {
         if (route.path.includes('/member')) {
             router.push('/');
         }
-        console.log('已登出');
     };
     // 取得會員詳細資訊
     const getMemberDetailInfo = async (account) => {

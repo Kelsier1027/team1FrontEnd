@@ -46,15 +46,16 @@ namespace team1FrontEnd.Server
 ));
 			string http = "https://127.0.0.1";
 			string httpPort = "https://127.0.0.1:5173";
-			// CORS policy 設定
-			builder.Services.AddCors(options =>
+            string httpLocal = "https://localhost:5173";
+            // CORS policy 設定
+            builder.Services.AddCors(options =>
 			{
 				// 設定為允許跨域請求攜帶cookies ， 接收跨域請求的網址攜帶cookies
 				options.AddPolicy("AllowAll",
 					builder => builder
 						//.AllowAnyOrigin() // 允許任何來源
 						// 設定允許跨域請求攜帶cookies
-						.WithOrigins(http, httpPort) // 允許跨域請求的網址
+						.WithOrigins(http, httpPort,httpLocal) // 允許跨域請求的網址
 						.AllowAnyHeader() // 允許任何標頭
 						.AllowAnyMethod() // 允許任何方法
 						.WithExposedHeaders("Set-Cookie") // 允許公開標頭
@@ -64,6 +65,7 @@ namespace team1FrontEnd.Server
 						);
 
 			});
+
 
 			builder.Services.AddDbContext<dbTeam1Context>(options =>
 			{

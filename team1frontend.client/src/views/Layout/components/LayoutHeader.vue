@@ -4,8 +4,8 @@ import { ref } from 'vue';
 const titles = ref([
     // { name: '住宿', url: '/hotel' },
     { name: '景點門票', url: '/' },
-    // { name: '套裝行程', url: '/tour' },
     { name: '全台租車', url: '/rentCar' },
+    { name: '套裝行程', url: '/tour' },
     { name: '訂單管理', url: '/orders' },
     // { name: '會員', url: '/member' },
 ]);

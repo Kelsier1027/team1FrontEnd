@@ -80,6 +80,16 @@ defineProps({
 .router-link:hover {
   background-image: linear-gradient(45deg, #93A5CF, #E4EfE9);
 }
+.card-div{
+  display: flex;
+  width: 200px;
+  height: 150px;
+  
+}
+.card-body{
+  width: 200px;
+  height: 150px;
+}
 
 .card-div {
   display: flex;

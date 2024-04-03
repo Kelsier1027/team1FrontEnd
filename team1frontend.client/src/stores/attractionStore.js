@@ -5,22 +5,22 @@ import { getCartByMemberAPI } from "@/apis/Chih/apis/get_cartByMember";
 
 
 export const useCartStore = defineStore('cart', {
-    state: () => ({
-        cartId: null,
-    }),
+  state: () => ({
+    cartId: null,
+  }),
 
-    getters: {
+  getters: {
 
-    },
+  },
 
-    actions: {
+  actions: {
 
-        async getCart() {
-            const memberStore = useMemberStore();
-            const res = await getCartByMemberAPI(memberStore.memberId)
-            this.cartId = res[0].cartId;
-        }
+    async getCart() {
+      const memberStore = useMemberStore();
+      const res = await getCartByMemberAPI(memberStore.memberId)
+      this.cartId = res[0].cartId;
     }
+  }
 
 
 

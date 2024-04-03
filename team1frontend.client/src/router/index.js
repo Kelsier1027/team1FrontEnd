@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/views/Home/index.vue';
 import Layout from '@/views/Layout/index.vue';
+import Tour from '@/views/Tour/index.vue';
+import Tour2 from '@/views/Tour2/index2.vue';
 import Member from '@/views/Member/index.vue';
 import AccountSetting from '@/views/Member/components/AccountSetting.vue';
 import MembershipBenefits from '@/views/Member/components/MembershipBenefits.vue';
@@ -22,12 +23,26 @@ import Success from '@/views/CarModel/Success.vue'
 import Orders from '@/views/Orders/Orders.vue'
 
 
+
 // 建立路徑
 const routes = [
     {
         path: '/',
         component: Layout,
         children: [
+            {
+                path: 'tour',
+                path: '/Tour',
+                name: 'Tour',
+                component: Tour,
+                meta: { hideHeader: false },
+                props: (route) => ({ selectedLocation: route.query.selectedLocation, date: route.query.date })
+            },
+            {
+                path: '/Tour2/:id',
+                name: 'Tour2',
+                component: Tour2,
+            },
             {
                 path: 'member/',
                 component: Member,

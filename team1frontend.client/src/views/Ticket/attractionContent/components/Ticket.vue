@@ -1,5 +1,5 @@
 <template>
-  <el-collapse-item :name="ticket.id" @click.stop.prevent="toggleTitle" :class=foldStatus class="collapseDiv"> 
+  <el-collapse-item :name="ticket.id" @click.stop.prevent="toggleTitle" :class=foldStatus class="collapseDiv">
     <template #title>
       <div class="titleBox">
         <div>{{ ticket.ticketTitle }}</div>
@@ -14,11 +14,15 @@
       <div class="ticketdetail">{{ ticket.ticketDetail }}</div>
       <div class="row">
         <div class="col-md-6 offset-md-6 buyblock">
-        <div class="innerprice">NT${{ ticketTotalPrice }}</div>
-        <div class="cal"><el-input-number v-model="num" :min="1" :max="77" @change="handleChange" @click.stop.prevent /></div>
-        <div class="addbtn"><el-button type="warning" plain @click.stop.prevent="addItem"><el-icon><ShoppingCart /></el-icon>加入購物車</el-button></div>
+          <div class="innerprice">NT${{ ticketTotalPrice }}</div>
+          <div class="cal"><el-input-number v-model="num" :min="1" :max="77" @change="handleChange"
+              @click.stop.prevent />
+          </div>
+          <div class="addbtn"><el-button type="warning" plain @click.stop.prevent="addItem"><el-icon>
+                <ShoppingCart />
+              </el-icon>加入購物車</el-button></div>
+        </div>
       </div>
-    </div>
     </div>
   </el-collapse-item>
 
@@ -34,6 +38,7 @@ const memberStore = useMemberStore();
 const cartStore = useCartStore();
 
 
+
 const showTitle = ref(true);
 
 
@@ -42,6 +47,7 @@ function toggleTitle() {
 }
 
 const addMessage = ref()
+
 
 
 
@@ -115,42 +121,42 @@ watch(() => memberStore.memberId, (newId, oldId) => {
 
 <style>
 @import url('/src/assets/font/font.css');
-*{
-  
-}
-.collapseDiv{
+
+
+
+.collapseDiv {
   font-family: MSJHBD;
 }
 
-.outprice{
+.outprice {
   font-family: MATRIX;
 }
 
-.ticketdetail{
+.ticketdetail {
   margin-bottom: 30px;
-  
+
 }
 
-.innerprice{
-  margin-right:36px;
+.innerprice {
+  margin-right: 36px;
   font-size: 25px;
   font-family: MATRIX;
 }
 
-.cal{
-  margin-right:5px;
+.cal {
+  margin-right: 5px;
 
 }
 
-.buyblock{
+.buyblock {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.d-flex{
-  margin-top:30px;
-  
+.d-flex {
+  margin-top: 30px;
+
 }
 
 .el-breadcrumb {
@@ -185,11 +191,8 @@ watch(() => memberStore.memberId, (newId, oldId) => {
   font-size: 20px;
 }
 
-.el-collapse-item__content {}
 
 button {
   margin-top: 20px;
 }
-
-
 </style>
