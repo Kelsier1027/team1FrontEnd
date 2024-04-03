@@ -135,5 +135,6 @@ onMounted(async () => useCart());
   position: fixed;
   right: 20px;
   top: 120px;
+  z-index: 101;
 }
 </style>
