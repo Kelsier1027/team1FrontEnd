@@ -19,6 +19,7 @@ import Order from '@/views/CarModel/Order.vue'
 import Order2 from '@/views/CarModel/Order2.vue'
 import toECPay from '@/views/CarModel/toECPay.vue'
 import Success from '@/views/CarModel/Success.vue'
+import CartList from '@/views/Ticket/components/CartList.vue'
 
 
 // 建立路徑
@@ -110,7 +111,12 @@ const routes = [
             {
                 path: '/rentCar/success/',
                 component: Success
-            }
+            },
+            {
+                path: 'cartList',
+                component: CartList,
+                meta: { hideHeader: false },
+            },
         ],
     },
 ];

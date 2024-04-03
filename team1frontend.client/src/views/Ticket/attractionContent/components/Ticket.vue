@@ -14,7 +14,7 @@
             <div>{{ ticket.ticketDetail }}</div>
             <div class="d-flex">
                 <div class="price">NT${{ ticketTotalPrice }}</div>
-                <el-button type="warning" plain @click.stop.prevent="addItem">Warning</el-button>
+                <el-button type="warning" plain @click.stop.prevent="addItem">加入購物車</el-button>
             </div>
             <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" @click.stop.prevent />
         </div>
@@ -28,6 +28,9 @@ import { AddCartItemAPI } from '@/apis/Chih/apis/post_addItem';
 import { getCartByMemberAPI } from '@/apis/Chih/apis/get_cartByMember'
 import { useMemberStore } from '@/stores/memberStore';
 import { useCartStore } from '@/stores/attractionStore'
+
+import { AddItemToCart } from '@/apis/Cart/additem';
+
 const memberStore = useMemberStore();
 const cartStore = useCartStore();
 
@@ -70,29 +73,40 @@ const ticketTotalPrice = computed(() => props.ticket.price * num.value);
 
 
 
+// const addItem = async () => {
+//     if (memberStore.isLoggedIn == false) {
+//         alert('請先登入K??');
+//         return;
+//     }
+
+//     const addItemDTO = {
+//         CartId: cartStore.cartId,
+//         ItemId: props.ticket.id,
+//         Quantity: num.value,
+//     };
+//     try {
+//         const res = await AddCartItemAPI(addItemDTO);
+//         addMessage.value = res;
+//         console.log(res);
+//         console.log(addItemDTO);
+//     } catch (error) {
+//         alert(error);
+//     }
+// }
+
 const addItem = async () => {
     if (memberStore.isLoggedIn == false) {
         alert('請先登入K??');
         return;
     }
-
-    const addItemDTO = {
-        CartId: cartStore.cartId,
-        ItemId: props.ticket.id,
-        Quantity: num.value,
-    };
+    console.log(55,props.ticket.id,1,num.value)
     try {
-        const res = await AddCartItemAPI(addItemDTO);
+        const res = await AddItemToCart(55,props.ticket.id,1,num.value);
         addMessage.value = res;
         console.log(res);
-        console.log(addItemDTO);
     } catch (error) {
         alert(error);
-
     }
-
-
-
 }
 
 

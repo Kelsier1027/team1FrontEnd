@@ -1,41 +1,99 @@
 <template>
-
     <el-affix :offset="120" class="affix-container">
         <img class="cartIcon" src="/src/assets/images/chih/shopping-cart.gif" @click="handleClick"
             v-if="memberStore.isLoggedIn == true">
     </el-affix>
     <el-drawer v-model="drawer" :direction="direction">
         <template #header>
-            <h4>購物車</h4>
+            <h4>購物車</h4>            
         </template>
+        
 
         <template #default>
 
-            <!-- v-for 購物清單  cart-item 預設樣式?-->
+            <v-card>
+    <v-tabs
+      v-model="tab"
+      bg-color="primary"
+    >
+      <v-tab value="one">景點訂票</v-tab>
+      <v-tab value="two">飯店訂房</v-tab>
+      <v-tab value="three">套裝行程</v-tab>
+    </v-tabs>
+
+    <v-card-text>
+      <v-window v-model="tab">
+        <v-window-item value="one">
             <div class="cart-item row">
                 <div class="item-name col-6">門票</div>
-                <div class="item-price col-3">單價</div>
-                <div class="item-qty col-3">數量</div>
+                <div class="item-price col-2">單價</div>
+                <div class="item-qty col-2">數量</div>
+                <div class="item-del col-2"></div>
             </div>
-            <div class="cart-item row" v-for="item in cleanItem" :key="item.id">
-
-                <div class="item-name col-6">{{ item.ticketName }}</div>
-                <div class="item-price col-3">{{ item.price }}</div>
-                <div class="item-qty col-3">{{ item.qty }}</div>
+            <div class="cart-item row" v-for="item in cartList" :key="item.id">
+                <div class="item-name col-6">{{ item.cartItem.name }}</div>
+                <div class="item-price col-2">{{ item.cartItem.price }}</div>
+                <div class="item-qty col-2">{{ item.quantity }}</div>
+                <div class="item-del col-2"><button @click="removeItem(item.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="currentColor" class="bi bi-trash"
+                viewBox="0 0 16 18">
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                <path
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+              </svg>
+            </button></div>
                 <div></div>
-
             </div>
-            <!-- <div>{{ cleanItem }}</div> -->
+        </v-window-item>
 
+        <v-window-item value="two">
+       
+            <div class="cart-item row" v-for="item in cleanItem" :key="item.id">
+                <div class="item-name col-6">{{ item.ticketName }}</div>
+                <div class="item-price col-2">{{ item.price }}</div>
+                <div class="item-qty col-2">{{ item.qty }}</div>
+                <div class="item-del col-2"><button @click="removeItem(index)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="currentColor" class="bi bi-trash"
+                viewBox="0 0 16 18">
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                <path
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+              </svg>
+            </button></div>
+                <div></div>
+            </div>
+        </v-window-item>
 
+        <v-window-item value="three">
+            <div class="cart-item row" v-for="item in cleanItem" :key="item.id">
+                <div class="item-name col-6">{{ item.ticketName }}</div>
+                <div class="item-price col-2">{{ item.price }}</div>
+                <div class="item-qty col-2">{{ item.qty }}</div>
+                <div class="item-del col-2"><button @click="removeItem(index)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="currentColor" class="bi bi-trash"
+                viewBox="0 0 16 18">
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                <path
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+              </svg>
+            </button></div>
+                <div></div>
+            </div>
+        </v-window-item>
+      </v-window>
+    </v-card-text>
+  </v-card>
         </template>
 
         <template #footer>
             <div style="display: flex;" class="row">
-                <div class="col-5">總計:NT${{ cartList[0]?.total }}</div>
+                <div class="col-5">總計:NT${{ total }}</div>
                 <div style="flex:auto" class="col-7">
-                    <el-button @click="cancelClick">繼續</el-button>
-                    <el-button type="primary" @click="confirmClick">結帳</el-button>
+                    <el-button @click="cancelClick">繼續購買</el-button>
+                    <el-button type="primary" @click="toCartList">查看購物車</el-button>
                 </div>
             </div>
 
@@ -44,46 +102,58 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { getCartByMemberAPI } from '@/apis/Chih/apis/get_cartByMember'
 import { useMemberStore } from '@/stores/memberStore';
 import { useRouter } from 'vue-router';
+
+import { getcartitem } from '@/apis/Cart/getcartitem';
+import { delitem } from '@/apis/Cart/delitem'
+
+
 const memberStore = useMemberStore();
 const router = useRouter();
-
-
 
 
 const drawer = ref(false)
 const direction = ref('rtl')
 const cartList = ref({});
 const cleanItem = ref({})
+const tab = ref(null);
+
+ const total = computed(() => {
+    let sum=0
+    if(cartList.value.length){
+    cartList.value.forEach(x => {
+        sum  += x.cartItem.price*x.quantity
+    })}
+    return sum
+})
+ console.log(total.value);
+
 
 //get cart info
 const useCart = async () => {
-    const res = await getCartByMemberAPI(memberStore.memberId);
-    console.log(memberStore.memberId);
-
+    const res = await getcartitem(1,1);        
     cartList.value = res;
-    console.log(res);
-    cleanItem.value = res[0].cartItems.map(item => ({
-        id: item.id,
-        ticketName: item.ticketName.trim(), // 清理 ticketName 字段
-        qty: item.qty,
-        price: item.price,
-    }))
-    console.log(cleanItem.value);
-
+    console.log(res[0]);
 };
+
+const removeItem = async (id) =>{
+    await delitem(id)
+    await useCart();
+}
 
 function handleClick() {
     drawer.value = true;
     useCart();
 }
-
 function cancelClick() {
     drawer.value = false;
+}
+function toCartList() {
+    router.push('/cartList')
 }
 
 function confirmClick() {
