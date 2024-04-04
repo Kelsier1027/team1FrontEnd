@@ -3,13 +3,7 @@
         <div class="block text-center">
             <el-carousel height="500px">
                 <el-carousel-item :interval="1500">
-                    <img src="https://www.kkday.com/zh-tw/blog/wp-content/uploads/batch_P1420358.jpg">
-                </el-carousel-item>
-                <el-carousel-item :interval="1500">
                     <img src="https://i0.wp.com/img.journey.tw/2020-07-29-180230-23.jpg?resize=1100%2C734&quality=99&ssl=1" />
-                </el-carousel-item>
-                <el-carousel-item :interval="1500">
-                    <img src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_2048,h_1371,f_auto/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/kmljdkbp98lfhhycozen/%E4%B9%9D%E6%97%8F%E6%96%87%E5%8C%96%E6%9D%91%E9%96%80%E7%A5%A8-Klook%E5%AE%A2%E8%B7%AF.jpg">
                 </el-carousel-item>
             </el-carousel>
         </div>
@@ -77,33 +71,30 @@
 
 <style scoped>
     .main-container {
-        max-width: 2000px; /* 設定最大寬度 */
-        margin-left: auto; /* 水平居中 */
-        margin-right: auto; /* 水平居中 */
+        max-width: 100%; /* 確保最大寬度為100% */
+        width: 100%; /* 新增，確保容器寬度為100% */
+        position: relative;
+    }
+    .search-panel {
+        position: absolute;
+        top: 350px;
+        left: 40px;
+        max-width: 100vw;
+    }
+
+
+    .el-carousel {
+        width: 100%; /* 確保旋轉木馬的寬度為100% */
+        height:500px;
     }
 
     .text-center {
         text-align: center;
     }
 
-    .el-carousel__item h3 {
-        color: #475669;
-        opacity: 0.75;
-        line-height: 150px;
-        margin: 0;
-        position: relative;
-    }
-
-    .el-carousel__item:nth-child(2n) {
-        background-color: #99a9bf;
-    }
-
-    .el-carousel__item:nth-child(2n + 1) {
-        background-color: #d3dce6;
-    }
-
     img {
-        width: 100%;
-        height: auto;
+        width: 100%; /* 新增，確保圖片寬度為100% */
+        height: 100%; /* 保持圖片的高度自動調整以保持宽高比 */
+        object-fit: cover; /* 更改為cover，以避免圖片失真 */
     }
 </style>

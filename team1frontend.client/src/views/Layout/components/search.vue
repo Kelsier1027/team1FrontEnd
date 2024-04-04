@@ -1,27 +1,27 @@
 ﻿<template>
     <div class="search-panel">
         <form class="search-form" @submit.prevent="submitForm">
-            <div class="input-group">
+            <div class="input-where">
                 <input type="text" placeholder="要去哪？" v-model="searchQuery.location" required />
             </div>
-            <div class="input-group">
+            <div class="input-date">
                 <Datepicker v-model="searchQuery.dateRange" :range="true" />
             </div>
 
-            <div class="input-group input-headcount">
+            <div class="input-headcount">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="adults-addon">成人</span>
+                    <!--<span class="input-group-text" id="adults-addon">成人</span>-->
                 </div>
-                <input type="number" class="form-control" v-model.number="searchQuery.adults" min="1" aria-label="成人" aria-describedby="adults-addon" required />
+                <input type="number" class="form-control" :placeholder="placeholderText" min="1" aria-label="成人" aria-describedby="adults-addon" required />
 
-                <div class="input-group-prepend">
+                <!--<div class="input-children">
                     <span class="input-group-text" id="children-addon">小孩</span>
-                </div>
-                <input type="number" class="form-control" v-model.number="searchQuery.children" min="0" aria-label="小孩" aria-describedby="children-addon" required />
+                </div>-->
+                <!--<input type="number" class="form-control" v-model.number="searchQuery.children" min="0" aria-label="小孩" aria-describedby="children-addon" required />-->
             </div>
 
 
-            <div class="input-group">
+            <div class="input-submit">
                 <button type="submit">搜尋</button>
             </div>
         </form>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import Datepicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -46,6 +46,11 @@
         infants: 0
     });
 
+    // 使用計算屬性生成 placeholder 文本
+const placeholderText = computed(() => {
+    return `成人${searchQuery.value.adults}位 小孩${searchQuery.value.children}位`;
+});
+
     function submitForm() {
         emit('search', searchQuery.value);
     }
@@ -58,7 +63,7 @@
         padding: 15px;
         border-radius: 8px;
         max-width: 100%; /* 调整为100%以适应父容器的宽度 */
-        margin: 20px auto;
+        margin:0px 50px 20px 50px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
@@ -68,19 +73,32 @@
         justify-content: space-between; /* 两端对齐 */
         gap: 10px; /* 输入框之间的间隔 */
     }
-
-    .input-group {
+    .input-where {
         display: flex;
         align-items: center;
         background-color: white;
         border: 1px solid #ccc;
         border-radius: 4px;
-        padding: 5px; /* 减少内边距以缩小框框 */
+        padding: 5px;
+        width: 150px;
     }
 
-        .input-group > * {
-            margin: 0 5px; /* 减少间距 */
-        }
+    .input-submit{
+        background-color:powderblue;
+        padding:10px;
+        border-radius:10px;
+    }
+
+    .input-date {
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 150px;
+    }
+
+        
 
     .input-group-prepend .input-group-text {
         background-color: #e9ecef;
@@ -110,7 +128,7 @@
         .input-group button:hover {
             background-color: #45a049;
         }
-
+    /*加入購物車的鍵*/
     @media (max-width: 768px) {
         .search-form {
             flex-wrap: wrap; /* 允许换行 */

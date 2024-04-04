@@ -11,6 +11,7 @@
                          :alt="`酒店的圖片 ${hotel.hotelInfo.name}`"
                          :key="image"
                          class="hotel-image" />
+                    
                 </div>
                 <!-- 詳細信息和地圖的容器 -->
                 <div class="details-map-container">
@@ -23,6 +24,7 @@
                                 {{ facility }}
                             </li>
                         </ul>
+                        <p >{{ hotel.hotelInfo.describe }}</p>
                         <div class="check-in-out">
                             <p>入住時間: {{ hotel.hotelInfo.checkInTime }}</p>
                             <p>退房時間: {{ hotel.hotelInfo.checkOutTime }}</p>
@@ -46,11 +48,14 @@
                          v-for="roomType in hotel.roomTypes"
                          :key="roomType.name">
                         <h3>{{ roomType.name }}</h3>
+
                         <img :src="roomType.image"
                              :alt="`房型圖片 ${roomType.name}`"
                              class="room-type-image" />
+                       
                         <p>尺寸: {{ roomType.size }}</p>
                         <p>價格: NT${{ roomType.price }}</p>
+                        <button class="add-to-cart-button">添加到購物車</button>
                         <!-- 其他房型信息 -->
                     </div>
                 </div>
@@ -71,42 +76,26 @@
 
 
 
-    //const hotel = ref({
-    //    "hotelInfo": {
-    //        "id": "1",
-    //        "name": "阿里山英迪格酒店",
-    //        "address": "阿里山景觀大道100號",
-    //        "rating": 8.8,
-    //        "price": 13500,
-    //        "facilities": ["WiFi", "健身房", "游泳池", "Spa"],
-    //        "checkInTime": "15:00",
-    //        "checkOutTime": "11:00",
-    //        "images": [
-    //            "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
-    //            "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
-    //            "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit"
-    //        ]
-    //    },
-    //    "roomTypes": [
-    //        {
-    //            "name": "豪華房",
-    //            "size": "30坪",
-    //            "facilities": ["大床", "山景", "獨立衛浴"],
-    //            "image": "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fithttps://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
-    //            "price": 5000,
-    //            "quantity": 10
-    //        },
-    //        {
-    //            "name": "家庭套房",
-    //            "size": "50坪",
-    //            "facilities": ["兩張大床", "海景", "包含早餐"],
-    //            "image": "https://a.travel-assets.com/media/meso_cm/PAPI/Images/lodging/90000000/89340000/89338400/89338365/df25c0f1_b.jpg?impolicy=resizecrop&rw=455&ra=fit",
-    //            "price": 8000,
-    //            "quantity": 5
-    //        }
-    //        // ...更多房型
-    //    ]
-    //});
+    onMounted(async () => {
+        // 獲取路由參數中的飯店ID
+        const hotelId = route.params.id;
+        try {
+            const response = await axios.get(`https://localhost:7113/api/Hotels/${hotelId}`);
+            const hotelData = response.data;
+
+            // 如果飯店的ID為3，則加上假資料的描述
+            if (hotelData.id === 3) {
+                hotelData.describe = "艾莎公寓位於台南市中西區大智街與保安路口，地處四通八達的地理中心位置，交通便捷，徒步3分鐘保安路、夏林路小吃，5分鐘海安路藝術商圈，6分鐘國華街和友愛街商圈，8分鐘新光三越台南新天地及藍曬圖文創園區，享有文創流行及美食小吃等多元的深度之旅。 艾莎公寓是全新的電梯別墅，外觀日系內斂灰白外牆，入口搭配上綠意盎然的重植花園造景，讓您在熱鬧的市區裡感受到大自然的活力，公寓內備有多種不同風格的主題套房讓您選擇，不論您是喜愛簡潔沉靜的高雅、喜歡粉色溫馨的浪漫、異國風味的空間表現或是針對兒童設計的親子館，都能滿足您的需求，尤其適合親子一同來體驗移居台南的生活步調，把「艾莎公寓」當作是您台南第二個家。";
+            }
+
+            // 現在hotel.value將包含修改後的飯店資料
+            hotel.value.hotelInfo = { ...hotelData };
+
+        } catch (error) {
+            console.error('Failed to fetch hotel details:', error);
+        }
+    });
+
 
 
     const hotel = ref({
@@ -169,7 +158,7 @@
                 facilities: facilityNames, // 假设这些信息需要另外处理
                 checkInTime: hotelData.checkinStart.split(':').slice(0, 2).join(':'),
                 checkOutTime: hotelData.checkoutEnd.split(':').slice(0, 2).join(':')
-,
+                ,
                 images: [
                     // 假设使用 mainImage 作为展示图
                     `/assets/HotelImages/${hotelData.mainImage}`
@@ -196,7 +185,7 @@
         }
 
     });
-   
+
 
 </script>
 
@@ -283,4 +272,23 @@
             max-width: 100%;
         }
     }
-</style>
+
+    .add-to-cart-button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .add-to-cart-button:hover {
+            background-color: #45a049;
+        }
+
+    @media (max-width: 768px) {
+        /* 移动设备或小屏幕的特定样式 */
+        /* ... */
+    }
+</style> 
