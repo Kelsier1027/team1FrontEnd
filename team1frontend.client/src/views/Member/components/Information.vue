@@ -443,8 +443,15 @@ onMounted(() => {
 
 :deep(.v-date-picker) {
     padding: 0 !important;
-    width: 252px !important;
-    height: 300px !important;
+    /* width: 252px !important;
+    height: 300px !important; */
+    width: 256px !important;
+    height: auto !important;
+}
+:deep(.v-date-picker-controls__month-btn) {
+    width: 120px !important;
+    padding-right: 0px !important;
+    padding-left: 10px !important;
 }
 :deep(.v-date-picker-month) {
     width: 252px !important;
