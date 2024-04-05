@@ -10,6 +10,7 @@ import {
     getEmailVerificationInfoAPI,
     getEmailVerificationEmailAPI,
     resetPasswordAPI,
+    changePasswordAPI,
 } from '../apis/auth.js';
 
 import {

@@ -74,7 +74,11 @@
         </v-text-field>
         <v-row justify="end" style="margin-top: -10px; margin-bottom: -2px">
             <v-col cols="auto">
-                <v-btn class="saveBtn btn" size="large" variant="flat"
+                <v-btn
+                    class="saveBtn btn"
+                    size="large"
+                    variant="flat"
+                    @click="saveChangePassword"
                     ><span class="saveBtnText">儲存</span>
                 </v-btn>
             </v-col>
@@ -165,9 +169,12 @@ const passwordMatch = (v) => v === newPassword.value || '密碼不相符';
 
 // 儲存更改密碼
 const saveChangePassword = async () => {
-    if (changePasswordForm.value.validate().valid) {
+    const validate = await changePasswordForm.value.validate();
+    console.log(validate.valid);
+    if (validate.valid) {
         // 建立一個物件，包含更改密碼表單的資料
         let changePasswordData = {
+            account: memberStore.account,
             oldPassword: oldPassword.value,
             newPassword: newPassword.value,
             confirmPassword: confirmPassword.value,

@@ -64,10 +64,11 @@ export const checkCookie = () => {
 };
 // 更改會員密碼
 export const changePasswordAPI = (changePasswordData) => {
+    console.log(changePasswordData);
     return http({
-        url: '/api/Members/changePassword',
+        url: '/api/Members/updatePassword',
         method: 'POST',
-        data: { changePasswordData },
+        data: changePasswordData,
     });
 };
 // 忘記密碼
