@@ -114,6 +114,7 @@ namespace team1FrontEnd.Server.Controllers.Chih
                                         ImgOfQRCode = x.QrcodeFileName,
                                         TicketImg=x.AttractionTicket.Attraction.MainImage,
                                         CreateTime = x.CreateTime,
+                                        IsUse=x.IsUse,
                                     }).ToListAsync();
 
 
@@ -127,6 +128,23 @@ namespace team1FrontEnd.Server.Controllers.Chih
             }
 
             return userTicket;
+        }
+        [HttpPost("ScanQRCode")]
+        public async Task<string> ScanQRCode([FromBody] string qrData)
+        {
+            var qrDataHash = Qrcode.ComputeHash(qrData);
+
+            var userTicket = await _dbTeam1Context.AttrationOrderItems.Where(x => x.Qrdata == qrDataHash)
+                                                                        .FirstOrDefaultAsync();
+            if(userTicket == null) 
+            { 
+                return "無此票券";
+            }
+
+            userTicket.IsUse=true;
+            
+            _dbTeam1Context.SaveChanges();
+            return "票券使用成功";
         }
     }
 }

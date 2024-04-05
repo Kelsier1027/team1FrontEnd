@@ -8,5 +8,6 @@
         public string ImgOfQRCode { get; set;}
         public DateTime? CreateTime { get; set;}
         public string TicketImg { get; set;}    
+        public bool? IsUse {get; set;}   
     }
 }

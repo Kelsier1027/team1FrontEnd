@@ -2,7 +2,7 @@
   <v-main>
     <v-container>
       <div style="display: grid;">
-        <video ref="video" autoplay></video>
+        <video class="videoqr" ref="video" autoplay></video>
         <canvas ref="canvas" style="display: none;"></canvas>
 
         <v-btn @click="scanQRCode" style="width:300px">掃描</v-btn>
@@ -14,6 +14,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import jsQR from 'jsqr';
+import { PostQRcodeAPI } from '@/apis/Chih/apis/post_QRcode.js'
 
 const video = ref(null);
 const canvas = ref(null);
@@ -44,9 +45,15 @@ const scanQRCode = () => {
 
   if (code) {
     console.log("找到QRCODE==>", code.data);
-    // call api 驗證
+    PostQRcodeAPI(code.data);
   } else {
     console.log("未找到QRCODE");
   }
 };
 </script>
+
+<style>
+.videoqr {
+  border: 3px solid black
+}
+</style>

@@ -12,6 +12,8 @@
 
                     <v-card-subtitle class="text-h6"> No.{{ item.itemId }}</v-card-subtitle>
                     <v-card-subtitle class="text-h6">購買日期{{ item.createTime }}</v-card-subtitle>
+                    <v-card-subtitle class="text-h8" v-if="item.isUse == true" style="color:red">已使用</v-card-subtitle>
+                    <v-card-subtitle class="text-h8" v-if="item.isUse == false">未使用</v-card-subtitle>
                     <v-card-actions>
 
 
@@ -62,10 +64,30 @@
 <script setup>
 import { useMemberStore } from '@/stores/memberStore'
 import { getUserTicketAPI } from '@/apis/Chih/apis/get_ticket'
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onUnmounted } from 'vue';
 const member = useMemberStore();
 const userTicket = ref({});
 const id = member.memberId
+const pollingInterval = ref(null);
+
+const goPolling = () => {
+  if (pollingInterval.value !== null) return;
+  console.log("開始pol");
+
+  pollingInterval.value = setInterval(() => {
+    getTicket()
+  }, 2000);
+};
+
+const stopPolling = () => {
+  console.log("結束pol");
+  if (pollingInterval.value !== null) {
+    clearInterval(pollingInterval.value);
+    pollingInterval.value = null;
+  }
+}
+
+
 
 
 
@@ -87,7 +109,14 @@ const getTicket = async () => {
   }
 }
 
-onMounted(() => getTicket())
+onMounted(() => {
+  getTicket();
+  goPolling();
+});
+
+onUnmounted(() => {
+  stopPolling();
+});
 
 
 
