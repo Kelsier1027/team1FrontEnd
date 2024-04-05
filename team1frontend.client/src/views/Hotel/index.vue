@@ -3,7 +3,7 @@
         <div class="block text-center">
             <el-carousel height="500px">
                 <el-carousel-item :interval="1500">
-                    <img src="https://i0.wp.com/img.journey.tw/2020-07-29-180230-23.jpg?resize=1100%2C734&quality=99&ssl=1" />
+                    <img src="https://kidfq.coach/wp-content/uploads/2023/09/%E5%AE%B6%E5%BA%AD%E6%97%85%E9%81%8A%EF%BC%BF1.webp" />
                 </el-carousel-item>
             </el-carousel>
         </div>
@@ -39,6 +39,7 @@
     import Carousel from '../Layout/components/Carousel.vue'; // 確保路徑正確
 
     const items = ref([
+        { name: '台南', acount: 1, image: "https://www.taiwanviptravel.com/articles/images/chihkan-tower-fort-provintia-img1.jpg" },
         { name: '台中', acount: 0, image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" },
         { name: "台北", acount: 0, image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
         { name: "宜蘭", acount: 2, image: "https://a.cdn-hotels.com/gdcs/production159/d242/af7bebaf-1370-41c8-8c63-19575a6c49e8.jpg" },

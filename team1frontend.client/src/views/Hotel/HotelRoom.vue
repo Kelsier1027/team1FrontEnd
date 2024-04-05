@@ -3,7 +3,6 @@
         <div class="hotel-room-container">
             <div class="hotel-room">
                 <h1>{{ hotel.hotelInfo.name }}</h1>
-
                 <!-- 圖片輪播 -->
                 <div class="image-gallery">
                     <img v-for="image in hotel.hotelInfo.images"
@@ -13,7 +12,6 @@
                          class="hotel-image" />
                 </div>
                 <p>{{ hotel.hotelInfo.describe }}</p>
-
                 <!-- 詳細信息和地圖的容器 -->
                 <div class="details-map-container">
                     <!-- 信息容器 -->
