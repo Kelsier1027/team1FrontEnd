@@ -6,6 +6,10 @@ import {
     getLoginInfo,
     registerIdentityAPI,
     checkCookie,
+    forgetPasswordAPI,
+    getEmailVerificationInfoAPI,
+    getEmailVerificationEmailAPI,
+    resetPasswordAPI,
 } from '../apis/auth.js';
 
 import {
@@ -67,7 +71,7 @@ export const useMemberStore = defineStore('member', () => {
     const getMemberInfo = async () => {
         // 先確認 cookie 驗證是否有效
         const responseOfCheckCookie = await checkCookie();
-        console.log(responseOfCheckCookie);
+        // console.log(responseOfCheckCookie);
         if (!responseOfCheckCookie) {
             // 如果 cookie 驗證失敗，執行登出
             logout();
@@ -114,32 +118,14 @@ export const useMemberStore = defineStore('member', () => {
     };
     // 取得會員詳細資訊
     const getMemberDetailInfo = async (account) => {
-        // const responseOfCheckCookie = await checkCookie();
-        // console.log(responseOfCheckCookie);
-        // if (!responseOfCheckCookie) {
-        //     // 如果 cookie 驗證失敗，執行登出
-        //     logout();
-        //     return;
-        // }
         const response = await getMemberInfoAPI(account);
-        // console.log(response);
-        // 將 API 回傳的資料以物件形式回傳
+
         return response;
     };
     // 更新會員詳細資訊
     const updateMemberDetailInfo = async (memberDetailInfo) => {
-        // const responseOfCheckCookie = await checkCookie();
-        // console.log(responseOfCheckCookie);
-
-        // if (!responseOfCheckCookie) {
-        //     // // 如果 cookie 驗證失敗，執行登出
-        //     // logout();
-        //     // return;
-        // }
-        // console.log(memberDetailInfo, 'memberStore');
         const response = await updateMemberDetailInfoAPI(memberDetailInfo);
-        // console.log(response);
-        // 將 API 回傳的資料以物件形式回傳
+
         return response;
     };
     // 更改會員密碼
@@ -151,6 +137,30 @@ export const useMemberStore = defineStore('member', () => {
     // 確認 cookie 驗證是否有效
     const isCookieValid = () => {
         const response = checkCookie();
+        // console.log(response);
+        return response;
+    };
+    // 忘記密碼
+    const sendForgetPasswordEmail = async (email) => {
+        const response = await forgetPasswordAPI(email);
+        // console.log(response);
+        return response;
+    };
+    // 透過 cookie 驗證取得信箱驗證資訊
+    const getEmailVerificationInfo = async () => {
+        const response = await getEmailVerificationInfoAPI();
+        // console.log(response);
+        return response;
+    };
+    // 透過信箱取得驗證信
+    const getEmailVerificationEmail = async (email) => {
+        const response = await getEmailVerificationEmailAPI(email);
+        // console.log(response);
+        return response;
+    };
+    // 重設密碼
+    const resetPassword = async (resetPasswordData) => {
+        const response = await resetPasswordAPI(resetPasswordData);
         // console.log(response);
         return response;
     };
@@ -168,5 +178,9 @@ export const useMemberStore = defineStore('member', () => {
         updateMemberDetailInfo,
         changePassword,
         isCookieValid,
+        sendForgetPasswordEmail,
+        getEmailVerificationInfo,
+        getEmailVerificationEmail,
+        resetPassword,
     };
 });

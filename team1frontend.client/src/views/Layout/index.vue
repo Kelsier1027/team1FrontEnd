@@ -27,9 +27,11 @@ onMounted(async () => {
     if (memberStore.account) {
         console.log('目前為登入狀態');
     } else {
-        // 如果沒有值，則導回首頁
+        // 如果沒有值，並且在 /member 之下的路由，則導回首頁
         console.log('目前為未登入狀態');
-        router.push('/'); // router 這個方法是 vue-router 提供的
+        if (route.path.includes('/member')) {
+            router.push('/');
+        }
     }
 });
 </script>

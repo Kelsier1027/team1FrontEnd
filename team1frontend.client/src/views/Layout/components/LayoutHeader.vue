@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+
 // 建立一個名為 links 的物件
 const titles = ref([
     // { name: '住宿', url: '/hotel' },
@@ -11,21 +12,17 @@ const titles = ref([
 ]);
 </script>
 
-<script>
-export default {
-    // data: () => ({
-    //     names: ['熱門目的地', '住宿', '景點門票', '套裝行程', '全台租車'],
-    // }),
-};
-</script>
-
 <template>
     <v-app-bar :elevation="7" class="" density="compact" flat>
         <v-spacer></v-spacer>
-
         <v-tabs color="grey-darken-2" centered>
-            <v-tab v-for="title in titles" :key="title.name" :text="title.name" :to="title.url"
-                :value="title.name"></v-tab>
+            <v-tab
+                v-for="title in titles"
+                :key="title.name"
+                :text="title.name"
+                :to="title.url"
+                :value="title.name"
+            ></v-tab>
         </v-tabs>
         <v-spacer></v-spacer>
     </v-app-bar>
@@ -38,7 +35,7 @@ export default {
     box-sizing: border-box;
 }
 
-.demo-tabs>.el-tabs__content {
+.demo-tabs > .el-tabs__content {
     padding: 32px;
     color: #6b778c;
     font-size: 32px;

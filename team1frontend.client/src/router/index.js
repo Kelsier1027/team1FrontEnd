@@ -21,6 +21,8 @@ import Order2 from '@/views/CarModel/Order2.vue';
 import toECPay from '@/views/CarModel/toECPay.vue';
 import Success from '@/views/CarModel/Success.vue';
 import Orders from '@/views/Orders/Orders.vue';
+import ConfirmEmailSuccessed from '@/views/Member/components/ConfirmEmailSuccessed.vue';
+import ResetPassword from '@/views/Member/components/ResetPassword.vue';
 import { useMemberStore } from '@/stores/memberStore.js';
 
 // 建立路徑
@@ -44,6 +46,22 @@ const routes = [
                 path: '/Tour2/:id',
                 name: 'Tour2',
                 component: Tour2,
+            },
+            {
+                path: 'confirmEmailSuccessed',
+                component: ConfirmEmailSuccessed,
+                meta: { hideHeader: true },
+                name: 'ConfirmEmailSuccessed',
+            },
+            {
+                path: 'resetPassword',
+                component: ResetPassword,
+                meta: { hideHeader: true },
+                name: 'ResetPassword',
+                props: (route) => ({
+                    memberAccount: route.query.memberAccount,
+                    token: route.query.token,
+                }),
             },
             {
                 path: 'member/',
