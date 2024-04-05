@@ -62,14 +62,20 @@ function loadGoogleSignInSDK() {
 // }
 </script>
 <template>
-    <v-card-title class="justify-center text-center text-h5 mt-0 mb-1"
+    <v-card-title
+        class="justify-center text-center text-h5 mb-1"
+        style="margin-top: 0px !important; padding-top: 0 !important"
         >登入註冊 小白旅遊</v-card-title
     >
     <v-card-subtitle class="justify-center text-center mb-9"
         >立即登入，隨時收到獨家優惠</v-card-subtitle
     >
     <div class="login-channel-list">
-        <v-btn class="btn-custom" variant="text" style="width: 100%">
+        <v-btn
+            class="btn-custom"
+            variant="text"
+            style="width: 100%; margin-top: -25px"
+        >
             <div
                 id="g_id_onload"
                 data-client_id="841135279083-38u2rs985d6jl5ki7v7sa2tf4o0nuojb.apps.googleusercontent.com"
