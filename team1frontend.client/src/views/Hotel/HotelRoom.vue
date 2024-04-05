@@ -10,7 +10,19 @@
                          :alt="`酒店的圖片 ${hotel.hotelInfo.name}`"
                          :key="image"
                          class="hotel-image" />
+                    <img class="hotel-image"
+                         src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/455303717.jpg?k=893177d70da78b62c660f448535210c9eff942f8041d6499f3e33749ec46bfd6&o=&hp=1" />
+                    <img class="hotel-image"
+                         src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/289814503.jpg?k=719e27f1e5d5b829eeb203c8ac97f99c41e3347cbd5e85f1e94008f7e3dd2599&o=&hp=1" />
+                    <img class="hotel-image"
+                         src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/451933103.jpg?k=e43041cffa50667defb2381ef065273b6add7a81d217c5adf9eaf234d011ba83&o=&hp=1" />
+                    <img class="hotel-image"
+                         src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/205758730.jpg?k=2a114ab9c212f1b81a3c2a99a1edb8b9dea6cbff0148d18ae2ce8ed4207446ad&o=&hp=1" />
+                    <img class="hotel-image"
+                         src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/279604713.jpg?k=0c7463a31098c262b6e4e4949f35678a7c44472ae4048bf534fcc829af5dc7bb&o=&hp=1" />
+
                 </div>
+                
                 <p>{{ hotel.hotelInfo.describe }}</p>
                 <!-- 詳細信息和地圖的容器 -->
                 <div class="details-map-container">
@@ -50,7 +62,6 @@
                         <img :src="roomType.image"
                              :alt="`房型圖片 ${roomType.name}`"
                              class="room-type-image" />
-
                         <p>尺寸: {{ roomType.size }}</p>
                         <p>價格: NT${{ roomType.price }}</p>
                         <!-- 数量选择器 -->
@@ -229,8 +240,8 @@
     }
 
     .hotel-image, .room-type-image {
-        width: 200px;
-        height: 150px;
+        width: 300px;
+        height: 300px;
         object-fit: cover;
         border-radius: 5px;
     }

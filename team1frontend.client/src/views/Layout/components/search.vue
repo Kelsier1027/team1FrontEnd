@@ -9,27 +9,38 @@
             </div>
 
             <div class="input-headcount">
-                <div class="input-group-prepend">
-                    <!--<span class="input-group-text" id="adults-addon">成人</span>-->
-                </div>
-                <input type="number" class="form-control" :placeholder="placeholderText" min="1" aria-label="成人" aria-describedby="adults-addon" required />
-
-                <!--<div class="input-children">
-                    <span class="input-group-text" id="children-addon">小孩</span>
-                </div>-->
-                <!--<input type="number" class="form-control" v-model.number="searchQuery.children" min="0" aria-label="小孩" aria-describedby="children-addon" required />-->
+                <input type="number"
+                       :placeholder="placeholderText"
+                       required
+                       readonly
+                       @click="showModal = true" />
             </div>
-
-
             <div class="input-submit">
                 <button type="submit">搜尋</button>
             </div>
         </form>
+        <!-- 數量選擇器的模態窗口 -->
+        <div v-if="showModal" class="dropdown-content">
+            <!-- 成人數量選擇 -->
+            <div class="counter">
+                <label>成人</label>
+                <button @click.stop="updateCount('adults', -1)" :disabled="searchQuery.adults <= 1">-</button>
+                <span>{{ searchQuery.adults }}</span>
+                <button @click.stop="updateCount('adults', 1)">+</button>
+            </div>
+            <!-- 小孩數量選擇 -->
+            <div class="counter">
+                <label>小孩</label>
+                <button @click.stop="updateCount('children', -1)" :disabled="searchQuery.children <= 0">-</button>
+                <span>{{ searchQuery.children }}</span>
+                <button @click.stop="updateCount('children', 1)">+</button>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
+    import { onMounted, onUnmounted, ref, computed } from 'vue';
     import Datepicker from '@vuepic/vue-datepicker';
     import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -47,18 +58,47 @@
     });
 
     // 使用計算屬性生成 placeholder 文本
-const placeholderText = computed(() => {
-    return `成人${searchQuery.value.adults}位 小孩${searchQuery.value.children}位`;
-});
+    const placeholderText = computed(() => {
+        return `成人${searchQuery.value.adults}位 小孩${searchQuery.value.children}位`;
+    });
 
     function submitForm() {
         emit('search', searchQuery.value);
     }
+    const showModal = ref(false);
+
+    function updateCount(type, increment) {
+        if (type === 'adults') {
+            searchQuery.value.adults = Math.max(1, searchQuery.value.adults + increment);
+        } else if (type === 'children') {
+            searchQuery.value.children = Math.max(0, searchQuery.value.children + increment);
+        }
+    }
+    // 切換顯示模態窗口
+    function toggleModal() {
+        showModal.value = !showModal.value;
+    }
+
+    // 點擊外部時關閉模態窗口
+    function closeOnOutsideClick(event) {
+        if (!event.target.closest('.modal-content') && !event.target.closest('.input-headcount')) {
+            showModal.value = false;
+        }
+    }
+    // 當組件掛載時添加事件監聽器，當組件卸載時移除
+    onMounted(() => {
+        document.addEventListener('click', closeOnOutsideClick);
+    });
+    onUnmounted(() => {
+        document.removeEventListener('click', closeOnOutsideClick);
+    });
 </script>
 
 <!-- 添加 CSS 樣式如果有的話 -->
 <style scoped>
+    
     .search-panel {
+        position:relative;
         background-color: #ffd54f;
         padding: 15px;
         border-radius: 8px;
@@ -106,14 +146,6 @@ const placeholderText = computed(() => {
         padding: 5px 10px; /* 缩小预置组件的填充 */
     }
 
-    .Datepicker, .input-group input[type="text"],
-    .input-group input[type="number"] {
-        border: none;
-        outline: none;
-        max-width: 140px; /* 限制输入框宽度 */
-        text-align: center; /* 文字居中 */
-    }
-
     .input-group button {
         background-color: #4CAF50;
         color: white;
@@ -144,5 +176,66 @@ const placeholderText = computed(() => {
                 flex-basis: auto;
             }
     }
+    /* 模態窗口樣式 */
+    .input-headcount {
+        align-items: center;
+        padding:7px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        /* 其他樣式保持不變 */
+    }
+
+    .dropdown-content {
+        display: block;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 105px;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    /* 確保點擊按鈕不會觸發下拉選項的顯示或隱藏 */
+    .counter button {
+        margin: 0 5px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .counter {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .counter button {
+        margin: 0 10px;
+    }
+
 </style>
 
