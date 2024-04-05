@@ -373,6 +373,9 @@ public partial class dbTeam1Context : DbContext
 
         modelBuilder.Entity<AttrationOrderItem>(entity =>
         {
+            entity.Property(e => e.CreateTime).HasColumnType("datetime");
+            entity.Property(e => e.QrcodeFileName).HasColumnName("QRCodeFileName");
+            entity.Property(e => e.Qrdata).HasColumnName("QRData");
             entity.Property(e => e.UnitPrice).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.AttractionOrder).WithMany(p => p.AttrationOrderItems)
@@ -708,7 +711,6 @@ public partial class dbTeam1Context : DbContext
 
             entity.HasOne(d => d.Admin).WithMany(p => p.HotelOrders)
                 .HasForeignKey(d => d.AdminId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_HotelOrders_Admins");
 
             entity.HasOne(d => d.HotelOrderCancelReason).WithMany(p => p.HotelOrders)
@@ -819,6 +821,7 @@ public partial class dbTeam1Context : DbContext
             entity.Property(e => e.LastName).HasMaxLength(50);
             entity.Property(e => e.RegistrationDate).HasColumnType("datetime");
             entity.Property(e => e.Salt).IsUnicode(false);
+            entity.Property(e => e.VerificationCode).IsUnicode(false);
         });
 
         modelBuilder.Entity<MemberActivityRecord>(entity =>

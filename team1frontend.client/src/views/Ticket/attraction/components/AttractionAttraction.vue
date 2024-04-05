@@ -9,12 +9,13 @@
       <div class="searchBar">
         <div style="display: flex;">
           <div class="searchBarBG">
-            <el-input class="searchInput" @keyup.enter="search" v-model="keyword" style="width: 240px"
-              placeholder="關鍵字搜尋" />
+            <el-input class="searchInput" @keyup.enter="search" v-model="keyword"
+              style="width: 340px;height: 50px;font-size: 20px;" placeholder="關鍵字搜尋" />
           </div>
           <div class="searchBarBG">
 
-            <el-button type="primary" icon="Search" @click="search" dir="">搜尋</el-button>
+            <el-button type="primary" icon="Search" @click="search" dir=""
+              style="width: 100px;height: 50px;;font-size: 20px;">搜尋</el-button>
 
           </div>
         </div>
@@ -22,19 +23,19 @@
       <!-- <el-carousel-item v-for="item in 4" :key="item" :interval="1500">
       </el-carousel-item> -->
 
-      <el-carousel-item :interval="1500">
+      <el-carousel-item :interval="1000">
         <img src="@/assets/images/chih/0x01.webp">
       </el-carousel-item>
-      <el-carousel-item :interval="1500">
+      <el-carousel-item :interval="1000">
         <img src="@/assets/images/chih/0x02.webp">
       </el-carousel-item>
-      <el-carousel-item :interval="1500">
+      <el-carousel-item :interval="1000">
         <img src="@/assets/images/chih/0x03.webp">
       </el-carousel-item>
-      <el-carousel-item :interval="1500">
+      <el-carousel-item :interval="1000">
         <img src="@/assets/images/chih/0x04.webp">
       </el-carousel-item>
-      <el-carousel-item :interval="1500">
+      <el-carousel-item :interval="1000">
         <img src="@/assets/images/chih/0x05.webp">
       </el-carousel-item>
 
@@ -75,7 +76,6 @@ import { Calendar, Search } from '@element-plus/icons-vue'
 import AttractionItem from './Attraction_Item.vue'
 import AttractionCategoryVue from './AttractionCategory.vue';
 import AttractionCategory from './AttractionCategory.vue'
-import axios from 'axios';
 import { getAttractionsAPI } from '@/apis/Chih/apis/search_attraction';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
@@ -139,8 +139,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.attraction_body{
-  padding-top:10px;
+.attraction_body {
+  padding-top: 10px;
   padding-left: 150px;
   padding-right: 150px;
   padding-bottom: 20px;

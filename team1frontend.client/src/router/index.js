@@ -13,6 +13,8 @@ import Favorites from '@/views/Member/components/Favorites.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
 import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
 import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue'
+import AttractionTicket from '@/views/Ticket/attractionTicket/index.vue'
+import AttractionQR from '@/views/Ticket/attractionQR/index.vue'
 import CarIndex from '@/views/CarModel/Index.vue'
 import CarSearch from '@/views/CarModel/CarSearch.vue'
 import Order from '@/views/CarModel/Order.vue'
@@ -83,6 +85,14 @@ const routes = [
             {
                 path: '/attraction_order',
                 component: AttractionOrder,
+            },
+            {
+                path: '/attraction_ticket',
+                component: AttractionTicket,
+            },
+            {
+                path: '/attraction_666',
+                component: AttractionQR,
             },
             {
                 path: '/rentCar',

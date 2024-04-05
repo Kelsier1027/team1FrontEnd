@@ -21,6 +21,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-vue": "^2.23.1",
     "element-plus": "^2.6.1",
+    "jsqr": "^1.4.0",
     "pinia": "^2.1.7",
     "scss": "^0.2.4",
     "thor-x": "^0.0.81",

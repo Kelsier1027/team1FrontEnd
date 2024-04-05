@@ -85,7 +85,7 @@ defineProps({
 
 .card-div {
   display: flex;
-  width: 200px;
+  width: 100%;
   height: 150px;
 
 }
@@ -94,11 +94,10 @@ defineProps({
   width: 200px;
   height: 150px;
 }
-.priceX{
+
+.priceX {
   text-align: center;
   font-size: 20px;
-  font-family:MATRIX;
+  font-family: MATRIX;
 }
-
-
 </style>

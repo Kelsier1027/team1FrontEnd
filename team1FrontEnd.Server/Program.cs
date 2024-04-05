@@ -18,6 +18,7 @@ using team1FrontEnd.Server.個人.Yen.Data;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 
+
 namespace team1FrontEnd.Server
 {
 	public class Program
@@ -46,15 +47,16 @@ namespace team1FrontEnd.Server
 ));
 			string http = "https://127.0.0.1";
 			string httpPort = "https://127.0.0.1:5173";
-			// CORS policy 設定
-			builder.Services.AddCors(options =>
+			string localhost = "https://localhost:5173";
+            // CORS policy 設定
+            builder.Services.AddCors(options =>
 			{
 				// 設定為允許跨域請求攜帶cookies ， 接收跨域請求的網址攜帶cookies
 				options.AddPolicy("AllowAll",
 					builder => builder
 						//.AllowAnyOrigin() // 允許任何來源
 						// 設定允許跨域請求攜帶cookies
-						.WithOrigins(http, httpPort) // 允許跨域請求的網址
+						.WithOrigins(http, httpPort, localhost) // 允許跨域請求的網址
 						.AllowAnyHeader() // 允許任何標頭
 						.AllowAnyMethod() // 允許任何方法
 						.WithExposedHeaders("Set-Cookie") // 允許公開標頭

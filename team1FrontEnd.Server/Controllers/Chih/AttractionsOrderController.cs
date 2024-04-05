@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 using team1FrontEnd.Server.Models;
 using team1FrontEnd.Server.個人.Chih._03_Infrastructure.DTOs;
+using team1FrontEnd.Server.個人.Chih._03_Infrastructure.Utilities;
 
 namespace team1FrontEnd.Server.Controllers.Chih
 {
@@ -17,15 +19,15 @@ namespace team1FrontEnd.Server.Controllers.Chih
             _dbTeam1Context = dbTeam1Context;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<string>CreateOrder(int userId)
         {
             //檢查購物車的商品是否為空
             var userCart = await _dbTeam1Context.AttractionCarts
-                                                        .Where(x=>x.MemberId== userId)
-                                                        .Include(x=>x.AttractionCartItems)
-                                                        .SelectMany(x=>x.AttractionCartItems)//壓平集合?
-                                                        .AnyAsync();
+                                    .Where(x=>x.MemberId== userId)
+                                    .Include(x=>x.AttractionCartItems)
+                                    .SelectMany(x=>x.AttractionCartItems)//壓平集合?
+                                    .AnyAsync();
             if (!userCart) 
             {
                 return "請新增商品";
@@ -50,20 +52,30 @@ namespace team1FrontEnd.Server.Controllers.Chih
 
             foreach (var item in cartItems)
             {
-                var ticket = await _dbTeam1Context.AttractionTickets.Where(x => x.Id == item.Items)
-                                                                    .FirstOrDefaultAsync();
-                                                                    
-                var orderItem = new AttrationOrderItem()
-                {
-                    AttractionTicketId=item.Items,
-                    AttractionOrderId= orderId,
-                    Qty=item.Quantity,
-                    UnitPrice=ticket.Price,
-                };
+                var ticket = await _dbTeam1Context.AttractionTickets.Where(x => x.Id == item.Items).FirstOrDefaultAsync();
 
-                _dbTeam1Context.AttrationOrderItems.Add(orderItem);
-                ticketTotalPrice+=item.Quantity*ticket.Price;
+                for (int i = 0, Max = item.Quantity; i < Max; i++) {
+                    var qrData = $"{orderId}-{item.Items}-{Guid.NewGuid()}";
+                    var qrFileName = $"ispan{item.Items}_{Guid.NewGuid()}.png";
+                    var qrFilePath = Path.Combine("MyStaticFiles", "images", "chih", "QrCode",qrFileName);
 
+                    Qrcode.CreateQrcode(qrData, qrFilePath);
+                    var qrDataHash=Qrcode.ComputeHash(qrData);
+                    var orderItem = new AttrationOrderItem()
+                    {
+                        AttractionTicketId = item.Items,
+                        AttractionOrderId = orderId,
+                        Qty = 1,
+                        UnitPrice = ticket.Price,
+                        QrcodeFileName = qrFileName,
+                        Qrdata=qrDataHash,
+                        IsUse=false,
+                        CreateTime= DateTime.Now,  
+                    };
+
+                    _dbTeam1Context.AttrationOrderItems.Add(orderItem);
+                    ticketTotalPrice += item.Quantity * ticket.Price;
+                }
             }
             await _dbTeam1Context.SaveChangesAsync();
 
@@ -88,6 +100,33 @@ namespace team1FrontEnd.Server.Controllers.Chih
             return "訂單建立成功";
 
 
+        }
+        [HttpPost("GetUserTicket")]
+        public async Task<IEnumerable<UserTicketDTO>> GetUserTicket([FromBody]int userId)
+        {
+            var userTicket = await _dbTeam1Context.AttractionOrders.Where(x => x.MemberId == userId)
+                                    .SelectMany(x => x.AttrationOrderItems)
+                                    .Select(x => new UserTicketDTO
+                                    {
+                                        ItemId = x.AttractionTicketId,
+                                        AttractionOrderId = x.AttractionOrderId,
+                                        TicketName = x.AttractionTicket.TicketTitle,
+                                        ImgOfQRCode = x.QrcodeFileName,
+                                        TicketImg=x.AttractionTicket.Attraction.MainImage,
+                                        CreateTime = x.CreateTime,
+                                    }).ToListAsync();
+
+
+            foreach (var item in userTicket)
+            {
+                item.ImgOfQRCode=$"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/StaticFiles/images/chih/QrCode/{item.ImgOfQRCode}";
+            }
+            foreach(var item in userTicket)
+            {
+                item.TicketImg= $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/StaticFiles/images/chih/AttractionMain/{item.TicketImg}";
+            }
+
+            return userTicket;
         }
     }
 }
