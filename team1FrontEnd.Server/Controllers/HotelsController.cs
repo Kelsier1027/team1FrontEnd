@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using team1FrontEnd.Server.Models;
 
 namespace team1FrontEnd.Server.Controllers
@@ -77,29 +78,66 @@ namespace team1FrontEnd.Server.Controllers
         }
 
         // GET: api/Hotels/facilities?facilityIds=1,2,3
-        [HttpGet("facilities")]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotelsByFacilities([FromQuery] List<int> facilityIds)
+        [HttpGet("GetHotelsByFacilities")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels([FromQuery] List<int> facilities)
         {
-            if (_context.Hotels == null)
+            try
             {
-                return NotFound("No hotels found.");
+                // 確認_context.Hotels是否為null
+                if (_context.Hotels == null)
+                {
+                    return NotFound("沒有找到任何飯店資料。");
+                }
+
+                // 確認是否有提供設施ID
+                if (facilities == null || facilities.Count == 0)
+                {
+                    return Ok(_context.Hotels); // 如果沒有提供設施ID,返回所有飯店
+                }
+
+                // 嘗試找到匹配所有提供設施ID的飯店列表
+                var hotels = await _context.Hotels
+                    .ToListAsync(); // 先把所有飯店資料拉到內存中
+
+                hotels = hotels
+                    .Where(hotel => hotel.HotelFacilities != null &&
+                                    facilities.All(fId => ParseFacilityIds(hotel.HotelFacilities).Contains(fId)))
+                    .ToList(); // 現在的過濾是在內存中進行的
+
+                // 檢查找到的飯店列表是否為空
+                if (hotels.Count == 0)
+                {
+                    return NotFound("沒有找到符合指定設施的飯店。");
+                }
+
+                // 回傳找到的飯店列表
+                return Ok(hotels);
+            }
+            catch (Exception ex)
+            {
+                // 記錄錯誤
+                return StatusCode(500, $"Error in GetHotels: {ex.Message}");
+            }
+        }
+
+        private List<int> ParseFacilityIds(string facilityIdsString)
+        {
+            if (string.IsNullOrEmpty(facilityIdsString))
+            {
+                return new List<int>();
             }
 
-            if (facilityIds == null || facilityIds.Count == 0)
+            // 直接使用 JSON 反序列化方法來轉換
+            try
             {
-                return BadRequest("Facility IDs are required for searching.");
+                var facilityIds = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, List<int>>>(facilityIdsString);
+                return facilityIds?["FacilityIds"] ?? new List<int>();
             }
-
-            var hotels = await _context.Hotels
-                .Where(hotel => hotel.HotelFacilities != null && facilityIds.All(fId => hotel.GetFacilityIds().Contains(fId)))
-                .ToListAsync();
-
-            if (hotels.Count == 0)
+            catch (JsonException)
             {
-                return NotFound("No hotels found with the specified facilities.");
+                // 如果 JSON 格式不正確，則處理異常
+                return new List<int>();
             }
-
-            return hotels;
         }
 
 

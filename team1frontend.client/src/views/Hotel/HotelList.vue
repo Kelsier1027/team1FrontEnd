@@ -86,7 +86,7 @@
             <!-- list 页面的 template 部分 -->
             <div class="hotel-list">
                 <!-- 搜索消息提示 -->
-                <p v-if="searchMessage">{{ searchMessage }}</p>
+                <p v-if="searchMessage && (!hotels.value || hotels.value.length === 0)">{{ searchMessage }}</p>
 
                 <!-- 酒店列表 -->
                 <div v-else>
@@ -199,15 +199,12 @@
         console.log('Go to hotel:');
     };
 
-    // 处理酒店预订的函数
-    const bookHotel = (hotelId) => {
-        console.log('Book hotel:', hotelId);
-        // 这里可以添加预订逻辑或跳转到预订页面
-    };
-
+    const hotels = ref([]);
+    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
     watch(selectedFacilities, (newValue, oldValue) => {
         // 只在實際有變化時發送請求
         if (newValue !== oldValue) {
+            searchMessage.value ="";
             fetchHotelsBasedOnFacilities(newValue);
         }
     });
@@ -216,20 +213,25 @@
         try {
             // 構造請求 URL，這裡假設你的後端支持通過查詢參數來篩選設施
             // 注意：這裡的 URL 和參數需要根據你的實際後端接口進行調整
-            const response = await axios.get(`https://localhost:7113/api/Hotels?facilities=${selectedFacilities.join(',')}`);
+            const facilities = selectedFacilities;
+            const queryString = facilities.map(f => `facilities=${f}`).join('&');
+            const url = `https://localhost:7113/api/Hotels/GetHotelsByFacilities?${queryString}`;
+            const response = await axios.get(url);
             // 假設後端返回的是一個符合條件的飯店列表
             hotels.value = response.data;
             console.log("77777");
-            console.log(selectedFacilities);
+            console.log(selectedFacilities.join(','));
+            console.log(response.data);
             console.log(hotels.value);
             console.log("88888");
         } catch (error) {
+            searchMessage.value = "沒有找到匹配的酒店，請嘗試其他搜索條件。";
+            hotels.value = []; // 清空之前的搜索结果
             console.error('Failed to fetch hotels based on facilities:', error);
         }
     }
 
-    const hotels = ref([]);
-    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
+   
 
     async function fetchHotelsAndRooms() {
         const address = route.query.address;
