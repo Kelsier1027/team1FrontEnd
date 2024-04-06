@@ -17,7 +17,6 @@ export const registerAPI = () => {
     return http({
         url: '/api/Members/registerToMember',
         method: 'GET',
-        data: { email, password },
     });
 };
 
@@ -65,9 +64,66 @@ export const checkCookie = () => {
 };
 // 更改會員密碼
 export const changePasswordAPI = (changePasswordData) => {
+    console.log(changePasswordData);
     return http({
-        url: '/api/Members/changePassword',
+        url: '/api/Members/updatePassword',
         method: 'POST',
-        data: { changePasswordData },
+        data: changePasswordData,
+    });
+};
+// 忘記密碼
+export const forgetPasswordAPI = (username) => {
+    // console.log({ username });
+
+    return http({
+        url: '/api/Members/GetResetPasswordEmail',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        data: username,
+    });
+};
+// 取得信箱驗證資訊
+export const getEmailVerificationInfoAPI = () => {
+    return http({
+        url: '/api/Members/GetEmailVerificationInfo',
+        method: 'GET',
+    });
+};
+
+// 發送信箱驗證信
+export const getEmailVerificationEmailAPI = (email) => {
+    return http({
+        url: '/api/Members/GetConfirmRegisterMail',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: email,
+    });
+};
+
+// 送出重設的新密碼
+export const resetPasswordAPI = (resetPasswordData) => {
+    return http({
+        url: '/api/Members/ResetPassword',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: resetPasswordData,
+    });
+};
+
+// 使用 valid-google-login 來驗證 google token
+export const googleLoginAPI = (token) => {
+    return http({
+        url: '/api/Members/GoogleLogin',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: token,
     });
 };

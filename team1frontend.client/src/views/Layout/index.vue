@@ -13,7 +13,6 @@ const route = useRoute();
 //import test from './Service/test.vue';
 //import Cart from './Service/Cart.vue';
 
-
 const links = ['熱門目的地', '住宿', '景點門票', '套裝行程', '全台租車'];
 
 // 透過 computed 來判斷是否顯示 Header
@@ -28,8 +27,11 @@ onMounted(async () => {
     if (memberStore.account) {
         console.log('目前為登入狀態');
     } else {
-        // 如果沒有值，則導回首頁
-        router.push('/'); // router 這個方法是 vue-router 提供的
+        // 如果沒有值，並且在 /member 之下的路由，則導回首頁
+        console.log('目前為未登入狀態');
+        if (route.path.includes('/member')) {
+            router.push('/');
+        }
     }
 });
 </script>

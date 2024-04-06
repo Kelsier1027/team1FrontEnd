@@ -52,7 +52,7 @@ namespace team1FrontEnd.Server.個人.Yen.Services.Menber
 			if (await IsAccountExistsAsync(memberDto.Account)) throw new ArgumentException("帳號已存在");
 
 			// 驗證帳號、密碼
-			ValidateMember(memberDto);
+			//ValidateMember(memberDto);
 
 			// 將雜湊後的密碼存入 dto
 			memberDto.EncryptedPassword = GenerateHashPassword(memberDto.OriginalPassword);

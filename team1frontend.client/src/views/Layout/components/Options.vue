@@ -9,15 +9,90 @@ const emit = defineEmits(['show-login']);
 function ShowLogin() {
     emit('show-login');
 }
+
+const loginURI = 'https://localhost:7113/api/Members/valid-google-login';
+
+onMounted(() => {
+    loadGoogleSignInSDK().then(() => {
+        google.accounts.id.initialize({
+            client_id:
+                '841135279083-38u2rs985d6jl5ki7v7sa2tf4o0nuojb.apps.googleusercontent.com',
+            callback: handleCredentialResponse,
+            auto_select: false,
+            context: 'signin',
+            ux_mode: 'popup',
+            login_uri: loginURI,
+        });
+        // 根據需要顯示登入提示或渲染登入按鈕
+    });
+});
+
+function handleCredentialResponse(response) {
+    console.log('Encoded JWT ID token:', response.credential);
+
+    // 處理登入成功後的邏輯，例如將 token 發送到後端
+}
+
+function loadGoogleSignInSDK() {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.defer = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+// function handleSignIn() {
+//     // 確保 Google Accounts SDK 已經初始化
+//     if (google && google.accounts && google.accounts.id) {
+//         google.accounts.id.prompt((notification) => {
+//             // 這裡處理登入提示的狀態
+//             if (
+//                 notification.isNotDisplayed() ||
+//                 notification.isSkippedMoment()
+//             ) {
+//                 console.log('Login prompt is not displayed or was skipped.');
+//             }
+//         });
+//     } else {
+//         console.error('Google Accounts SDK is not initialized.');
+//     }
+// }
 </script>
 <template>
-    <v-card-title class="justify-center text-center text-h5 mt-0 mb-1"
+    <v-card-title
+        class="justify-center text-center text-h5 mb-1"
+        style="margin-top: 0px !important; padding-top: 0 !important"
         >登入註冊 小白旅遊</v-card-title
     >
     <v-card-subtitle class="justify-center text-center mb-9"
         >立即登入，隨時收到獨家優惠</v-card-subtitle
     >
     <div class="login-channel-list">
+        <v-btn
+            class="btn-custom"
+            variant="text"
+            style="width: 100%; margin-top: -25px"
+        >
+            <div
+                id="g_id_onload"
+                data-client_id="841135279083-38u2rs985d6jl5ki7v7sa2tf4o0nuojb.apps.googleusercontent.com"
+                data-login_uri="https://localhost:7113/api/Members/valid-google-login"
+                data-auto_prompt="false"
+            ></div>
+            <div
+                class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="使用Google繼續"
+                data-shape="circle"
+                data-logo_alignment="left"
+                style="width: 100%"
+            ></div>
+        </v-btn>
         <v-btn class="btn-custom" variant="text" style="width: 100%">
             <img
                 class="btn-icon"
@@ -27,14 +102,14 @@ function ShowLogin() {
             <span class="btn-text"> 使用 Facebook 繼續 </span>
         </v-btn>
 
-        <v-btn class="btn-custom" variant="text" style="width: 100%">
+        <!-- <v-btn class="btn-custom" variant="text" style="width: 100%">
             <img
                 class="btn-icon"
                 src="https://cdn.kkday.com/pc-web/assets/img/sns/google.svg"
                 alt="Google"
             />
             <span class="btn-text">使用 Google 繼續</span>
-        </v-btn>
+        </v-btn> -->
 
         <v-btn class="btn-custom" variant="text" style="width: 100%">
             <img
@@ -99,6 +174,9 @@ function ShowLogin() {
     padding: 0;
     box-sizing: border-box;
 }
+/* :deep(.nsm7Bb-HzV7m-LgbsSe) {
+    border-width: 0px;
+} */
 element.style {
     --text-color: #222;
     --border-color: #ddd;

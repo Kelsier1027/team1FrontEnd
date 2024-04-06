@@ -54,6 +54,7 @@ const register = async () => {
                 console.log(error);
             }
         }
+        // emit('register-success');
     }
 };
 
@@ -188,12 +189,12 @@ function showLogin() {
 
         <v-btn
             type="submit"
-            class="mb-4"
-            color="white"
+            class="mb-4 register-btn"
+            color=""
             size="large"
             variant="tonal"
             block
-            style="background-color: #5cbbc7"
+            style=""
         >
             註冊
         </v-btn>
@@ -226,6 +227,18 @@ function showLogin() {
 }
 .v-selection-control {
     height: 10px !important;
+}
+:deep(.register-btn) {
+    font-weight: 500;
+    font-size: 14px;
+    color: white;
+    border-radius: 5px;
+    background-color: #5cbbc7;
+    transition: background-color 0.3s;
+}
+:deep(.register-btn:hover) {
+    background-color: #428c8c;
+    font-size: 16px;
 }
 </style>
 

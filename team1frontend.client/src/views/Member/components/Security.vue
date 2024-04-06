@@ -14,14 +14,19 @@
             density="comfortable"
             variant="outlined"
             label="原密碼"
+            clearable
+            :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+            :type="visible ? 'text' : 'password'"
+            @click:append-inner="visible = !visible"
         >
         </v-text-field>
-        <div class="fieldsRow">
+        <div class="fieldsRow mt-2">
             <span class="fields font-weight-medium fontFamily"> 新密碼 </span>
             <span class="dot"> * </span>
         </div>
-        <div class="fontFamily">
-            新密碼長度必須至少 10 個字元，且至少包含 1 個數字和 1 個英文字母
+        <div class="fontFamily detailInfo">
+            新密碼長度必須至少 6 個字元，且至少包含 1 個數字和 1 個英文字母 1
+            個特殊字元
         </div>
         <v-text-field
             v-model="newPassword"
@@ -39,6 +44,10 @@
             density="comfortable"
             variant="outlined"
             label="新密碼"
+            clearable
+            :append-inner-icon="visible2 ? 'mdi-eye-off' : 'mdi-eye'"
+            :type="visible2 ? 'text' : 'password'"
+            @click:append-inner="visible2 = !visible2"
         >
         </v-text-field>
         <v-text-field
@@ -51,22 +60,26 @@
                 hasSpecialCharacter,
                 passwordMatch,
             ]"
-            class="originalField"
+            class="originalField mt-2"
             color="#26bec9"
             single-line
             density="comfortable"
             variant="outlined"
             label="再次確認新密碼"
+            clearable
+            :append-inner-icon="visible3 ? 'mdi-eye-off' : 'mdi-eye'"
+            :type="visible3 ? 'text' : 'password'"
+            @click:append-inner="visible3 = !visible3"
         >
         </v-text-field>
         <v-row justify="end" style="margin-top: -10px; margin-bottom: -2px">
             <v-col cols="auto">
                 <v-btn
-                    class="saveBtn"
+                    class="saveBtn btn"
                     size="large"
-                    color="#26bec9"
                     variant="flat"
-                    ><span class="saveBtnText" style="color: white">儲存</span>
+                    @click="saveChangePassword"
+                    ><span class="saveBtnText">儲存</span>
                 </v-btn>
             </v-col>
         </v-row>
@@ -74,29 +87,36 @@
     <hr style="color: gray" />
     <div class="validateLoginEmailTitle fontFamily">驗證登入信箱</div>
     <div>
-        <span>dnfd@sdfs.com</span
+        <span class="mr-2">{{ memberStore.account }}</span
         ><span
             style="
-                background-color: darkgrey;
                 color: white;
                 padding: 2px 5px;
                 border-radius: 2px;
                 font-size: 12px;
             "
             class="fontFamily"
-            ><v-icon icon="mdi-shield-half"></v-icon>尚未驗證</span
+            :class="isEmailVerified ? 'blueBG' : 'grayBG'"
+            ><v-icon icon="mdi-shield-half"></v-icon
+            >{{ emailVerificationInfo }}</span
         >
     </div>
-    <v-btn class="mt-2" variant="outlined">重新發送驗證信</v-btn>
+    <v-btn
+        v-if="!isEmailVerified"
+        class="mt-2"
+        variant="outlined"
+        @click="getEmailVerification"
+        >重新發送驗證信</v-btn
+    >
     <hr style="color: gray" />
     <div class="deleteAccountTitle fontFamily">刪除會員</div>
-    <v-row justify="space-between">
-        <v-col cols="6">
-            <span>dnfd@sdfs.com</span>
+    <v-row class="d-flex justify-space-between">
+        <v-col cols="auto">
+            <span>{{ memberStore.account }}</span>
         </v-col>
-        <v-col cols="2" justify="start">
-            <v-btn class="saveBtn" size="large" color="#26bec9" variant="flat"
-                ><span class="saveBtnText" style="color: white">刪除會員</span>
+        <v-col cols="auto">
+            <v-btn class="deleteBtn" size="large" variant="flat"
+                ><span class="">刪除會員</span>
             </v-btn>
         </v-col>
     </v-row>
@@ -105,8 +125,20 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useMemberStore } from '@/stores/memberStore.js';
+import { useAlertStore } from '@/stores/alertStore.js';
+
+const alertStore = useAlertStore();
 
 const memberStore = useMemberStore();
+const visible = ref(false);
+const visible2 = ref(false);
+const visible3 = ref(false);
+
+const isEmailVerified = ref(false);
+// 驗證信箱訊息
+const emailVerificationInfo = computed(() =>
+    isEmailVerified.value ? '已驗證' : '尚未驗證'
+);
 
 // 更改密碼表單實例
 const changePasswordForm = ref(null);
@@ -137,9 +169,12 @@ const passwordMatch = (v) => v === newPassword.value || '密碼不相符';
 
 // 儲存更改密碼
 const saveChangePassword = async () => {
-    if (changePasswordForm.value.validate().valid) {
+    const validate = await changePasswordForm.value.validate();
+    console.log(validate.valid);
+    if (validate.valid) {
         // 建立一個物件，包含更改密碼表單的資料
         let changePasswordData = {
+            account: memberStore.account,
             oldPassword: oldPassword.value,
             newPassword: newPassword.value,
             confirmPassword: confirmPassword.value,
@@ -154,15 +189,66 @@ const saveChangePassword = async () => {
                 oldPassword.value = '';
                 newPassword.value = '';
                 confirmPassword.value = '';
+                alertStore.showAlert({
+                    message: '密碼變更成功',
+                    type: 'success',
+                });
             }
         } catch (error) {
             console.log(error);
+            alertStore.showAlert({
+                message: '密碼變更失敗',
+                type: 'error',
+            });
         }
     }
 };
+// 取得信箱驗證信
+const getEmailVerification = async () => {
+    try {
+        // 呼叫取得信箱驗證信的 API
+        const emailVerification = await memberStore.getEmailVerificationEmail(
+            memberStore.account
+        );
+        if (emailVerification) {
+            alertStore.showAlert({
+                message: '驗證信發送成功',
+                type: 'success',
+            });
+        } else {
+            alertStore.showAlert({
+                message: '驗證信發送失敗',
+                type: 'error',
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        alertStore.showAlert({
+            message: '驗證信發送失敗',
+            type: 'error',
+        });
+    }
+};
+
+onMounted(async () => {
+    const bool = await memberStore.getEmailVerificationInfo();
+    console.log(bool);
+    if (bool) {
+        isEmailVerified.value = true;
+    } else {
+        isEmailVerified.value = false;
+    }
+});
 </script>
 
 <style scoped>
+:deep(.blueBG) {
+    background-color: #26bec9;
+}
+:deep(.grayBG) {
+    background-color: darkgrey;
+}
+
 .validateLoginEmailTitle {
     font-size: 18px;
     font-weight: 700;
@@ -202,6 +288,39 @@ const saveChangePassword = async () => {
     font-size: 14px;
 }
 :deep(.fieldsRow) {
+    margin-bottom: 5px;
+}
+:deep(.btn) {
+    font-weight: 500;
+    font-size: 14px;
+    color: white;
+    border-radius: 5px;
+    background-color: #5cbbc7;
+    transition: background-color 0.3s;
+}
+:deep(.btn:hover) {
+    background-color: #428c8c;
+    color: white;
+
+    font-size: 16px;
+}
+:deep(.deleteBtn) {
+    font-weight: 500;
+    font-size: 14px;
+    color: white;
+    border-radius: 5px;
+    background-color: #5cbbc7;
+    transition: background-color 0.3s;
+}
+:deep(.deleteBtn:hover) {
+    background-color: #428c8c;
+    color: white;
+    font-weight: bolder;
+    font-size: 14px;
+}
+:deep(.detailInfo) {
+    font-size: 14px;
+    color: rgb(156, 157, 160);
     margin-bottom: 5px;
 }
 </style>

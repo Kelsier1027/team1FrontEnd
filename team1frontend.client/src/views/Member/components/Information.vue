@@ -212,12 +212,8 @@
         </v-row>
         <v-row justify="end" style="margin-top: 8px; margin-bottom: -2px">
             <v-col cols="auto">
-                <v-btn
-                    class="saveBtn"
-                    type="submit"
-                    color="#26bec9"
-                    variant="flat"
-                    ><span class="saveBtnText" style="color: white">儲存</span>
+                <v-btn class="saveBtn btn" type="submit" variant="flat"
+                    ><span class="saveBtnText">儲存</span>
                 </v-btn>
             </v-col>
         </v-row>
@@ -229,7 +225,8 @@ import { useMemberStore } from '@/stores/memberStore.js';
 import { useRouter } from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
 import { useDate } from 'vuetify';
-
+import { useAlertStore } from '@/stores/alertStore.js';
+const alertStore = useAlertStore();
 const router = useRouter();
 const memberStore = useMemberStore();
 
@@ -377,8 +374,17 @@ const saveMemberInfo = async () => {
             );
             // console.log(updatedMemberInfo);
             getMemberDetailInfo(memberStore.account);
+            memberStore.getMemberInfo();
+            alertStore.showAlert({
+                message: '資料變更成功',
+                type: 'success',
+            });
         } catch (error) {
             console.log(error);
+            alertStore.showAlert({
+                message: '資料變更失敗',
+                type: 'error',
+            });
         }
     }
 };
@@ -397,7 +403,6 @@ onMounted(() => {
         router.push('/'); // router 這個方法是 vue-router 提供的
     }
 });
-
 </script>
 
 <style scoped>
@@ -438,8 +443,15 @@ onMounted(() => {
 
 :deep(.v-date-picker) {
     padding: 0 !important;
-    width: 252px !important;
-    height: 300px !important;
+    /* width: 252px !important;
+    height: 300px !important; */
+    width: 256px !important;
+    height: auto !important;
+}
+:deep(.v-date-picker-controls__month-btn) {
+    width: 120px !important;
+    padding-right: 0px !important;
+    padding-left: 10px !important;
 }
 :deep(.v-date-picker-month) {
     width: 252px !important;
@@ -526,7 +538,7 @@ onMounted(() => {
     font-family: 'Noto Sans TC', 微软雅黑, 'Microsoft YaHei', sans-serif;
     color: white;
     font-weight: 400;
-    font-size: 14px;
+    /* font-size: 14px; */
 }
 :deep(.saveBtn) {
     height: 42.39px !important;
@@ -538,5 +550,18 @@ onMounted(() => {
 :deep(.dialSelectorField .v-input__details) {
     /* 將座標位置向下移 */
     margin-top: 6px;
+}
+:deep(.btn) {
+    font-weight: 500;
+    font-size: 14px;
+    color: white;
+    border-radius: 5px;
+    background-color: #5cbbc7;
+    transition: background-color 0.3s;
+}
+:deep(.btn:hover) {
+    background-color: #428c8c;
+    color: white;
+    font-size: 16px;
 }
 </style>
