@@ -1,5 +1,5 @@
 <script setup>
-//import top from './Components/topForm.vue';
+
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getPackageItem } from '@/apis/package';
 import { useRoute } from 'vue-router';
@@ -106,7 +106,7 @@ function search() {
 }
 </script>
 
-@charset "UTF-8";
+<!-- @charset "UTF-8"; -->
 
 
 <template>
@@ -532,12 +532,12 @@ select {
     word-wrap: normal;
 }
 
-button,
+/* button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
     -webkit-appearance: button;
-}
+} */
 
 button:not(:disabled),
 [type="button"]:not(:disabled),
@@ -560,12 +560,12 @@ input[type="checkbox"] {
     padding: 0;
 }
 
-input[type="date"],
+/* input[type="date"],
 input[type="time"],
 input[type="datetime-local"],
 input[type="month"] {
     -webkit-appearance: listbox;
-}
+} */
 
 textarea {
     overflow: auto;
@@ -608,7 +608,7 @@ progress {
 
 [type="search"] {
     outline-offset: -2px;
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
 }
 
 [type="search"]::-webkit-search-decoration {
@@ -11377,27 +11377,27 @@ a.text-dark:focus {
 }
 
 .fa-rotate-90 {
-    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+    /* -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)"; */
     transform: rotate(90deg);
 }
 
 .fa-rotate-180 {
-    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+    /* -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)"; */
     transform: rotate(180deg);
 }
 
 .fa-rotate-270 {
-    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
+    /* -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)"; */
     transform: rotate(270deg);
 }
 
 .fa-flip-horizontal {
-    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+    /* -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)"; */
     transform: scale(-1, 1);
 }
 
 .fa-flip-vertical {
-    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
+    /* -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)"; */
     transform: scale(1, -1);
 }
 
@@ -14360,7 +14360,7 @@ input,
 select,
 label,
 li {
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
     outline: none;
     font-family: 'Lato', sans-serif;
 }
@@ -15295,12 +15295,12 @@ nav ul li a:hover {
 
 .book-form select {
     background: #fff url(../images/down.png) no-repeat 92% 52%;
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
 }
 
 .booking-form input[type="date"] {
     background: #fff url(../images/date.png) 92% 50% no-repeat;
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
 }
 
 @media (max-width:800px) {
@@ -15447,7 +15447,7 @@ nav#breadcrumbs a {
 .owl-carousel .owl-stage {
     position: relative;
     touch-action: manipulation;
-    -moz-backface-visibility: hidden;
+    /* -moz-backface-visibility: hidden; */
 }
 
 .owl-carousel .owl-stage:after {
@@ -15462,19 +15462,19 @@ nav#breadcrumbs a {
 .owl-carousel .owl-stage-outer {
     position: relative;
     overflow: hidden;
-    -webkit-transform: translate3d(0, 0, 0);
+    /* -webkit-transform: translate3d(0, 0, 0); */
 }
 
-.owl-carousel .owl-item,
+/* .owl-carousel .owl-item,
 .owl-carousel .owl-wrapper {
     -webkit-backface-visibility: hidden;
     -webkit-transform: translate3d(0, 0, 0);
-}
+} */
 
 .owl-carousel .owl-item {
     min-height: 1px;
     float: left;
-    -webkit-backface-visibility: hidden;
+    /* -webkit-backface-visibility: hidden; */
     -webkit-touch-callout: none;
 }
 
@@ -15625,7 +15625,7 @@ nav#breadcrumbs a {
     background: url(owl.video.play.png) no-repeat;
     cursor: pointer;
     z-index: 1;
-    -webkit-backface-visibility: hidden;
+    /* -webkit-backface-visibility: hidden; */
     transition: transform .1s ease;
 }
 
@@ -15745,7 +15745,7 @@ nav#breadcrumbs a {
     margin: 5px 2px;
     background: var(--font-color);
     display: block;
-    -webkit-backface-visibility: visible;
+    /* -webkit-backface-visibility: visible; */
     transition: opacity .2s ease;
     border-radius: 50%;
     position: relative;
@@ -16371,7 +16371,7 @@ a.read span {
     margin: 5px 2px;
     background: #d8d8d8;
     display: block;
-    -webkit-backface-visibility: visible;
+    /* -webkit-backface-visibility: visible; */
     transition: opacity .2s ease;
     border-radius: 50%;
     position: relative;

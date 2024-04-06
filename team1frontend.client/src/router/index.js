@@ -35,9 +35,7 @@ const routes = [
     {
         path: '/',
         component: Layout,
-        children: [
-            
-            
+        children: [ 
             {
                 path: 'hotel',
                 component: Hotel,
@@ -54,11 +52,6 @@ const routes = [
                 name: 'HotelRoom',
                 component: HotelRoom,
             },
-            
-            
-            
-            
-            
             {
                 path: '/Tour',
                 name: 'Tour',
