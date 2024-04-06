@@ -132,7 +132,7 @@
             <!-- list 页面的 template 部分 -->
             <div class="hotel-list">
                 <!-- 搜索消息提示 -->
-                <p v-if="searchMessage">{{ searchMessage }}</p>
+                <p v-if="searchMessage && (!hotels.value || hotels.value.length === 0)">{{ searchMessage }}</p>
 
                 <!-- 酒店列表 -->
                 <div v-else>
@@ -163,20 +163,35 @@
 </template>
 
 <script setup>
-import Search from '../Layout/components/search.vue';
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+    import Search from '../Layout/components/search.vue';
+    import { ref, onMounted} from 'vue'
+    import { useRoute, useRouter } from 'vue-router';
+    import axios from 'axios';
+    import { watch } from 'vue';
 
 
     const route = useRoute();
     const router = useRouter();
 
+    const hotels = ref([]);
+    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
+
     // list 页面的 script 部分，添加 handleSearch 函数处理搜索事件
     function handleSearch(searchQuery) {
+        // Reset state before new search
+        hotels.value = [];
+        searchMessage.value = "";
         // 根据新的 searchQuery 更新页面展示的数据
-        fetchHotels(searchQuery);
+        router.push({ path: '/hotel/list', query: { address: searchQuery.location ,capacity:searchQuery.adults + searchQuery.children} });
     }
+    watch(() => [route.query.address, route.query.capacity], ([newAddress, newCapacity], [oldAddress, oldCapacity]) => {
+    // 当地址或容纳人数查询参数变化时，重新加载数据
+    if (newAddress !== oldAddress || newCapacity !== oldCapacity) {
+        // 调用获取酒店数据的函数
+        fetchHotelsAndRooms();
+    }
+}, { deep: true }); // 设置deep为true，以便能够深度监听对象内部的变化
+
  
     const facilities = ref([])
     const selectedFacilities = ref([]);
@@ -190,70 +205,96 @@ import axios from 'axios';
         }
     }
 
-// 使用 onMounted 生命週期鉤子來在組件掛載時獲取數據
-onMounted(fetchFacilities);
+    // 使用 onMounted 生命週期鉤子來在組件掛載時獲取數據
+    onMounted(fetchFacilities);
 
     const selectedPrice = ref([])
 
     //處理圖片
     const getHotelImageUrl = (imagePath) => {
-        return `/public/assets/HotelImages/${imagePath}`;
+        return `/assets/HotelImages/${imagePath}`;
     };
 
     //價格篩選
     const searchMix = ref('')
     const searchMin = ref('')
 
-//旅客評分篩選
-const selectedRating = ref('');
-const ratingOptions = [
-    { label: '不限', value: 'all' },
-    { label: '好评 9+', value: '9plus' },
-    { label: '非常好 8+', value: '8plus' },
-    { label: '不錯 7+', value: '7plus' },
-];
+    //旅客評分篩選
+    const selectedRating = ref('')
+    const ratingOptions = [
+        { label: '不限', value: 'all' },
+        { label: '好评 9+', value: '9plus' },
+        { label: '非常好 8+', value: '8plus' },
+        { label: '不錯 7+', value: '7plus' }
+    ]
 
-//三個select
-const selectedSort = ref('');
-const sortOptions = [
-    { value: 'recommend', text: '推薦' },
-    { value: 'popularity', text: '人氣' },
-    // ...更多排序選項
-];
+    //三個select
+    const selectedSort = ref('')
+    const sortOptions = [
+        { value: 'recommend', text: '推薦' },
+        { value: 'popularity', text: '人氣' },
+        // ...更多排序選項
+    ]
 
-const selectedRegion = ref('');
-const regionOptions = [
-    { value: 'north', text: '北部' },
-    { value: 'south', text: '南部' },
-    // ...更多地區選項
-];
+    const selectedRegion = ref('')
+    const regionOptions = [
+        { value: 'north', text: '北部' },
+        { value: 'south', text: '南部' },
+        // ...更多地區選項
+    ]
 
-const selectedFeature = ref('');
-const featureOptions = [
-    { value: 'hotel', text: '飯店' },
-    { value: 'motel', text: '汽車旅館' },
-    // ...更多住宿類型選項
-];
+    const selectedFeature = ref('')
+    const featureOptions = [
+        { value: 'hotel', text: '飯店' },
+        { value: 'motel', text: '汽車旅館' },
+        // ...更多住宿類型選項
+    ]
 
-// 跳转到酒店详细页面的函数
-const goToHotelRoom = (hotelId) => {
-    // 这里可以使用Vue Router或者window.location来导航
-    router.push({ name: 'HotelRoom', params: { id: hotelId } });
-    console.log('Go to hotel:');
-};
+   
+    // 跳转到酒店详细页面的函数
+    const goToHotelRoom = (hotelId) => {
+        // 这里可以使用Vue Router或者window.location来导航
+        router.push({ name: 'HotelRoom', params: { id: hotelId } });
+        console.log('Go to hotel:');
+    };
 
-// 处理酒店预订的函数
-const bookHotel = (hotelId) => {
-    console.log('Book hotel:', hotelId);
-    // 这里可以添加预订逻辑或跳转到预订页面
-};
+    
+    watch(selectedFacilities, (newValue, oldValue) => {
+        // 只在實際有變化時發送請求
+        if (newValue !== oldValue) {
+            searchMessage.value ="";
+            fetchHotelsBasedOnFacilities(newValue);
+        }
+    });
 
-    const hotels = ref([]);
-    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
+    async function fetchHotelsBasedOnFacilities(selectedFacilities) {
+        try {
+            // 構造請求 URL，這裡假設你的後端支持通過查詢參數來篩選設施
+            // 注意：這裡的 URL 和參數需要根據你的實際後端接口進行調整
+            const facilities = selectedFacilities;
+            const queryString = facilities.map(f => `facilities=${f}`).join('&');
+            const url = `https://localhost:7113/api/Hotels/GetHotelsByFacilities?${queryString}`;
+            const response = await axios.get(url);
+            // 假設後端返回的是一個符合條件的飯店列表
+            hotels.value = response.data;
+            console.log("77777");
+            console.log(selectedFacilities.join(','));
+            console.log(response.data);
+            console.log(hotels.value);
+            console.log("88888");
+        } catch (error) {
+            searchMessage.value = "沒有找到匹配的酒店，請嘗試其他搜索條件。";
+            hotels.value = []; // 清空之前的搜索结果
+            console.error('Failed to fetch hotels based on facilities:', error);
+        }
+    }
+
+   
 
     async function fetchHotelsAndRooms() {
         const address = route.query.address;
         const name = route.query.name;
+        const capacity = route.query.capacity; // 添加容纳人数参数
         let url = 'https://localhost:7113/api/Hotels';
 
         if (address) {
@@ -262,6 +303,10 @@ const bookHotel = (hotelId) => {
             // 如果你有一个基于name搜索酒店的API端点，你可以在这里构建URL
             url += `/search?address=${encodeURIComponent(name)}`;
             // 注意: 这里的'/searchByName'和查询参数'name'需要你根据实际API进行调整
+        }
+        //&capacity=1
+        if (capacity) {
+            url += `&capacity=${encodeURIComponent(capacity)}`;
         }
         try {
             const response = await axios.get(url);
@@ -273,9 +318,7 @@ const bookHotel = (hotelId) => {
                 axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotel.id}`)
             );
 
-        const hotelRoomsResponses = await Promise.allSettled(
-            hotelRoomsRequests
-        );
+            const hotelRoomsResponses = await Promise.allSettled(hotelRoomsRequests);
 
             hotelRoomsResponses.forEach((result, index) => {
                 if (result.status === 'fulfilled' && result.value.data.length > 0) {
@@ -296,196 +339,205 @@ const bookHotel = (hotelId) => {
         }
     }
 
-onMounted(fetchHotelsAndRooms);
+    onMounted(fetchHotelsAndRooms);
+
+
+
+
 </script>
 
 <style scoped>
-.wrapper {
-    display: grid;
-    grid-template-columns: 300px auto; /* 300px為左側篩選欄寬度，剩餘空間給右側內容 */
-    gap: 20px;
-}
+    .wrapper {
+        display: grid;
+        grid-template-columns: 300px auto; /* 300px為左側篩選欄寬度，剩餘空間給右側內容 */
+        gap: 20px;
+    }
 
-.facilities {
-    background-color: #eee;
-    color: black;
-    padding: 20px;
-    border-right: 2px solid #ddd;
-    overflow-y: auto;
-}
+    .facilities {
+        background-color: #eee;
+        color: black;
+        padding: 20px;
+        border-right: 2px solid #ddd;
+        overflow-y: auto;
+    }
 
-.content {
-    display: flex;
-    flex: 1; /* 讓 .content 佔滿剩餘空間 */
-}
+    .content {
+        display: flex;
+        flex: 1; /* 讓 .content 佔滿剩餘空間 */
+        max-width: 1500px; /* 設定最大寬度 */
+        margin-left: auto; /* 水平居中 */
+        margin-right: auto; /* 水平居中 */
+    }
 
-.main-content {
-    flex: 1; /* 讓 .main-content 佔滿剩餘空間 */
-    padding-left: 20px; /* 加點左邊距讓內容不會太擠 */
-}
+    .main-content {
+        flex: 1; /* 讓 .main-content 佔滿剩餘空間 */
+        padding-left: 20px; /* 加點左邊距讓內容不會太擠 */
+    }
 
-.search-panel {
-    background-color: #ffd54f; /* 您喜歡的顏色 */
-    padding: 15px;
-    border-radius: 8px;
-    max-width: 900px; /* 或者根據您的設計需求調整 */
-    margin: 0; /* 讓搜索面板在頁面中間顯示 */
-}
-/*飯店設施*/
-.facility-list {
-    max-width: 300px;
-    margin: 0;
-    padding: 0;
-}
+    .search-panel {
+        background-color: #ffd54f; /* 您喜歡的顏色 */
+        padding: 15px;
+        border-radius: 8px;
+        max-width: 900px; /* 或者根據您的設計需求調整 */
+        margin: 0; /* 讓搜索面板在頁面中間顯示 */
+    }
+    /*飯店設施*/
+    .facility-list {
+        max-width: 300px;
+        margin: 0;
+        padding: 0;
+    }
 
-.facility-item {
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
-}
+    .facility-item {
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+    }
 
-.facility-item input[type='checkbox'] {
-    margin-right: 10px;
-}
+        .facility-item input[type='checkbox'] {
+            margin-right: 10px;
+        }
 
-.facility-item label {
-    margin: 0;
-}
-/*價格篩選*/
-.search-price {
-    display: flex;
-    flex-direction: column;
-    width: 100%; /* 或者根据您的布局需求调整 */
-}
+        .facility-item label {
+            margin: 0;
+        }
+        /*價格篩選*/
+    .search-price {
+        display: flex;
+        flex-direction: column;
+        width: 100%; /* 或者根据您的布局需求调整 */
+    }
 
-.form-group {
-    margin-bottom: 10px;
-}
+    .form-group {
+        margin-bottom: 10px;
+    }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
 
-.form-group input[type='text'] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: white;
-}
+        .form-group input[type='text'] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color:white;
+        }
 
-/*  旅客評分篩選*/
-.rating-filter {
-    margin-bottom: 20px;
-}
+      /*  旅客評分篩選*/
+    .rating-filter {
+        margin-bottom: 20px;
+    }
 
-.rating-filter label {
-    display: block;
-    margin: 5px 0;
-}
+        .rating-filter label {
+            display: block;
+            margin: 5px 0;
+        }
+        
+        /*三個select*/
+    .dropdown-selects {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: #f7f7f7;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-/*三個select*/
-.dropdown-selects {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-bottom: 20px;
-    background-color: #f7f7f7;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    .dropdown-select {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.dropdown-select {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    .dropdown-select label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
 
-.dropdown-select label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
+    .dropdown {
+        background-color: white;
+        margin-left: 1rem;
+        border: 1px solid black;
+        border-radius: 5px;
+        padding:0 10px;
+    }
 
-.dropdown {
-    background-color: white;
-    margin-left: 1rem;
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 0 10px;
-}
+    .dropdown label {
+        display: block;
+        margin-bottom: 5px;
+    }
 
-.dropdown label {
-    display: block;
-    margin-bottom: 5px;
-}
+    .dropdown select {
+        width: 100%;
+        padding: 5px 10px;
+        font-size: 16px;
+    }
 
-.dropdown select {
-    width: 100%;
-    padding: 5px 10px;
-    font-size: 16px;
-}
 
-/*飯店標題*/
-.hotel-list {
-    display: flex;
-    flex-direction: column;
-}
+    /*飯店標題*/
+    .hotel-list {
+        display: flex;
+        flex-direction: column;
+    }
 
-.hotel-card {
-    border: 1px solid #e1e1e1;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 10px;
-    display: flex;
-}
+    .hotel-card {
+        border: 1px solid #e1e1e1;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        display: flex;
+    }
 
-.hotel-image {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-}
+    .hotel-image {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+    }
 
-.hotel-info {
-    padding: 10px;
-}
+    .hotel-info {
+        padding: 10px;
+    }
 
-.hotel-rating {
-    color: green;
-}
+    .hotel-rating {
+        color: green;
+    }
 
-.hotel-price {
-    font-size: 16px;
-}
+    .hotel-price {
+        font-size: 16px;
+    }
 
-.original-price {
-    text-decoration: line-through;
-    color: grey;
-    margin-left: 10px;
-}
+    .original-price {
+        text-decoration: line-through;
+        color: grey;
+        margin-left: 10px;
+    }
 
-.booking-button {
-    padding: 10px 20px;
-    background-color: #4caf50; /* 按钮背景颜色 */
-    color: white; /* 按钮文字颜色 */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-}
+    .booking-button {
+        padding: 10px 20px;
+        background-color: #4CAF50; /* 按钮背景颜色 */
+        color: white; /* 按钮文字颜色 */
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
 
-/* 增加 :hover 状态以改善用户体验 */
-.booking-button:hover {
-    background-color: #45a049;
-}
+    /* 增加 :hover 状态以改善用户体验 */
+    .booking-button:hover {
+        background-color: #45a049;
+    }
 
-.hotel-card {
-    cursor: pointer; /* 当鼠标悬停时显示指针手势 */
-    transition: box-shadow 0.3s; /* 添加过渡效果使点击有动画感 */
-}
+    .hotel-card {
+        cursor: pointer; /* 当鼠标悬停时显示指针手势 */
+        transition: box-shadow 0.3s; /* 添加过渡效果使点击有动画感 */
+    }
 
-.hotel-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 悬停时添加阴影 */
-}
+    .hotel-card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 悬停时添加阴影 */
+    }
+
 </style>

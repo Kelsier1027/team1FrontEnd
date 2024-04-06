@@ -54,7 +54,6 @@ const register = async () => {
                 console.log(error);
             }
         }
-        // emit('register-success');
     }
 };
 
