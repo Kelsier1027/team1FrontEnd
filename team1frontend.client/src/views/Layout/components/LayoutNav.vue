@@ -99,10 +99,19 @@ const items = ref([
 
         <!-- 使用flex容器包裹右邊的兩個元件，並利用CSS控制排列 -->
         <div class="flex-right">
+            <RouterLink :to="{ path: '/attraction_ticket' }" style="color:black">
+            <v-icon
+                v-if="memberStore.isLoggedIn"
+                icon="mdi-ticket-confirmation-outline"
+                class="pe-10 ticket"
+                style=":hover{cursor: pointer;}"
+            />
+            </RouterLink>
+           
             <v-icon
                 v-if="memberStore.isLoggedIn"
                 icon="mdi-cart-outline"
-                class="pe-6"
+                class="pe-6 cart"
             />
             <!-- <v-btn @click="getMemberInfo"> 取得會員資料 </v-btn> -->
             <v-btn v-if="!memberStore.isLoggedIn" @click="checkLogin">
@@ -207,6 +216,12 @@ const items = ref([
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+.ticket:hover{
+    cursor: pointer;
+}
+.cart:hover{
+    cursor: pointer;
 }
 :deep(.fixed-alertStore) {
     position: fixed;
