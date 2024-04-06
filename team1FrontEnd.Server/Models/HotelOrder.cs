@@ -31,7 +31,7 @@ public partial class HotelOrder
 
     public int? HotelOrderCancelReasonId { get; set; }
 
-    public int AdminId { get; set; }
+    public int? AdminId { get; set; }
 
     public virtual Beadmin Admin { get; set; }
 

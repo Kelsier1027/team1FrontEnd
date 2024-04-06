@@ -17,6 +17,14 @@ public partial class AttrationOrderItem
 
     public decimal UnitPrice { get; set; }
 
+    public string QrcodeFileName { get; set; }
+
+    public bool? IsUse { get; set; }
+
+    public string Qrdata { get; set; }
+
+    public DateTime? CreateTime { get; set; }
+
     public virtual AttractionOrder AttractionOrder { get; set; }
 
     public virtual AttractionTicket AttractionTicket { get; set; }

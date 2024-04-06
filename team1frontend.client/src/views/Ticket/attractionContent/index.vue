@@ -12,6 +12,11 @@
       <!--內文-->
       <h1>{{ attractionContent[0]?.attractionName }}</h1>
       <h4>{{ attractionContent[0]?.attractionContentContextDTO[0].subTitle }}</h4>
+      <div class="tag">
+        <el-tag type="danger" style="font-size: 17px;">熱賣中</el-tag>
+        <el-tag type="success" style="font-size: 17px;">推薦</el-tag>
+        <el-tag type="warning" style="font-size: 17px;">限量</el-tag>
+      </div>
       <div class="pictureBox">
         <div class="leftBox"><img :src="attractionContent[0]?.attractionContentImageDTO[0]?.image"></div>
         <div class="rightBox">
@@ -19,19 +24,26 @@
           <div class="imageBox imageBox2"><img :src="attractionContent[0]?.attractionContentImageDTO[2]?.image"></div>
         </div>
       </div>
-      <ul v-html="attractionContent[0]?.attractionContentContextDTO[0].hightLight"></ul>
-      <h2>方案選擇</h2>
-      <div class="demo-collapse">
-        <el-collapse v-model="activeName" @change="handleChange">
-          <Ticket v-for="item in ticketContentList" :ticket="item" :key="item.id" />
+      <div class="block">
+        <ul v-html="attractionContent[0]?.attractionContentContextDTO[0].hightLight"
+          style="font-size: 20px;line-height: 50PX;"></ul>
+      </div>
+      <div class="block">
+        <h2>方案選擇</h2>
+        <div class="demo-collapse">
+          <el-collapse v-model="activeName" @change="handleChange">
+            <Ticket v-for="item in ticketContentList" :ticket="item" :key="item.id" />
 
-        </el-collapse>
-        <div class="test">{{ attractionContent[0]?.attractionContentImageDTO[0]?.image }}</div>
+          </el-collapse>
+
+        </div>
       </div>
 
       <!-- <span class="test">{{ attractionContent[0]?.longitude }}</span> -->
-      <h1>地點</h1>
-      <Map :lat="attractionContent[0]?.latitude" :lng="attractionContent[0]?.longitude" />
+      <div class="block">
+        <h2>地點</h2>
+        <Map :lat="attractionContent[0]?.latitude" :lng="attractionContent[0]?.longitude" />
+      </div>
     </v-container>
   </v-main>
 </template>
@@ -69,20 +81,32 @@ onMounted(() => loadContent());
 
 
 <style scoped>
-.imageBox1{
-  margin-bottom:4px;
+.tag {
+  margin-bottom: 15px;
 }
-.leftBox{
+
+.block {
+  margin-top: 50px;
+}
+
+.imageBox1 {
+  margin-bottom: 4px;
+}
+
+.leftBox {
   margin-right: 4px;
 }
-.leftBox img{
- border-top-left-radius: 20px;
- border-bottom-left-radius: 20px;
+
+.leftBox img {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 }
-.imageBox1 img{
+
+.imageBox1 img {
   border-top-right-radius: 20px;
 }
-.imageBox2 img{
+
+.imageBox2 img {
   border-bottom-right-radius: 20px;
 }
 

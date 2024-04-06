@@ -18,6 +18,7 @@ using team1FrontEnd.Server.個人.Yen.Data;
 using team1FrontEnd.Server.個人.Yen.Interface.IRepositories.Member;
 using team1FrontEnd.Server.個人.Yen.Repositories.Members;
 
+
 namespace team1FrontEnd.Server
 {
 	public class Program
