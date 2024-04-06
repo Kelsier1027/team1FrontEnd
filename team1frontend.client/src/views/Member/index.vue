@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useMemberStore } from '@/stores/memberStore';
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
 const memberStore = useMemberStore();
 
 const items = ref([
@@ -77,6 +80,15 @@ const items = ref([
         },
     },
 ]);
+
+onMounted(() => {
+    const currentPath = route.path;
+    const accountSettingPath = '/member/accountSetting';
+    const memberPath = '/member';
+    if (currentPath == memberPath) {
+        router.push(accountSettingPath);
+    }
+});
 </script>
 
 <template>
