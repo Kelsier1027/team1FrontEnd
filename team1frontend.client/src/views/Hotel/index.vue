@@ -35,17 +35,17 @@
     }
 
     //旋轉木馬
-    import { ref, computed } from 'vue';
-    import Carousel from '../Layout/components/Carousel.vue'; // 確保路徑正確
-
+    import { onMounted, ref, computed } from 'vue';
+    import axios from 'axios';
+    import Carousel from '../Layout/components/Carousel.vue';
     const items = ref([
-        { name: '台南', acount: 1, image: "https://www.taiwanviptravel.com/articles/images/chihkan-tower-fort-provintia-img1.jpg" },
-        { name: '台中', acount: 0, image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" },
-        { name: "台北", acount: 0, image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
-        { name: "宜蘭", acount: 2, image: "https://a.cdn-hotels.com/gdcs/production159/d242/af7bebaf-1370-41c8-8c63-19575a6c49e8.jpg" },
-        { name: "花蓮", acount: 1, image: "https://storage.googleapis.com/smiletaiwan-cms-cwg-tw/article/202312/article-657028cf6664d.jpg" },
-        { name: '金門', acount: 1, image: "https://tlife.thsrc.com.tw/s3/post/20230728-l24hIFWmfakd98oejZ7jGcIJzkegT1za2v5G2yYj.jpg" },
-        { name: "高雄", acount: 0, image: "https://cpok.tw/wp-content/uploads/2024/01/202403-5.jpg" },
+        { name: '台南', image: "https://www.taiwanviptravel.com/articles/images/chihkan-tower-fort-provintia-img1.jpg" },
+        { name: '台中', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" },
+        { name: "台北", image: "https://a.cdn-hotels.com/gdcs/production57/d1344/58e63eaa-73ec-48f3-828a-c287ee898ac3.jpg" },
+        { name: "宜蘭", image: "https://a.cdn-hotels.com/gdcs/production159/d242/af7bebaf-1370-41c8-8c63-19575a6c49e8.jpg" },
+        { name: "花蓮", image: "https://storage.googleapis.com/smiletaiwan-cms-cwg-tw/article/202312/article-657028cf6664d.jpg" },
+        { name: '金門', image: "https://tlife.thsrc.com.tw/s3/post/20230728-l24hIFWmfakd98oejZ7jGcIJzkegT1za2v5G2yYj.jpg" },
+        { name: "高雄", image: "https://cpok.tw/wp-content/uploads/2024/01/202403-5.jpg" },
         // 更多項目...
     ]);
     const currentOffset = ref(0);
@@ -67,6 +67,20 @@
             currentOffset.value += paginationFactor;
         }
     };
+
+    // 使用 onMounted 鉤子在組件掛載時發起 API 請求
+    onMounted(() => {
+        items.value.forEach(async (item, index) => {
+            try {
+                const response = await axios.get(`https://localhost:7113/api/Hotels/search?address=${encodeURIComponent(item.name)}`);
+                // 假设 response 的 data 是一个数组，其长度即为该地区的酒店数量
+                items.value[index].acount = response.data.length; // 更新对应地区的酒店数量
+            } catch (error) {
+                console.log(`搜尋 ${item.name} 地區酒店數量發生錯誤:`, error);
+                items.value[index].acount = 0; // 如果请求失败，将数量设置为0
+            }
+        });
+    });
     
 </script>
 

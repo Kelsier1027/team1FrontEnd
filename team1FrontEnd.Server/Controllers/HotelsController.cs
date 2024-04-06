@@ -52,7 +52,7 @@ namespace team1FrontEnd.Server.Controllers
 
         // GET: api/Hotels/search?address=xxx
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<Hotel>>> SearchHotelsByAddress(string address)
+        public async Task<ActionResult<IEnumerable<Hotel>>> SearchHotelsByAddress(string address, int? capacity)
         {
             if (_context.Hotels == null)
             {

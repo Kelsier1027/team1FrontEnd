@@ -127,12 +127,24 @@
     const route = useRoute();
     const router = useRouter();
 
+    const hotels = ref([]);
+    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
+
     // list 页面的 script 部分，添加 handleSearch 函数处理搜索事件
     function handleSearch(searchQuery) {
+        // Reset state before new search
+        hotels.value = [];
+        searchMessage.value = "";
         // 根据新的 searchQuery 更新页面展示的数据
-        fetchHotels(searchQuery);
+        router.push({ path: '/hotel/list', query: { address: searchQuery.location } });
     }
-
+    watch(() => route.query.address, (newAddress) => {
+        // 当地址查询参数变化时，重新加载数据
+        if (newAddress) {
+            // 调用获取酒店数据的函数
+            fetchHotelsAndRooms();
+        }
+    });
  
     const facilities = ref([])
     const selectedFacilities = ref([]);
@@ -199,8 +211,7 @@
         console.log('Go to hotel:');
     };
 
-    const hotels = ref([]);
-    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
+    
     watch(selectedFacilities, (newValue, oldValue) => {
         // 只在實際有變化時發送請求
         if (newValue !== oldValue) {
