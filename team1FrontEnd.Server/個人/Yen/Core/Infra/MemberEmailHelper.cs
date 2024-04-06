@@ -10,7 +10,7 @@ namespace team1FrontEnd.Server.個人.Yen.Core.Infra
 {
     public class MemberEmailHelper
     {
-        private string senderEmail = "g01.webapp@gmail.com"; // 寄件者
+        private string senderEmail = "hakutravel31@gmail.com"; // 寄件者
         public void SendForgetPasswordEmail(string url, string name, string email)
         {
             var subject = "[重設密碼通知]";
