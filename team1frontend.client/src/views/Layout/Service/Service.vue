@@ -79,7 +79,7 @@ import { defineProps } from 'vue';
 const props = defineProps();
 </script>
 
-<style>
+<style scoped>
 .chat-box {
   width: 300px;
   border: 1px solid #ccc;

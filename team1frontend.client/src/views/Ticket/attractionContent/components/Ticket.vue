@@ -129,7 +129,7 @@ watch(() => memberStore.memberId, (newId, oldId) => {
 
 </script>
 
-<style>
+<style scoped>
 @import url('/src/assets/font/font.css');
 *{
   font-family:MSJHBD ;

@@ -52,7 +52,7 @@ const scanQRCode = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .videoqr {
   border: 3px solid black
 }
