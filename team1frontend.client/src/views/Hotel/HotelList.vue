@@ -136,15 +136,16 @@
         hotels.value = [];
         searchMessage.value = "";
         // 根据新的 searchQuery 更新页面展示的数据
-        router.push({ path: '/hotel/list', query: { address: searchQuery.location } });
+        router.push({ path: '/hotel/list', query: { address: searchQuery.location ,capacity:searchQuery.adults + searchQuery.children} });
     }
-    watch(() => route.query.address, (newAddress) => {
-        // 当地址查询参数变化时，重新加载数据
-        if (newAddress) {
-            // 调用获取酒店数据的函数
-            fetchHotelsAndRooms();
-        }
-    });
+    watch(() => [route.query.address, route.query.capacity], ([newAddress, newCapacity], [oldAddress, oldCapacity]) => {
+    // 当地址或容纳人数查询参数变化时，重新加载数据
+    if (newAddress !== oldAddress || newCapacity !== oldCapacity) {
+        // 调用获取酒店数据的函数
+        fetchHotelsAndRooms();
+    }
+}, { deep: true }); // 设置deep为true，以便能够深度监听对象内部的变化
+
  
     const facilities = ref([])
     const selectedFacilities = ref([]);
@@ -247,6 +248,7 @@
     async function fetchHotelsAndRooms() {
         const address = route.query.address;
         const name = route.query.name;
+        const capacity = route.query.capacity; // 添加容纳人数参数
         let url = 'https://localhost:7113/api/Hotels';
 
         if (address) {
@@ -255,6 +257,10 @@
             // 如果你有一个基于name搜索酒店的API端点，你可以在这里构建URL
             url += `/search?address=${encodeURIComponent(name)}`;
             // 注意: 这里的'/searchByName'和查询参数'name'需要你根据实际API进行调整
+        }
+        //&capacity=1
+        if (capacity) {
+            url += `&capacity=${encodeURIComponent(capacity)}`;
         }
         try {
             const response = await axios.get(url);

@@ -50,9 +50,9 @@ namespace team1FrontEnd.Server.Controllers
             return hotel;
         }
 
-        // GET: api/Hotels/search?address=xxx
+        // GET: https://localhost:7113/api/Hotels/search?address=xxx&capacity=xxx
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<Hotel>>> SearchHotelsByAddress(string address, int? capacity)
+        public async Task<ActionResult<IEnumerable<Hotel>>> SearchHotels(string address, int? capacity)
         {
             if (_context.Hotels == null)
             {
@@ -64,17 +64,24 @@ namespace team1FrontEnd.Server.Controllers
                 return BadRequest("Address is required for searching.");
             }
 
-            // 使用 EF.Functions.Like 来进行模糊匹配
             var hotels = await _context.Hotels
+                .Include(hotel => hotel.HotelRooms)
                 .Where(hotel => EF.Functions.Like(hotel.Address, $"%{address}%"))
                 .ToListAsync();
 
-            if (hotels == null || hotels.Count == 0)
+            if (hotels.Count == 0)
             {
                 return NotFound($"No hotels found with address containing '{address}'.");
             }
 
-            return hotels;
+            if (capacity.HasValue)
+            {
+                hotels = hotels
+                    .Where(hotel => hotel.HotelRooms.Any(room => room.Capacity >= capacity.Value))
+                    .ToList();
+            }
+
+            return Ok(hotels);
         }
 
         // GET: api/Hotels/facilities?facilityIds=1,2,3

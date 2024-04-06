@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace team1FrontEnd.Server.Models;
 
@@ -31,6 +32,7 @@ public partial class HotelRoom
 
     public int Count { get; set; }
 
+    [JsonIgnore]
     public virtual Hotel Hotel { get; set; }
 
     public virtual ICollection<HotelOrderItem> HotelOrderItems { get; set; } = new List<HotelOrderItem>();

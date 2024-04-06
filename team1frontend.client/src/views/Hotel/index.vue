@@ -31,7 +31,7 @@
     // 在 index 页面的 script 中
     function handleSearch(searchQuery) {
         // 假设 searchQuery.location 包含了用户输入的搜索地点
-        router.push({ path: '/hotel/list', query: { address: searchQuery.location } });
+        router.push({ path: '/hotel/list', query: { address: searchQuery.location, capacity: searchQuery.adults + searchQuery.children } });
     }
 
     //旋轉木馬
