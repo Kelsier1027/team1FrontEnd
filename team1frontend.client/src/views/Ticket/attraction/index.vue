@@ -1,5 +1,5 @@
 <template>
-  <v-main>
+  <v-main style="font-family: MSJHBD;">
     <Cart />
     <AttractionAttraction />
   </v-main>

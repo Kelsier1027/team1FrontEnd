@@ -1,14 +1,21 @@
 <template>
-  <v-main>
-    <v-container>
+  <v-parallax
+          src="/src/assets/images/chih/196642133185623.61b8c0f3b3158.gif"
+      style="height: 1300px;">
+      <v-main style="font-family: MSJHBD;" >
+  <v-container>
       <div style="display: grid;">
+        <div class="videodiv">
         <video class="videoqr" ref="video" autoplay></video>
+        </div>
         <canvas ref="canvas" style="display: none;"></canvas>
-
-        <v-btn @click="scanQRCode" style="width:300px">掃描</v-btn>
+        <div class="btndiv">
+        <v-btn @click="scanQRCode" style="width:300px" theme="light">掃描</v-btn>
+        </div>
       </div>
     </v-container>
   </v-main>
+</v-parallax>
 </template>
 
 <script setup>
@@ -55,5 +62,14 @@ const scanQRCode = () => {
 <style scoped>
 .videoqr {
   border: 3px solid black
+  
+}
+
+.btndiv{
+  text-align: center;
+}
+
+.videodiv{
+  text-align: center;
 }
 </style>
