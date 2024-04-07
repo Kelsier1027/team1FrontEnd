@@ -93,7 +93,7 @@ namespace team1FrontEnd.Server.Controllers.Chih
             if (delCartItems.Any())
             {
                 _dbTeam1Context.AttractionCartItems.RemoveRange(delCartItems);
-                var cart = await _dbTeam1Context.AttractionCarts.FirstOrDefaultAsync();
+                var cart = await _dbTeam1Context.AttractionCarts.FirstOrDefaultAsync(x=>x.MemberId==userId);
                 cart.Total = 0;
                 await _dbTeam1Context.SaveChangesAsync();
             }
@@ -108,7 +108,7 @@ namespace team1FrontEnd.Server.Controllers.Chih
                                     .SelectMany(x => x.AttrationOrderItems)
                                     .Select(x => new UserTicketDTO
                                     {
-                                        ItemId = x.AttractionTicketId,
+                                        ItemId = x.Id,
                                         AttractionOrderId = x.AttractionOrderId,
                                         TicketName = x.AttractionTicket.TicketTitle,
                                         ImgOfQRCode = x.QrcodeFileName,
