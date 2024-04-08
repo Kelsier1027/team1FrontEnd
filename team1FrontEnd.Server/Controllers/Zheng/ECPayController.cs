@@ -23,7 +23,7 @@ namespace team1FrontEnd.Server.Controllers.Zheng
                 { "MerchantTradeDate",  DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")},
                 { "TotalAmount",  vm.Total.ToString()},
                 { "TradeDesc",  "abc"},
-                { "ItemName",  "租車"},
+                { "ItemName",  "小白旅遊"},
                 { "CustomField1",  vm.GetDesc()},
                 { "ReturnURL",  "https://localhost:7113/api/ecpayorders"},
                 { "OrderResultURL", "https://localhost:7113/api/ecpayorders"},

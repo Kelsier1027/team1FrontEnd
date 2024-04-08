@@ -1,4 +1,5 @@
 <script setup>
+import Cart from "@/views/Ticket/components/cart.vue"
 import { ref, onMounted, computed } from 'vue';
 import SearchForm from '@/components/IndexForm.vue'
 import Criteria from '@/components/CarCriteria.vue'
@@ -51,6 +52,7 @@ onMounted(() => GetCarModels())
 <template>
     <v-main>
         <div class="d-flex justify-content-center">
+            <Cart></Cart>
             <div style="width: 75%;">
                 <div class="d-flex justify-content-center">
                     <div>

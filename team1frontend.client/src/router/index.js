@@ -29,13 +29,14 @@ import Orders from '@/views/Orders/Orders.vue'
 import ConfirmEmailSuccessed from '@/views/Member/components/ConfirmEmailSuccessed.vue';
 import ResetPassword from '@/views/Member/components/ResetPassword.vue';
 import { useMemberStore } from '@/stores/memberStore.js';
+import cartList from '@/views/Ticket/components/cartList.vue'
 
 // 建立路徑
 const routes = [
     {
         path: '/',
         component: Layout,
-        children: [ 
+        children: [
             {
                 path: 'hotel',
                 component: Hotel,
@@ -45,8 +46,8 @@ const routes = [
                 path: 'hotel/list',
                 name: 'HotelList',
                 component: HotelList,
-            }, 
-            
+            },
+
             {
                 path: '/hotel-room/:id', // :id 是動態路徑參數
                 name: 'HotelRoom',
@@ -180,6 +181,11 @@ const routes = [
                 path: '/orders/',
                 meta: { requiresAuth: true },
                 component: Orders,
+            },
+            {
+                path: 'cartList',
+                component: cartList,
+                meta: { hideHeader: false },
             },
         ],
     },

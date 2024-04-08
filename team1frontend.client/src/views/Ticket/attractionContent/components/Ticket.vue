@@ -1,11 +1,11 @@
 <template>
   <el-collapse-item :name="ticket.id" @click.stop.prevent="toggleTitle" :class=foldStatus class="collapseDiv">
     <template #title>
-      
-        <div class="tickettitle">{{ ticket.ticketTitle }}</div>
 
-        <div v-if="showTitle" class="outprice">NT${{ ticket.price }}</div>
-      
+      <div class="tickettitle">{{ ticket.ticketTitle }}</div>
+
+      <div v-if="showTitle" class="outprice">NT${{ ticket.price }}</div>
+
 
     </template>
 
@@ -14,11 +14,16 @@
       <div class="ticketdetail">{{ ticket.ticketDetail }}</div>
       <div class="row">
         <div class="col-md-6 offset-md-6 buyblock">
-        <div class="innerprice">NT${{ ticketTotalPrice }}</div>
-        <div class="cal"><el-input-number v-model="num" :min="1" :max="77" @change="handleChange" @click.stop.prevent /></div>
-        <div class="addbtn"><el-button type="primary" @click.stop.prevent="addItem" style="color:white"><el-icon size="25px"><ShoppingCart/></el-icon>加入購物車</el-button></div>
+          <div class="innerprice">NT${{ ticketTotalPrice }}</div>
+          <div class="cal"><el-input-number v-model="num" :min="1" :max="77" @change="handleChange"
+              @click.stop.prevent />
+          </div>
+          <div class="addbtn"><el-button type="primary" @click.stop.prevent="addItem" style="color:white"><el-icon
+                size="25px">
+                <ShoppingCart />
+              </el-icon>加入購物車</el-button></div>
+        </div>
       </div>
-    </div>
     </div>
   </el-collapse-item>
 
@@ -31,6 +36,9 @@ import { getCartByMemberAPI } from '@/apis/Chih/apis/get_cartByMember'
 import { useMemberStore } from '@/stores/memberStore';
 import { useCartStore } from '@/stores/attractionStore'
 import { ElMessage } from 'element-plus'
+
+import { AddItemToCart } from '@/apis/Cart/additem';
+
 
 const memberStore = useMemberStore();
 const cartStore = useCartStore();
@@ -78,39 +86,17 @@ const ticketTotalPrice = computed(() => props.ticket.price * num.value);
 
 const addItem = async () => {
   if (memberStore.isLoggedIn == false) {
-    ElMessage({
-    message:'請先登入',
-    type: 'warning'
-  }
-    );
-      
+    alert('請先登入K??');
     return;
   }
-
-  const addItemDTO = {
-    CartId: cartStore.cartId,
-    ItemId: props.ticket.id,
-    Quantity: num.value,
-  };
+  console.log(55, props.ticket.id, 1, num.value)
   try {
-    const res = await AddCartItemAPI(addItemDTO);
+    const res = await AddItemToCart(55, props.ticket.id, 1, num.value);
     addMessage.value = res;
     console.log(res);
-    console.log(addItemDTO);
-    ElMessage({
-      message:`${props.ticket.ticketTitle}加入成功`,
-      type:'success'
-    });
   } catch (error) {
-    ElMessage({
-      message:error,
-      type: 'error'
-    });
-
+    alert(error);
   }
-
-
-
 }
 
 
@@ -131,14 +117,15 @@ watch(() => memberStore.memberId, (newId, oldId) => {
 
 <style scoped>
 @import url('/src/assets/font/font.css');
-*{
-  font-family:MSJHBD ;
+
+* {
+  font-family: MSJHBD;
 }
 
 
 .outprice {
   font-family: MATRIX;
-  margin-left:400px;
+  margin-left: 400px;
   text-align: left;
   width: 200px;
 }
@@ -146,10 +133,10 @@ watch(() => memberStore.memberId, (newId, oldId) => {
 .ticketdetail {
   margin-bottom: 30px;
   font-size: 20px;
-	place-items: center;
-	min-height: 100px;
-	border: 3px solid;	
- 
+  place-items: center;
+  min-height: 100px;
+  border: 3px solid;
+
   border-image: linear-gradient(to left, turquoise, greenyellow) 1 0;
 }
 
@@ -157,7 +144,7 @@ watch(() => memberStore.memberId, (newId, oldId) => {
   margin-right: 36px;
   font-size: 25px;
   font-family: MATRIX;
-  
+
 }
 
 .cal {
@@ -196,7 +183,7 @@ watch(() => memberStore.memberId, (newId, oldId) => {
 
 .el-collapse {
   --el-collapse-border-color: lightgreen;
-  --el-collapse-border:10px;
+  --el-collapse-border: 10px;
 }
 
 .el-button {
@@ -214,14 +201,13 @@ button {
   margin-top: 20px;
 }
 
-.titleBox{
+.titleBox {
   display: block;
 }
 
-.tickettitle{
+.tickettitle {
   width: 300px;
   text-align: left;
   font-size: 21px;
 }
-
 </style>
