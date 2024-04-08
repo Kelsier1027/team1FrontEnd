@@ -54,6 +54,8 @@ namespace team1FrontEnd.Server.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<Hotel>>> SearchHotels(string address, int? capacity)
         {
+            try
+            {
             if (_context.Hotels == null)
             {
                 return NotFound("No hotels found.");
@@ -64,24 +66,28 @@ namespace team1FrontEnd.Server.Controllers
                 return BadRequest("Address is required for searching.");
             }
 
-            var hotels = await _context.Hotels
-                .Include(hotel => hotel.HotelRooms)
-                .Where(hotel => EF.Functions.Like(hotel.Address, $"%{address}%"))
-                .ToListAsync();
+                var hotels = await _context.Hotels
+                    .Include(hotel => hotel.HotelRooms)
+                    .Where(hotel => EF.Functions.Like(hotel.Address, $"%{address}%"))
+                    .ToListAsync();
+                if (hotels.Count == 0)
+                {
+                    return NotFound($"No hotels found with address containing '{address}'.");
+                }
 
-            if (hotels.Count == 0)
-            {
-                return NotFound($"No hotels found with address containing '{address}'.");
+                if (capacity.HasValue)
+                {
+                    hotels = hotels
+                        .Where(hotel => hotel.HotelRooms.Any(room => room.Capacity >= capacity.Value))
+                        .ToList();
+                }
+
+                return Ok(hotels);
             }
+            catch (Exception ex) { return Ok(); }
 
-            if (capacity.HasValue)
-            {
-                hotels = hotels
-                    .Where(hotel => hotel.HotelRooms.Any(room => room.Capacity >= capacity.Value))
-                    .ToList();
-            }
 
-            return Ok(hotels);
+            
         }
 
         // GET: api/Hotels/facilities?facilityIds=1,2,3

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using team1FrontEnd.Server.Dtos;
+using team1FrontEnd.Server.Controllers.Zheng;
 using team1FrontEnd.Server.Models;
 
 namespace team1FrontEnd.Server.Controllers.huang
@@ -23,17 +23,18 @@ namespace team1FrontEnd.Server.Controllers.huang
 
         // GET: api/CartItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartItem>>> GetCartItems()
+        public async Task<IEnumerable<CartItem>> GetCartItems()
         {
             return await _context.CartItems.ToListAsync();
         }
 
         // GET: api/CartItems/5
-        [HttpGet("{cartId}")]
-        public async Task<IEnumerable<ICartItem>> GetCartItems(int cartId, int categoryId)
+        [HttpGet("GetCartItems")]
+        public async Task<IEnumerable<GetCartItemsDto>> GetCartItems(int cartId, int categoryId)
         {
-            var cartItems = _context.Carts.AsNoTracking().
-                Where(x => x.Id == cartId).SingleOrDefault().CartItems.Where(x => x.ServicerCategoryId == categoryId).Select(x => x as ICartItem);			
+            var cartItems = _context.CartItems.Where(x => x.ServicerCategoryId == categoryId && x.CartId == cartId).ToList().Select(x => new GetCartItemsDto { selected = false, Id = x.Id, cartItem = GetItem(x.ItemId, categoryId), quantity = x.Quantity });
+
+            if (categoryId == 0) cartItems = _context.CartItems.Where(x => x.CartId == cartId).ToList().Select(x => new GetCartItemsDto { selected = false, Id = x.Id, cartItem = GetItem(x.ItemId, x.ServicerCategoryId), quantity = x.Quantity });
 
             return cartItems;
         }
@@ -71,29 +72,45 @@ namespace team1FrontEnd.Server.Controllers.huang
 
         // POST: api/CartItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<string> PostCartItem(int memberId ,int itemId, int categoryId)
+        [HttpPost("addCartItem")]
+        public async Task<string> PostCartItem([FromBody] CartItemDto cartItemDto)
         {
             Cart cart;
 
-            if (!_context.Carts.Any(x => x.MemberId == memberId)) _context.Carts.Add(new Cart() { MemberId = memberId });
-
-			cart = _context.Carts.Where(x => x.MemberId == memberId).Single();
-
-            var item = new CartItem
+            if (!_context.Carts.Any(x => x.MemberId == cartItemDto.memberId))
             {
-                CartId = cart.Id,
-                ItemId = itemId,
-                ServicerCategoryId = categoryId,
-            };
-            _context.CartItems.Add(item);
-            await _context.SaveChangesAsync();
+                _context.Carts.Add(new Cart() { MemberId = cartItemDto.memberId });
+                await _context.SaveChangesAsync();
+            }
+
+            cart = _context.Carts.Where(x => x.MemberId == cartItemDto.memberId).Single();
+
+
+            var checkItem = _context.CartItems.Where(x => x.ItemId == cartItemDto.itemId && x.ServicerCategoryId == cartItemDto.categoryId).FirstOrDefault();
+
+            if (checkItem != null) 
+            {
+                checkItem.Quantity += cartItemDto.quantity;
+            }
+            else
+            {
+
+                var item = new CartItem
+                {
+                    CartId = cart.Id,
+                    ItemId = cartItemDto.itemId,
+                    Quantity = cartItemDto.quantity,
+                    ServicerCategoryId = cartItemDto.categoryId,
+                };
+                _context.CartItems.Add(item);
+                await _context.SaveChangesAsync();
+            }
 
             return "已成功加入購物車";
         }
 
         // DELETE: api/CartItems/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteCartItem")]
         public async Task<string> DeleteCartItem(int id)
         {
             var cartItem = await _context.CartItems.FindAsync(id);
@@ -108,21 +125,159 @@ namespace team1FrontEnd.Server.Controllers.huang
             return "刪除成功";
         }
 
-		private ICartItem GetItem(int categoryId, int orderId)
-		{
+        //[HttpDelete("DeleteCartAllItem")]
+        //public async Task<string> DeleteCartAllItem(int cartId)
+        //{
+        //    var cartAllItem = await _context.CartItems.Where(x => x.CartId == cartId).ToListAsync();
+        //    if (cartAllItem == null)
+        //    {
+        //        return "結帳失敗";
+        //    }
 
-			if (categoryId == 2) _context.AttractionOrders.Find(orderId); //景點
+        //    _context.CartItems.RemoveRange(cartAllItem);
+        //    await _context.SaveChangesAsync();
 
-			if (categoryId == 3) _context.HotelOrders.Find(orderId);//房間
+        //    return "結帳成功";
+        //}
 
-			if (categoryId == 4) _context.PackageOrders.Find(orderId);//套裝行程
-			throw new Exception();
-		}
+        [HttpPost("CreatOrder")]
+        public async Task<OrderVm> CreatOrder([FromBody]IEnumerable<int> cartItemIds)
+        {
+            var cartItems = cartItemIds.Select(x => _context.CartItems.Include(y => y.Cart).Where(y => y.Id == x).SingleOrDefault()).ToList();
 
-		//private bool CartItemExists(int id)
-		//{
-		//    return _context.CartItems.Any(e => e.Id == id);
-		//}
+            AttractionOrder attractionOrder = null;
 
-	}
+            HotelOrder hotelOrder = null;
+
+            var attractionOrderTotal = 0;
+
+            var hotelOrderTotal = 0;
+
+            foreach (var cartItem in cartItems)
+            {
+                switch (cartItem.ServicerCategoryId)
+                {
+                    case 1: // 景點訂單                       
+
+                        // 如果訂單不存在，則新建一個
+                        
+                        if (attractionOrder == null)
+                        {
+                            attractionOrder = new AttractionOrder
+                            {
+                                MemberId = cartItem.Cart.MemberId,
+                                OrderDate = DateTime.Now,
+                                TicketTotalPrice = 0,
+                                AttractionOrderStatusId = 1,
+                            };
+                            _context.AttractionOrders.Add(attractionOrder);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        var attration = new AttrationOrderItem
+                        {
+                            AttractionOrderId = attractionOrder.Id,
+                            AttractionTicketId = cartItem.ItemId,
+                            Qty = cartItem.Quantity,
+                            UnitPrice = _context.AttractionTickets.Find(cartItem.ItemId).Price,
+                        };
+
+                        attractionOrderTotal += attration.Qty * (int)attration.UnitPrice;
+
+                        attractionOrder.AttrationOrderItems.Add(attration);
+
+                        await _context.SaveChangesAsync();
+
+                        break;
+                    case 2: // 房間訂單                        
+                        
+
+                        if (hotelOrder == null)
+                        {
+                            hotelOrder = new HotelOrder
+                            {
+                                OrderSn = "123",
+                                NumberOfPeople = 1,
+                                Breakfast = true,
+                                HotelOrderStatusId = 1,
+                                Phone = "0932112383",
+                                CreditCard = "8786-7576-5372-8908",
+                                MemberId = cartItem.Cart.MemberId,
+                                Price = 0,
+                                Checkin = DateTime.Now,
+                                Checkout = DateTime.Now.AddDays(5),
+                            };
+                            _context.HotelOrders.Add(hotelOrder);
+
+                            await _context.SaveChangesAsync();
+                        }
+                        
+                        var hotel = new HotelOrderItem
+                        {
+                            HotelRoomId = cartItem.ItemId,
+                            HotelOrderId = hotelOrder.Id,
+                        };
+                        hotelOrder.HotelOrderItems.Add(hotel);
+                        hotelOrderTotal += _context.HotelRooms.Find(cartItem.ItemId).Price * cartItem.Quantity;
+
+                        await _context.SaveChangesAsync();
+
+                        break;
+                    case 3: // 套裝行程訂單
+
+                        var packageOrder = new PackageOrder
+                        {
+                            OrderDate = DateTime.Now,
+                            PackageId = cartItem.Id,
+                            PackageOrdeStatusId = 1,
+                            MemberId = cartItem.Cart.MemberId,
+                            Quantity = cartItem.Quantity,
+                            TotalAmt = _context.Packages.Find(cartItem.ItemId).Price,
+                        };
+                        _context.PackageOrders.Add(packageOrder);
+
+                        await _context.SaveChangesAsync();
+
+                        break;
+                }
+                // 儲存對資料庫的更改
+            }
+
+          
+            if (attractionOrder != null) attractionOrder.TicketTotalPrice = attractionOrderTotal;
+
+            if (hotelOrder != null) hotelOrder.Price = hotelOrderTotal;
+
+            var orderVm = new OrderVm
+            {
+                Total = attractionOrderTotal + hotelOrderTotal
+            };
+            _context.RemoveRange(cartItems);
+
+            await _context.SaveChangesAsync();
+
+
+
+            return orderVm;
+
+        }
+
+        private ICartItem GetItem(int itemId, int categoryId)
+        {
+
+            if (categoryId == 1) return _context.AttractionTickets.Include(x => x.Attraction).Where(x => x.Id == itemId).SingleOrDefault();//景點
+
+            if (categoryId == 2) return _context.HotelRooms.Find(itemId);//房間
+
+            if (categoryId == 3) return _context.Packages.Find(itemId);//套裝行程
+
+            throw new NotImplementedException();
+        }
+
+        //private bool CartItemExists(int id)
+        //{
+        //    return _context.CartItems.Any(e => e.Id == id);
+        //}
+
+    }
 }

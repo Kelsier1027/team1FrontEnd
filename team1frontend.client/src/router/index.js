@@ -30,6 +30,7 @@ import Orders from '@/views/Orders/index.vue';
 import ConfirmEmailSuccessed from '@/views/Member/components/ConfirmEmailSuccessed.vue';
 import ResetPassword from '@/views/Member/components/ResetPassword.vue';
 import { useMemberStore } from '@/stores/memberStore.js';
+import cartList from '@/views/Ticket/components/cartList.vue'
 import CartFloatingCard from '@/views/Cart/components/FloatingCart.vue';
 
 // 建立路徑
@@ -183,11 +184,16 @@ const routes = [
                 path: '/rentCar/success/',
                 component: Success,
             },
-            // {
-            //     path: '/orders/',
-            //     meta: { requiresAuth: true },
-            //     component: Orders,
-            // },
+            {
+                path: '/orders/',
+                meta: { requiresAuth: true },
+                component: Orders,
+            },
+            {
+                path: 'cartList',
+                component: cartList,
+                meta: { hideHeader: false },
+            },
         ],
     },
 ];
