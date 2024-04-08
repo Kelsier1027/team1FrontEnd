@@ -65,4 +65,13 @@ namespace team1FrontEnd.Server.Models
 
     //	public int Price => throw new NotImplementedException();
     //}
+
+    public partial class CarModel : ICartItem
+    {
+        public string FileName => $"{this.MainImage}";
+
+        public string Detail => "";
+
+        public int Price => this.FeePerDay * 5;
+    }
 }

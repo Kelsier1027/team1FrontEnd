@@ -19,10 +19,7 @@
                                 成功付款
                             </div>
                             <v-divider></v-divider>
-                            <v-list lines="three">
-                                <v-list-item v-for="n in 3" :key="n" :title="'Item ' + n"
-                                    subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit"></v-list-item>
-                            </v-list>
+
                         </v-card-text>
                     </v-card>
                     <div class="position-absolute bottom-0 end-0">

@@ -25,8 +25,25 @@
                                         </v-card-title>
                                     </v-col>
                                     <v-col cols="5">
-                                        <v-card-text>
-                                            {{ ` ${item.cartItem.detail} ` }}
+                                        <v-card-text v-if="item.categoryId === 4">
+                                            費用不包含燃油費、停車費、高速公路過路費與甲租乙還費用。高速公路過路費(ETC)：收費規定將依照取車店家現場說明指示如需攜帶寵物，請事先洽詢客服;未事先告知，店家將保留出租權益。
+                                        </v-card-text>
+                                        <v-card-text v-if="item.categoryId === 2">
+                                            這是一家位於城市中心的時尚飯店，擁有舒適的客房和豪華的設施。飯店提供各種房型，包括單人間、雙人間和套房，以滿足不同客人的需求。每個房間都配備了現代化的設施，如空調、免費無線網絡、迷你冰箱和平板電視。飯店還設有一間風格獨特的餐廳，供應精緻美食和飲料。此外，飯店還擁有健身中心、室內游泳池和會議設施，為客人提供一站式服務。
+                                        </v-card-text>
+                                        <v-card-text v-if="item.categoryId === 3">
+                                            響應環保~客房浴室不提供拋棄式備品喔! (牙膏/牙刷/梳子/刮鬍
+                                            刀/浴帽/棉花棒等)，旅客請自行攜帶!!! 讓我們一起為地球盡一
+                                            份心力吧~<br />
+                                            海景風呂溫泉RF樓，需從10F走樓梯上樓，電梯無法到達，敬
+                                            請知悉！
+                                            <br />
+                                            早餐：敬請自理
+                                            午餐：頭城老街自理午餐
+                                            晚餐：頭城農場晚餐
+                                        </v-card-text>
+                                        <v-card-text v-if="item.categoryId === 1">
+                                            {{ item.cartItem.detail }}
                                         </v-card-text>
                                     </v-col>
                                     <v-col cols="2">
@@ -57,7 +74,6 @@
 
                 <div class="action border rounded">
                     <div class="batch">
-                        共 3 件商品，已选择 3 件
                         <span class="red">總計:NT${{ total }}</span>
                     </div>
                     <div class="total">
@@ -117,11 +133,13 @@ const total = computed(() => {
     return sum
 })
 
-const removeSelectedItems = () => {
-    for (let i = items.value.length - 1; i >= 0; i--) {
+const removeSelectedItems = async () => {
+    for (let i = cartList.value.length - 1; i >= 0; i--) {
         // 如果项目被选中，则从数组中删除它
-        if (items.value[i].selected) {
-            console.log(items.value.splice(i, 1));
+        if (cartList.value[i].selected) {
+
+            await delitem(cartList.value[i].id)
+            cartList.value.splice(i, 1);
         }
     }
 };

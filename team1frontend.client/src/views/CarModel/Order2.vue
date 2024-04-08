@@ -3,8 +3,9 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useField, useForm } from 'vee-validate'
-import { GetOrderAPI } from '@/apis/CarModel/Order'
 import { usetTimeSpanStore } from '@/stores/timeSpan';
+import { AddItemToCart } from '@/apis/Cart/additem';
+import Cart from '@/views/Ticket/components/cart.vue'
 
 const timeSpanStore = usetTimeSpanStore()
 const timeSpan = timeSpanStore.timeSpan[1].getDate() - timeSpanStore.timeSpan[0].getDate()
@@ -73,25 +74,19 @@ const submit = handleSubmit(values => {
     values.carModel = carModel.name
     values.total = carModel.feePerDay * timeSpan
     data = Object.assign({}, values);
+    console.log(carModel)
     canSubmit.value = false
 })
 const router = useRouter()
 const click = async () => {
-    const response = await GetOrderAPI(data)
-    console.log(response);
-    router.push({
-        path: '/toecpay',
-        name: 'toecpay',
-        params: {
-            str: JSON.stringify(response)
-        }
-    })
+    await AddItemToCart(55, carModel.id, 4, 1);
 }
 
 </script>
 
 <template>
     <v-main>
+        <Cart></Cart>
         <div class="row">
             <div class="col-2"></div>
             <div class="col-5">
@@ -157,7 +152,7 @@ const click = async () => {
                     </div>
                     <div>
                         <v-btn class="me-4 bg-blue" type="button" rounded="xl" @click="click" block :disabled=canSubmit>
-                            付款
+                            加入購物車
                         </v-btn>
                     </div>
 
