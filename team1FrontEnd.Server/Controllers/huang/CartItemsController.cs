@@ -245,8 +245,8 @@ namespace team1FrontEnd.Server.Controllers.huang
                         var carOrder = new CarOrder
                         {
                             MemberId = 55,
-                            CarId = cartItem.ItemId,
-                            AdminId = 69,
+                            CarId = _context.Cars.Where(x => x.CarModelId == cartItem.ItemId).FirstOrDefault().Id,
+                            AdminId = 30,
                             StartDateTime = DateTime.Now,
                             EndDateTime = DateTime.Now.AddDays(5),
                             Price = _context.CarModels.Find(cartItem.ItemId).FeePerDay * 5,

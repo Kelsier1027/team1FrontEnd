@@ -133,11 +133,13 @@ const total = computed(() => {
     return sum
 })
 
-const removeSelectedItems = () => {
-    for (let i = items.value.length - 1; i >= 0; i--) {
+const removeSelectedItems = async () => {
+    for (let i = cartList.value.length - 1; i >= 0; i--) {
         // 如果项目被选中，则从数组中删除它
-        if (items.value[i].selected) {
-            console.log(items.value.splice(i, 1));
+        if (cartList.value[i].selected) {
+
+            await delitem(cartList.value[i].id)
+            cartList.value.splice(i, 1);
         }
     }
 };
