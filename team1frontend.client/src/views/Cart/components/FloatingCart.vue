@@ -2,7 +2,7 @@
     <v-card width="400px" class="d-flex flex-column floatingCard">
         <v-list v-if="cartItems.length > 0" class="m-1">
             <v-list-item v-for="item in cartItems" :key="item.id">
-                <v-list-item-content class="">
+                <div class="">
                     <v-row>
                         <v-col cols="3" class="d-flex align-top justify-start">
                             <v-img :src="item.photo" height="72px"></v-img>
@@ -20,7 +20,7 @@
                             <v-list-item-subtitle
                                 class="fontFamily"
                                 style="color: #5cbbc7; font-weight: 900"
-                                ><span>TWD</span>{{ ' '
+                                >TWD{{ ' '
                                 }}{{ item.price }}</v-list-item-subtitle
                             >
                         </v-col>
@@ -35,7 +35,7 @@
                             ></v-btn>
                         </v-col>
                     </v-row>
-                </v-list-item-content>
+                </div>
             </v-list-item>
         </v-list>
 
@@ -49,14 +49,14 @@
                 width="132px"
                 class="d-flex justify-center"
             ></v-img>
-            <v-text class="text-center fontFamily cartEmptyMessasge"
-                >您的購物車是空的</v-text
-            >
+            <div class="text-center fontFamily cartEmptyMessasge">
+                您的購物車是空的
+            </div>
         </v-card-item>
 
         <v-spacer></v-spacer>
         <v-divider class="m-0"></v-divider>
-        <v-card-footer class="m-3">
+        <div class="m-3">
             <v-row class="d-flex justify-space-between align-center">
                 <v-col class="d-flex justify-start" col="auto"
                     >共 0 件商品</v-col
@@ -65,7 +65,7 @@
                     ><v-btn class="btn fontFamily">查看購物車</v-btn></v-col
                 >
             </v-row>
-        </v-card-footer>
+        </div>
     </v-card>
 </template>
 
@@ -77,25 +77,25 @@ const cartItems = ref([
     {
         id: 1,
         photo: 'https://fakeimg.pl/300/',
-        name: '商品名稱1',
-        detail: '商品描述1',
-        price: 100,
+        name: '劍湖山世界',
+        detail: '成人門票',
+        price: 600,
         quantity: 1,
     },
     {
         id: 2,
         photo: 'https://fakeimg.pl/300/',
-        name: '商品名稱2',
-        detail: '商品描述2',
-        price: 100,
+        name: '九族文化村',
+        detail: '成人門票',
+        price: 700,
         quantity: 1,
     },
     {
         id: 3,
         photo: 'https://fakeimg.pl/300/',
-        name: '商品名稱3',
-        detail: '商品描述3',
-        price: 100,
+        name: '麗寶樂園',
+        detail: '成人門票',
+        price: 900,
         quantity: 1,
     },
 ]);

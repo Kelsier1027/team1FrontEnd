@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { computed } from 'vue';
 import Options from './Options.vue';
 import LoginOrRegister from './LoginOrRegister.vue';
@@ -8,6 +8,12 @@ import { useRouter, useRoute } from 'vue-router';
 import Searcher from './Searcher.vue';
 import { useAlertStore } from '@/stores/alertStore';
 import FloatingCart from '@/views/Cart/components/FloatingCart.vue';
+import FloatingMemberCard from '@/views/Member/components/FloatingMemberCard.vue';
+
+const memberFirstLetter = computed(() => {
+    // 返回會員帳號的第一個字母
+    return memberStore.account[0];
+});
 
 const isFloatingCartVisible = ref(false);
 const showFloatingCart = () => {
@@ -16,6 +22,32 @@ const showFloatingCart = () => {
 const hideFloatingCart = () => {
     isFloatingCartVisible.value = false;
 };
+
+const iconRef = ref(null); // 用于引用<v-icon>
+const iconPosition = ref({ top: 0, left: 0 }); // 用于存储位置信息
+
+onMounted(() => {
+    const updatePosition = () => {
+        if (iconRef.value) {
+            const { top, left } = iconRef.value.getBoundingClientRect();
+            iconPosition.value = { top, left };
+            console.log(iconPosition.value);
+        }
+    };
+
+    // 监听窗口大小变化
+    window.addEventListener('resize', updatePosition);
+
+    // 初始更新位置
+    updatePosition();
+
+    // 如果需要，也可以设置MutationObserver来监听DOM变化
+});
+
+onUnmounted(() => {
+    // 清理
+    window.removeEventListener('resize', updatePosition);
+});
 
 const alertStore = useAlertStore();
 const router = useRouter();
@@ -78,6 +110,18 @@ const items = ref([
 ]);
 </script>
 
+<script>
+export default {
+    data: () => ({
+        items: [
+            { title: 'Click Me' },
+            { title: 'Click Me' },
+            { title: 'Click Me' },
+            { title: 'Click Me 2' },
+        ],
+    }),
+};
+</script>
 <template>
     <v-app-bar :elevation="0" class="app-bar-flex">
         <v-alert
@@ -122,18 +166,16 @@ const items = ref([
                     }
                 "
             />
-
             <v-menu
-                v-model="isFloatingCartVisible"
                 transition="slide-y-transition"
+                location="bottom right"
+                open-on-hover
             >
-                <template v-slot:activator="{ on }">
+                <template v-slot:activator="{ props }">
                     <v-icon
-                        v-if="memberStore.isLoggedIn"
+                        v-bind="props"
+                        class="pe-4 cart"
                         icon="mdi-cart-outline"
-                        class="pe-6 cart"
-                        v-on="on"
-                        @mouseenter="showFloatingCart"
                         style="
                             :hover {
                                 cursor: pointer;
@@ -141,59 +183,42 @@ const items = ref([
                         "
                     ></v-icon>
                 </template>
-                <FloatingCart @mouseleave="hideFloatingCart"></FloatingCart>
+                <FloatingCart />
             </v-menu>
 
             <!-- <v-icon
-                v-if="memberStore.isLoggedIn"
                 icon="mdi-cart-outline"
-                class="pe-6 cart"
-                @mouseenter="showFloatingCart"
-            /> -->
-            <!-- <v-btn @click="getMemberInfo"> 取得會員資料 </v-btn> -->
+                class="pe-4 cart"
+                style="
+                    :hover {
+                        cursor: pointer;
+                    }
+                "
+            ></v-icon> -->
+
             <v-btn v-if="!memberStore.isLoggedIn" @click="checkLogin">
                 <div class="font-weight-bold" style="color: gray">
                     登入/註冊
                 </div>
             </v-btn>
-            <v-btn v-if="memberStore.isLoggedIn" @click="Logout">
-                <div class="font-weight-bold" style="color: gray">登出</div>
-            </v-btn>
-            <!-- 只在大螢幕上顯示v-avatar，並在小螢幕上隱藏v-app-bar-nav-icon -->
-            <!-- <v-btn
-                v-if="memberStore.isLoggedIn"
-                icon="mdi-account"
-                size="small"
-                elevation="4"
-            >
-            </v-btn> -->
 
-            <v-btn
+            <v-menu
+                transition="slide-y-transition"
+                location="bottom right"
                 v-if="memberStore.isLoggedIn"
-                :to="'/member'"
-                icon="mdi-account"
-                size="small"
-                elevation="0"
-                border="1"
-                color="gray"
             >
-            </v-btn>
-            <!-- <v-avatar
-                v-if="memberStore.isLoggedIn"
-                class=""
-                color="grey-darken-1"
-                size="32"
-            ></v-avatar> -->
-            <!-- <v-avatar
-                v-if="memberStore.isLoggedIn"
-                class="hidden-sm-and-down"
-                color="grey-darken-1"
-                size="32"
-            ></v-avatar> -->
-            <!-- <v-app-bar-nav-icon
-                class="hidden-md-and-up"
-                @click.stop="drawer = !drawer"
-            ></v-app-bar-nav-icon> -->
+                <template v-slot:activator="{ props }">
+                    <v-avatar
+                        v-bind="props"
+                        color="rgba(38, 190, 201,1)"
+                        size="40"
+                        class="ma-3"
+                        :text="memberFirstLetter"
+                    >
+                    </v-avatar>
+                </template>
+                <FloatingMemberCard />
+            </v-menu>
         </div>
     </v-app-bar>
 
@@ -246,18 +271,16 @@ const items = ref([
     </v-dialog>
 </template>
 
-<script></script>
-
 <style scoped>
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-:deep(.floatingCard) {
+/* :deep(.floatingCart) {
     top: 50px;
-    left: 750px;
-}
+    left: 1005px;
+} */
 .ticket:hover {
     cursor: pointer;
 }

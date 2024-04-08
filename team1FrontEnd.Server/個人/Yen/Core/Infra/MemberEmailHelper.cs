@@ -15,7 +15,6 @@ namespace team1FrontEnd.Server.個人.Yen.Core.Infra
         {
             var subject = "[重設密碼通知]";
             var body = $@"Hi {name},
-
 請點擊此連結 {url} 重設密碼, 以進行重設密碼, 如果您沒有提出申請, 請忽略本信, 謝謝";
             var from = senderEmail;
             var to = email;
@@ -106,7 +105,6 @@ namespace team1FrontEnd.Server.個人.Yen.Core.Infra
         {
             var subject = "[電子信箱驗證信]";
             var body = $@"Hi {name},
-
 請點擊此連結 {url} 驗證電子信箱, 如果您沒有提出申請, 請忽略本信, 謝謝";
 
             var from = senderEmail;

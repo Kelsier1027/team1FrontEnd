@@ -163,7 +163,6 @@ onMounted(() => {
                         >
                             <v-list
                                 class="-listitem custom-list-item"
-                                Height="41px"
                                 :items="items"
                             >
                             </v-list>
