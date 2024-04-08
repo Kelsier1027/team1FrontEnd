@@ -7,6 +7,15 @@ import { useMemberStore } from '@/stores/memberStore';
 import { useRouter, useRoute } from 'vue-router';
 import Searcher from './Searcher.vue';
 import { useAlertStore } from '@/stores/alertStore';
+import FloatingCart from '@/views/Cart/components/FloatingCart.vue';
+
+const isFloatingCartVisible = ref(false);
+const showFloatingCart = () => {
+    isFloatingCartVisible.value = true;
+};
+const hideFloatingCart = () => {
+    isFloatingCartVisible.value = false;
+};
 
 const alertStore = useAlertStore();
 const router = useRouter();
@@ -30,6 +39,9 @@ function getMemberInfo() {
 }
 function Logout() {
     memberStore.logout();
+}
+function toTicket() {
+    router.push('/attraction_ticket');
 }
 
 // 確認是否登入
@@ -99,20 +111,45 @@ const items = ref([
 
         <!-- 使用flex容器包裹右邊的兩個元件，並利用CSS控制排列 -->
         <div class="flex-right">
-            <RouterLink :to="{ path: '/attraction_ticket' }" style="color:black">
             <v-icon
                 v-if="memberStore.isLoggedIn"
+                @click="toTicket"
                 icon="mdi-ticket-confirmation-outline"
                 class="pe-10 ticket"
-                style=":hover{cursor: pointer;}"
+                style="
+                    :hover {
+                        cursor: pointer;
+                    }
+                "
             />
-            </RouterLink>
-           
-            <v-icon
+
+            <v-menu
+                v-model="isFloatingCartVisible"
+                transition="slide-y-transition"
+            >
+                <template v-slot:activator="{ on }">
+                    <v-icon
+                        v-if="memberStore.isLoggedIn"
+                        icon="mdi-cart-outline"
+                        class="pe-6 cart"
+                        v-on="on"
+                        @mouseenter="showFloatingCart"
+                        style="
+                            :hover {
+                                cursor: pointer;
+                            }
+                        "
+                    ></v-icon>
+                </template>
+                <FloatingCart @mouseleave="hideFloatingCart"></FloatingCart>
+            </v-menu>
+
+            <!-- <v-icon
                 v-if="memberStore.isLoggedIn"
                 icon="mdi-cart-outline"
                 class="pe-6 cart"
-            />
+                @mouseenter="showFloatingCart"
+            /> -->
             <!-- <v-btn @click="getMemberInfo"> 取得會員資料 </v-btn> -->
             <v-btn v-if="!memberStore.isLoggedIn" @click="checkLogin">
                 <div class="font-weight-bold" style="color: gray">
@@ -217,10 +254,14 @@ const items = ref([
     padding: 0;
     box-sizing: border-box;
 }
-.ticket:hover{
+:deep(.floatingCard) {
+    top: 50px;
+    left: 750px;
+}
+.ticket:hover {
     cursor: pointer;
 }
-.cart:hover{
+.cart:hover {
     cursor: pointer;
 }
 :deep(.fixed-alertStore) {

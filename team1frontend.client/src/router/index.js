@@ -11,7 +11,7 @@ import MembershipBenefits from '@/views/Member/components/MembershipBenefits.vue
 import DiscountCoupons from '@/views/Member/components/DiscountCoupons.vue';
 import Coins from '@/views/Member/components/Coins.vue';
 import Quests from '@/views/Member/components/Quests.vue';
-//import Orders from '@/views/Member/components/Orders.vue';
+// import Orders from '@/views/Member/components/Orders.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
@@ -25,22 +25,24 @@ import Order from '@/views/CarModel/Order.vue';
 import Order2 from '@/views/CarModel/Order2.vue';
 import toECPay from '@/views/CarModel/toECPay.vue';
 import Success from '@/views/CarModel/Success.vue';
-import Orders from '@/views/Orders/Orders.vue';
+import OrdersForHomePage from '@/views/Orders/indexForHomePage.vue';
+import Orders from '@/views/Orders/index.vue';
 import ConfirmEmailSuccessed from '@/views/Member/components/ConfirmEmailSuccessed.vue';
 import ResetPassword from '@/views/Member/components/ResetPassword.vue';
 import { useMemberStore } from '@/stores/memberStore.js';
-import CartFloatingCard from '@/views/Cart/components/CartFloatingCard.vue';
+import CartFloatingCard from '@/views/Cart/components/FloatingCart.vue';
 
 // 建立路徑
 const routes = [
     {
-        path: '/cart',
-        component: CartFloatingCard,
-    },
-    {
         path: '/',
         component: Layout,
         children: [
+            {
+                path: 'ordersForHomePage',
+                component: OrdersForHomePage,
+                meta: { hideHeader: false },
+            },
             {
                 path: 'hotel',
                 component: Hotel,
@@ -181,11 +183,11 @@ const routes = [
                 path: '/rentCar/success/',
                 component: Success,
             },
-            {
-                path: '/orders/',
-                meta: { requiresAuth: true },
-                component: Orders,
-            },
+            // {
+            //     path: '/orders/',
+            //     meta: { requiresAuth: true },
+            //     component: Orders,
+            // },
         ],
     },
 ];
