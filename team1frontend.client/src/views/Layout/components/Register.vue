@@ -45,13 +45,17 @@ const register = async () => {
             if (error != null || undefined) {
                 if (error.response != null || undefined) {
                     if (error.response.data != null || undefined) {
-                        errorMessage.value = error.response.data;
+                        // errorMessage.value = error.response.data;
+                        console.log(error.response.data);
+                        errorMessage.value = '註冊失敗，帳號已存在';
                     }
                 } else {
                     console.log(error.response);
+                    errorMessage.value = '註冊失敗，帳號已存在';
                 }
             } else {
                 console.log(error);
+                errorMessage.value = '註冊失敗，帳號已存在';
             }
         }
     }

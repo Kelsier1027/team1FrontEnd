@@ -15,27 +15,32 @@ import Quests from '@/views/Member/components/Quests.vue';
 import Messages from '@/views/Member/components/Messages.vue';
 import Favorites from '@/views/Member/components/Favorites.vue';
 import Attraction from '@/views/Ticket/attraction/index.vue';
-import AttractionContent from '@/views/Ticket/attractionContent/index.vue'
-import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue'
-import AttractionTicket from '@/views/Ticket/attractionTicket/index.vue'
-import AttractionQR from '@/views/Ticket/attractionQR/index.vue'
-import CarIndex from '@/views/CarModel/Index.vue'
-import CarSearch from '@/views/CarModel/CarSearch.vue'
-import Order from '@/views/CarModel/Order.vue'
-import Order2 from '@/views/CarModel/Order2.vue'
-import toECPay from '@/views/CarModel/toECPay.vue'
-import Success from '@/views/CarModel/Success.vue'
-import Orders from '@/views/Orders/Orders.vue'
+import AttractionContent from '@/views/Ticket/attractionContent/index.vue';
+import AttractionOrder from '@/views/Ticket/attractionOrder/index.vue';
+import AttractionTicket from '@/views/Ticket/attractionTicket/index.vue';
+import AttractionQR from '@/views/Ticket/attractionQR/index.vue';
+import CarIndex from '@/views/CarModel/Index.vue';
+import CarSearch from '@/views/CarModel/CarSearch.vue';
+import Order from '@/views/CarModel/Order.vue';
+import Order2 from '@/views/CarModel/Order2.vue';
+import toECPay from '@/views/CarModel/toECPay.vue';
+import Success from '@/views/CarModel/Success.vue';
+import Orders from '@/views/Orders/Orders.vue';
 import ConfirmEmailSuccessed from '@/views/Member/components/ConfirmEmailSuccessed.vue';
 import ResetPassword from '@/views/Member/components/ResetPassword.vue';
 import { useMemberStore } from '@/stores/memberStore.js';
+import CartFloatingCard from '@/views/Cart/components/CartFloatingCard.vue';
 
 // 建立路徑
 const routes = [
     {
+        path: '/cart',
+        component: CartFloatingCard,
+    },
+    {
         path: '/',
         component: Layout,
-        children: [ 
+        children: [
             {
                 path: 'hotel',
                 component: Hotel,
@@ -45,8 +50,8 @@ const routes = [
                 path: 'hotel/list',
                 name: 'HotelList',
                 component: HotelList,
-            }, 
-            
+            },
+
             {
                 path: '/hotel-room/:id', // :id 是動態路徑參數
                 name: 'HotelRoom',
