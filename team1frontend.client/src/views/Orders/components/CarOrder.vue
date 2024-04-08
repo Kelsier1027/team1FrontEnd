@@ -22,47 +22,47 @@ watch(
     }
 );
 const text = ref();
-const desserts = ref([]);
-desserts.value = [
+const carOrders = ref([]);
+carOrders.value = [
     {
-        name: 'Frozen Yogurt',
-        calories: 159,
+        orderId: 13244231,
+        orderDate: '2024-02-01',
+        carName: 'BMW-X5',
+        pickUpTime: '2024-02-01',
+        returnTime: '2024-02-03',
+        price: 8000,
+        status: '已付款',
+        color: 'green',
     },
     {
-        name: 'Ice cream sandwich',
-        calories: 237,
+        orderId: 43235452,
+        orderDate: '2024-05-15',
+        carName: 'Benz-SL500',
+        pickUpTime: '2024-05-15',
+        returnTime: '2024-05-17',
+        price: 5000,
+        status: '已付款',
+        color: 'green',
     },
     {
-        name: 'Eclair',
-        calories: 262,
+        orderId: 33243212,
+        orderDate: '2024-08-20',
+        carName: 'Audi-A8',
+        pickUpTime: '2024-08-20',
+        returnTime: '2024-08-22',
+        price: 6000,
+        status: '未付款',
+        color: 'red',
     },
     {
-        name: 'Cupcake',
-        calories: 305,
-    },
-    {
-        name: 'Gingerbread',
-        calories: 356,
-    },
-    {
-        name: 'Jelly bean',
-        calories: 375,
-    },
-    {
-        name: 'Lollipop',
-        calories: 392,
-    },
-    {
-        name: 'Honeycomb',
-        calories: 408,
-    },
-    {
-        name: 'Donut',
-        calories: 452,
-    },
-    {
-        name: 'KitKat',
-        calories: 518,
+        orderId: 45223414,
+        orderDate: '2024-09-01',
+        carName: 'Toyota-Camry',
+        pickUpTime: '2024-09-01',
+        returnTime: '2024-09-03',
+        price: 7000,
+        status: '未付款',
+        color: 'red',
     },
 ];
 </script>
@@ -137,23 +137,31 @@ desserts.value = [
                 <v-table>
                     <thead>
                         <tr style="background-color: #e7e7e7f1; height: 70px">
-                            <th class="text-left text-h6">租車單號</th>
-                            <th class="text-left text-h6">下訂日期</th>
-                            <th class="text-left text-h6">租賃車輛</th>
-                            <th class="text-left text-h6">取車時間</th>
-                            <th class="text-left text-h6">還車時間</th>
-                            <th class="text-left text-h6">租車費用</th>
-                            <th class="text-left text-h6">訂單處理</th>
+                            <th class="text-center text-h6">租車單號</th>
+                            <th class="text-center text-h6">下訂日期</th>
+                            <th class="text-center text-h6">租賃車輛</th>
+                            <th class="text-center text-h6">取車時間</th>
+                            <th class="text-center text-h6">還車時間</th>
+                            <th class="text-center text-h6">租車費用</th>
+                            <th class="text-center text-h6">訂單處理</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr
-                                v-for="item in desserts"
-                                :key="item.name"
+                        <tr v-for="item in carOrders" :key="item.name">
+                            <td class="text-center">{{ item.orderId }}</td>
+                            <td class="text-center">{{ item.orderDate }}</td>
+                            <td class="text-center">{{ item.carName }}</td>
+                            <td class="text-center">{{ item.pickUpTime }}</td>
+                            <td class="text-center">{{ item.returnTime }}</td>
+                            <td class="text-center">{{ item.price }}</td>
+                            <td
+                                class="text-center font-weight-black"
+                                style="font-size: 18px"
+                                :style="{ color: item.color }"
                             >
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.calories }}</td>
-                            </tr> -->
+                                {{ item.status }}
+                            </td>
+                        </tr>
                     </tbody>
                 </v-table>
             </div>

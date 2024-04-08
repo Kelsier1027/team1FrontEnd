@@ -33,7 +33,7 @@
             <v-tab value="carOrder" class="fontFamily tabTitle">租車</v-tab>
             <v-tab value="hotelOrder" class="fontFamily tabTitle">住宿</v-tab>
         </v-tabs>
-        <v-card-text style="padding-top: 0">
+        <v-card-item style="padding-top: 0">
             <v-window v-model="tab">
                 <v-window-item value="ticketOrder">
                     <TicketOrder />
@@ -47,7 +47,7 @@
                     <HotelOrder />
                 </v-window-item>
             </v-window>
-        </v-card-text>
+        </v-card-item>
     </v-card>
 </template>
 
