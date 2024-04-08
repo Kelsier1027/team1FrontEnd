@@ -32,9 +32,9 @@ namespace team1FrontEnd.Server.Controllers.huang
         [HttpGet("GetCartItems")]
         public async Task<IEnumerable<GetCartItemsDto>> GetCartItems(int cartId, int categoryId)
         {
-            var cartItems = _context.CartItems.Where(x => x.ServicerCategoryId == categoryId && x.CartId == cartId).ToList().Select(x => new GetCartItemsDto { selected = false, Id = x.Id, cartItem = GetItem(x.ItemId, categoryId), quantity = x.Quantity });
+            var cartItems = _context.CartItems.Where(x => x.ServicerCategoryId == categoryId && x.CartId == cartId).ToList().Select(x => new GetCartItemsDto { selected = false, Id = x.Id, CategoryId = categoryId, cartItem = GetItem(x.ItemId, categoryId), quantity = x.Quantity });
 
-            if (categoryId == 0) cartItems = _context.CartItems.Where(x => x.CartId == cartId).ToList().Select(x => new GetCartItemsDto { selected = false, Id = x.Id, cartItem = GetItem(x.ItemId, x.ServicerCategoryId), quantity = x.Quantity });
+            if (categoryId == 0) cartItems = _context.CartItems.Where(x => x.CartId == cartId).ToList().Select(x => new GetCartItemsDto { selected = false, Id = x.Id, cartItem = GetItem(x.ItemId, x.ServicerCategoryId), quantity = x.Quantity ,CategoryId=x.ServicerCategoryId});
 
             return cartItems;
         }
@@ -91,6 +91,8 @@ namespace team1FrontEnd.Server.Controllers.huang
             if (checkItem != null) 
             {
                 checkItem.Quantity += cartItemDto.quantity;
+
+                await _context.SaveChangesAsync();
             }
             else
             {
@@ -239,6 +241,21 @@ namespace team1FrontEnd.Server.Controllers.huang
                         await _context.SaveChangesAsync();
 
                         break;
+                    case 4:
+                        var carOrder = new CarOrder
+                        {
+                            MemberId = 55,
+                            CarId = cartItem.ItemId,
+                            AdminId = 69,
+                            StartDateTime = DateTime.Now,
+                            EndDateTime = DateTime.Now.AddDays(5),
+                            Price = _context.CarModels.Find(cartItem.ItemId).FeePerDay * 5,
+                            CarOrderStatusId = 1,
+                        };
+                        _context.CarOrders.Add(carOrder);
+                        
+                        await _context.SaveChangesAsync();
+                        break;
                 }
                 // 儲存對資料庫的更改
             }
@@ -271,7 +288,9 @@ namespace team1FrontEnd.Server.Controllers.huang
 
             if (categoryId == 3) return _context.Packages.Find(itemId);//套裝行程
 
-            throw new NotImplementedException();
+            if (categoryId == 4 ) return _context.CarModels.Find(itemId);
+
+            return null;
         }
 
         //private bool CartItemExists(int id)

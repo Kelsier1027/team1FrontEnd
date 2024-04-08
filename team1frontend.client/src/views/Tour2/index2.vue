@@ -2,6 +2,8 @@
 import { getPackageItem } from '@/apis/package';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { AddItemToCart } from '@/apis/Cart/additem';
+import Cart from '@/views/Ticket/components/cart.vue'
 // 使用 useRoute 函数获取路由信息
 const route = useRoute();
 const id = route.params.id;
@@ -54,9 +56,14 @@ onMounted(async () => {
   pdfUrl.value = `/pdf/${obj.value[0].name}.pdf`;
 });
 
+const click = async (id) => {
+  await AddItemToCart(55, id, 3, 1)
+}
+
 </script>
 
 <template>
+  <Cart></Cart>
   <template v-for="item in obj">
     <div class="container h-100 py-5">
       <div class="topProduct">
@@ -97,7 +104,7 @@ onMounted(async () => {
                   </tr>
                 </tbody>
               </table>
-              <v-btn size="large" width="200">
+              <v-btn @click="click(item.id)" size="large" width="200">
                 購買
               </v-btn>
               <!-- <div class="d-flex justify-center">

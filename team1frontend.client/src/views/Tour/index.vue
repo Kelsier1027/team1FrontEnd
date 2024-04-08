@@ -3,6 +3,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getPackageItem } from '@/apis/package';
 import { useRoute } from 'vue-router';
+import Cart from '@/views/Ticket/components/cart.vue'
 import router from '@/router'
 // 使用 useRoute 函数获取路由信息
 const route = useRoute();
@@ -111,6 +112,7 @@ function search() {
 
 <template>
     <v-main>
+        <Cart></Cart>
 
         <!--banner-slider-->
         <!-- main-slider -->

@@ -1,10 +1,12 @@
 <script setup>
 import Form from '@/components/IndexForm.vue';
 import Carousel from '@/components/IndexCarousel.vue';
+import Cart from '@/views/Ticket/components/cart.vue'
 
 </script>
 <template>
     <v-main>
+        <Cart></Cart>
         <div class="">
             <img src="../../assets/images/CarModel/banner.6e663b8.webp"
                 class="object-fit-cover w-100 position-absolute ">

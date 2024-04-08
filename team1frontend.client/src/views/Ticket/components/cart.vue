@@ -14,6 +14,7 @@
       <v-card>
         <v-tabs v-model="tab" bg-color="primary">
           <v-tab value="one">景點訂票</v-tab>
+          <v-tab value="four">全台訂車</v-tab>
           <v-tab value="two">飯店訂房</v-tab>
           <v-tab value="three">套裝行程</v-tab>
         </v-tabs>
@@ -58,7 +59,7 @@
                 <div class="item-name col-3">{{ item.cartItem.name }}</div>
                 <div class="item-price col-2">{{ item.cartItem.price }}</div>
                 <div class="item-qty col-1">{{ item.quantity }}</div>
-                <div class="item-del col-2"><button @click="removeItem(index)">
+                <div class="item-del col-2"><button @click="removeItem(item.id)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="currentColor"
                       class="bi bi-trash" viewBox="0 0 16 18">
                       <path
@@ -72,11 +73,40 @@
             </v-window-item>
 
             <v-window-item value="three">
-              <div class="cart-item row" v-for="item in cleanItem" :key="item.id">
-                <div class="item-name col-6">{{ item.ticketName }}</div>
-                <div class="item-price col-2">{{ item.price }}</div>
-                <div class="item-qty col-2">{{ item.qty }}</div>
-                <div class="item-del col-2"><button @click="removeItem(index)">
+              <div class="cart-item row">
+                <div class="item-name col-4">名稱</div>
+                <div class="item-qty col-2">單價</div>
+                <div class="col-2"></div>
+                <div class="item-del col-2"></div>
+              </div>
+              <div class="cart-item row" v-for="item in cleanItem3" :key="item.id">
+                <div class="item-name col-4">{{ item.cartItem.name }}</div>
+                <div class="item-price col-2">{{ item.cartItem.price }}</div>
+                <div class="col-2"></div>
+                <div class="item-del col-2"><button @click="removeItem(item.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="currentColor"
+                      class="bi bi-trash" viewBox="0 0 16 18">
+                      <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                      <path
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                    </svg>
+                  </button></div>
+                <div></div>
+              </div>
+            </v-window-item>
+            <v-window-item value="four">
+              <div class="cart-item row">
+                <div class="item-name col-3">車款</div>
+                <div class="item-price col-2">總價</div>
+                <div class="col-4">時間</div>
+                <div class="item-del col-2"></div>
+              </div>
+              <div class="cart-item row" v-for="item in cleanItem2" :key="item.id">
+                <div class="item-name col-3">{{ item.cartItem.name }}</div>
+                <div class="item-price col-2">{{ item.cartItem.price }}</div>
+                <div class="col-4">04/12-04/17</div>
+                <div class="item-del col-2"><button @click="removeItem(item.id)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" fill="currentColor"
                       class="bi bi-trash" viewBox="0 0 16 18">
                       <path
@@ -125,6 +155,8 @@ const drawer = ref(false)
 const direction = ref('rtl')
 const cartList = ref({});
 const cleanItem = ref({})
+const cleanItem2 = ref({})
+const cleanItem3 = ref({})
 
 const tab = ref(null);
 
@@ -135,6 +167,22 @@ const total = computed(() => {
       sum += x.cartItem.price * x.quantity
     })
   }
+  if (cleanItem.value.length) {
+    cleanItem.value.forEach(x => {
+      sum += x.cartItem.price * x.quantity
+    })
+  }
+  if (cleanItem2.value.length) {
+    cleanItem2.value.forEach(x => {
+      sum += x.cartItem.price * x.quantity
+    })
+  }
+  if (cleanItem3.value.length) {
+    cleanItem3.value.forEach(x => {
+      sum += x.cartItem.price * x.quantity
+    })
+  }
+
   return sum
 })
 console.log(total.value);
@@ -151,16 +199,30 @@ const useCart2 = async () => {
   cleanItem.value = res;
   console.log(res);
 };
-
+const useCart3 = async () => {
+  const res = await getcartitem(1, 3);
+  cleanItem3.value = res;
+  console.log(res);
+};
+const useCart4 = async () => {
+  const res = await getcartitem(1, 4);
+  cleanItem2.value = res;
+  console.log(res);
+};
 const removeItem = async (id) => {
   await delitem(id)
   await useCart();
+  await useCart2();
+  await useCart3();
+  await useCart4();
 }
 
 function handleClick() {
   drawer.value = true;
   useCart();
   useCart2();
+  useCart3();
+  useCart4();
 }
 function cancelClick() {
   drawer.value = false;
@@ -181,6 +243,8 @@ function confirmClick() {
 
 onMounted(async () => useCart());
 onMounted(async () => useCart2());
+onMounted(async () => useCart4());
+onMounted(async () => useCart3());
 
 
 </script>
