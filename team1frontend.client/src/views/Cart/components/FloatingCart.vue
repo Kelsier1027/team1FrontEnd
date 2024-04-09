@@ -29,6 +29,7 @@
                             class="d-flex justify-end align-top mt-1"
                         >
                             <v-btn
+                                @click="deleteItem(item.id)"
                                 variant="text"
                                 size="small"
                                 icon="mdi-trash-can-outline"
@@ -59,7 +60,7 @@
         <div class="m-3">
             <v-row class="d-flex justify-space-between align-center">
                 <v-col class="d-flex justify-start" col="auto"
-                    >共 3 件商品</v-col
+                    >共 {{ cartItems.length }} 件商品</v-col
                 >
                 <v-col class="d-flex justify-end" col="auto"
                     ><v-btn class="btn fontFamily">查看購物車</v-btn></v-col
@@ -99,6 +100,11 @@ const cartItems = ref([
         quantity: 1,
     },
 ]);
+
+const deleteItem = (id) => {
+    const index = cartItems.value.findIndex((item) => item.id === id);
+    cartItems.value.splice(index, 1);
+};
 </script>
 
 <style scoped>

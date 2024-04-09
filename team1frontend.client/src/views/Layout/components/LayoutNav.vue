@@ -169,6 +169,7 @@ export default {
             <v-menu
                 transition="slide-y-transition"
                 location="bottom right"
+                :close-on-content-click="false"
                 open-on-hover
             >
                 <template v-slot:activator="{ props }">
