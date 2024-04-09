@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 const memberStore = useMemberStore();
+const memberAccountFirstLatter = memberStore.account.slice(0, 1);
 
 const items = ref([
     {
@@ -100,7 +101,8 @@ onMounted(() => {
                         <v-card class="aside-box" variant="flat">
                             <v-card-title
                                 class="text-center align-center justify-center"
-                                ><v-btn
+                            >
+                                <!-- <v-btn
                                     icon="mdi-account"
                                     size="120px"
                                     elevation="0"
@@ -108,15 +110,25 @@ onMounted(() => {
                                     color="#f5f5f5"
                                     class=""
                                 >
-                                </v-btn>
+                                </v-btn> -->
+                                <v-avatar
+                                    v-bind="props"
+                                    color="rgba(38, 190, 201,1)"
+                                    size="120"
+                                    class="ma-3"
+                                    style="font-size: 70px; font-weight: 900"
+                                    :text="memberAccountFirstLatter"
+                                >
+                                </v-avatar>
                                 <div
-                                    class="font-weight-bold text-subtitle-1"
+                                    class="text-subtitle-1"
                                     style="
                                         margin: 10px 0 4px;
                                         font-size: 16px;
                                         font-family: 'Noto Sans TC', '微软雅黑',
                                             'Microsoft YaHei', 'sans'-serif;
                                         color: #333333;
+                                        font-weight: 900;
                                     "
                                 >
                                     {{ memberStore.firstName + ' ' }}
