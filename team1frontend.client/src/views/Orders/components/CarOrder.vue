@@ -21,7 +21,7 @@ watch(
         }
     }
 );
-const text = ref(null);
+const text = ref(0);
 const carOrders = ref([]);
 carOrders.value = [
     {
@@ -140,7 +140,6 @@ carOrders.value = [
                     </v-btn> -->
                     <v-btn
                         variant="text"
-                        value="left"
                         class="font-weight-black"
                         style="font-size: 20px; border-right: 1px solid white"
                     >
@@ -148,7 +147,6 @@ carOrders.value = [
                     </v-btn>
                     <v-btn
                         variant="text"
-                        value="left"
                         class="font-weight-black"
                         style="font-size: 20px; border-right: 1px solid white"
                     >
@@ -157,7 +155,6 @@ carOrders.value = [
 
                     <v-btn
                         variant="text"
-                        value="center"
                         class="font-weight-black"
                         style="font-size: 20px; border-right: 1px solid white"
                     >
@@ -175,7 +172,6 @@ carOrders.value = [
 
                     <v-btn
                         variant="text"
-                        value="justify"
                         class="font-weight-black"
                         style="font-size: 20px"
                     >
