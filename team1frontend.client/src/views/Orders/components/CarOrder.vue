@@ -21,7 +21,7 @@ watch(
         }
     }
 );
-const text = ref();
+const text = ref(null);
 const carOrders = ref([]);
 carOrders.value = [
     {
@@ -72,15 +72,22 @@ carOrders.value = [
         <div class="col-0"></div>
         <div class="col-12">
             <!-- <h1 class="font-weight-black ma-6">訂單管理</h1> -->
-            <div class="d-flex justify-center mt-3" style="">
-                <v-btn-toggle
+            <div class="d-flex justify-center mt-4" style="">
+                <!-- <v-btn-toggle
                     v-model="text"
                     color="blue-accent-3"
                     rounded="0"
                     group
                     style=""
+                > -->
+                <v-btn-toggle
+                    v-model="text"
+                    group
+                    style=""
+                    color="#00b9c6"
+                    class="v-btn-toggle"
                 >
-                    <v-btn
+                    <!-- <v-btn
                         border
                         value="left"
                         rounded="lg"
@@ -130,20 +137,78 @@ carOrders.value = [
                         "
                     >
                         未付款
+                    </v-btn> -->
+                    <v-btn
+                        variant="text"
+                        value="left"
+                        class="font-weight-black"
+                        style="font-size: 20px; border-right: 1px solid white"
+                    >
+                        所有訂單
+                    </v-btn>
+                    <v-btn
+                        variant="text"
+                        value="left"
+                        class="font-weight-black"
+                        style="font-size: 20px; border-right: 1px solid white"
+                    >
+                        未取車
+                    </v-btn>
+
+                    <v-btn
+                        variant="text"
+                        value="center"
+                        class="font-weight-black"
+                        style="font-size: 20px; border-right: 1px solid white"
+                    >
+                        已取車
+                    </v-btn>
+
+                    <v-btn
+                        variant="text"
+                        value="right"
+                        class="font-weight-black"
+                        style="font-size: 20px; border-right: 1px solid white"
+                    >
+                        已還車
+                    </v-btn>
+
+                    <v-btn
+                        variant="text"
+                        value="justify"
+                        class="font-weight-black"
+                        style="font-size: 20px"
+                    >
+                        未付款
                     </v-btn>
                 </v-btn-toggle>
             </div>
-            <div class="mt-5">
+            <div class="mt-1">
                 <v-table>
                     <thead>
-                        <tr style="background-color: #e7e7e7f1; height: 70px">
-                            <th class="text-center text-h6">租車單號</th>
-                            <th class="text-center text-h6">下訂日期</th>
-                            <th class="text-center text-h6">租賃車輛</th>
-                            <th class="text-center text-h6">取車時間</th>
-                            <th class="text-center text-h6">還車時間</th>
-                            <th class="text-center text-h6">租車費用</th>
-                            <th class="text-center text-h6">訂單處理</th>
+                        <!-- <tr style="background-color: #e7e7e7f1; height: 70px"> -->
+                        <tr style="background-color: white; height: 70px">
+                            <th class="text-center font-weight-black text-h6">
+                                租車單號
+                            </th>
+                            <th class="text-center font-weight-black text-h6">
+                                下訂日期
+                            </th>
+                            <th class="text-center font-weight-black text-h6">
+                                租賃車輛
+                            </th>
+                            <th class="text-center font-weight-black text-h6">
+                                取車時間
+                            </th>
+                            <th class="text-center font-weight-black text-h6">
+                                還車時間
+                            </th>
+                            <th class="text-center font-weight-black text-h6">
+                                租車費用
+                            </th>
+                            <th class="text-center font-weight-black text-h6">
+                                訂單處理
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,4 +235,10 @@ carOrders.value = [
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.v-btn-toggle {
+    background-color: #f1f1f1f1;
+    /* color: #398b8f; */
+    color: #8d8d8d;
+}
+</style>
