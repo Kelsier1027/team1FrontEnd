@@ -166,7 +166,7 @@ export default {
                     }
                 "
             />
-            <v-menu
+            <!-- <v-menu
                 transition="slide-y-transition"
                 location="bottom right"
                 :close-on-content-click="false"
@@ -185,7 +185,7 @@ export default {
                     ></v-icon>
                 </template>
                 <FloatingCart />
-            </v-menu>
+            </v-menu> -->
 
             <!-- <v-icon
                 icon="mdi-cart-outline"
