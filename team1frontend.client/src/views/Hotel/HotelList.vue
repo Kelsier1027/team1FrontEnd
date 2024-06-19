@@ -64,7 +64,7 @@
         </div>
         <div>
             <div class="main-content">
-                <h1>Hotel飯店</h1>
+                <!--<h1>Hotel飯店</h1>-->
                 <Search @search="handleSearch" />
                 <div class="dropdown-selects">
                     <div class="dropdown-container">
@@ -142,18 +142,19 @@
                          @click="goToHotelRoom(hotel.id)">
                         <img :src="getHotelImageUrl(hotel.mainImage)" alt="Hotel Image" class="hotel-image" />
                         <div class="hotel-info">
-                            <h2>{{ hotel.name }}</h2>
-                            <p>{{ hotel.address }}</p>
+                            <h3>{{ hotel.name }}</h3>
+                            <h5>{{ hotel.address }}</h5>
                             <div class="hotel-rating">
                                 <span>{{ hotel.grade }}</span>
                             </div>
                             <div class="hotel-price">
                                 <span v-if="hotel.hotelRooms.length">NT${{ hotel.hotelRooms[0].weekendPrice }}</span>
                             </div>
-                            <button class="booking-button">
-                                立即訂購
-                            </button>
+
                         </div>
+                        <button class="booking-button">
+                            立即訂購
+                        </button>
                     </div>
                 </div>
             </div>  
@@ -168,6 +169,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import axios from 'axios';
     import { watch } from 'vue';
+   
 
 
     const route = useRoute();
@@ -347,6 +349,8 @@
 </script>
 
 <style scoped>
+
+
     .wrapper {
         display: grid;
         grid-template-columns: 300px auto; /* 300px為左側篩選欄寬度，剩餘空間給右側內容 */
@@ -375,7 +379,7 @@
     }
 
     .search-panel {
-        background-color: #ffd54f; /* 您喜歡的顏色 */
+        background-color: #D0AB7A; /* 您喜歡的顏色 */
         padding: 15px;
         border-radius: 8px;
         max-width: 900px; /* 或者根據您的設計需求調整 */
@@ -490,16 +494,24 @@
         overflow: hidden;
         margin-bottom: 10px;
         display: flex;
+        height: 200px;
+        box-sizing: border-box;
+        position: relative;
     }
+        .hotel-card:hover {
+            background-color: #F0DBBF; /* 改成你想要的顏色 */
+        }
 
     .hotel-image {
         width: 200px;
         height: 200px;
         object-fit: cover;
+
     }
 
     .hotel-info {
         padding: 10px;
+       
     }
 
     .hotel-rating {
@@ -517,19 +529,24 @@
     }
 
     .booking-button {
-        padding: 10px 20px;
-        background-color: #4CAF50; /* 按钮背景颜色 */
+        width:130px;
+        height:60px;
+        padding: 5px 5px;
+        background-color: #F3C364; /* 按钮背景颜色 */
         color: white; /* 按钮文字颜色 */
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        margin-top: 10px;
+        /**/ /*margin-top: 5px;*/
+        bottom: 13px;
+        left: 450px;
+        position: absolute;
     }
 
     /* 增加 :hover 状态以改善用户体验 */
-    .booking-button:hover {
-        background-color: #45a049;
-    }
+        .booking-button:hover {
+            background-color: #FCC954;
+        }
 
     .hotel-card {
         cursor: pointer; /* 当鼠标悬停时显示指针手势 */

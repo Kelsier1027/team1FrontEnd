@@ -99,7 +99,7 @@
     
     .search-panel {
         position:relative;
-        background-color: #ffd54f;
+        background-color: #D0AB7A;
         padding: 15px;
         border-radius: 8px;
         max-width: 100%; /* 调整为100%以适应父容器的宽度 */
