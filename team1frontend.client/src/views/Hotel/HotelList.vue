@@ -5,24 +5,16 @@
             <!--左邊篩選直條-->
             <div class="facilities">
                 <p><i class="fa-solid fa-house"></i>設施服務</p>
-                <!-- 確保文字是實際的 HTML 元素 -->
                 <!--飯店設施-->
                 <div class="facility-list">
-                    <div
-                        class="facility-item"
-                        v-for="(facility, index) in facilities"
-                        :key="facility.id"
-                    >
-                        <!-- 使用 facility.id 作為 key -->
-                        <!-- 修正為模板字符串，正確繫結 id -->
-                        <!-- 用 facility.id 作為 value -->
-                        <!-- 確保 selectedFacilities 是一個陣列 -->
-                        <input
-                            type="checkbox"
-                            :id="facility.id"
-                            :value="facility.id"
-                            v-model="selectedFacilities"
-                        />
+                    <div class="facility-item"
+                         v-for="(facility, index) in facilities"
+                         :key="facility.id">
+                        <input type="checkbox"
+                               :id="facility.id"
+                               :value="facility.id"
+                               v-model="selectedFacilities" />
+                        <!--:for 是 v-bind:for 的簡寫,將 facility.id 的值綁定到 label 元素的 for 屬性-->
                         <label :for="facility.id">{{ facility.jaon }}</label>
                     </div>
                 </div>
@@ -64,7 +56,6 @@
         </div>
         <div>
             <div class="main-content">
-                <!--<h1>Hotel飯店</h1>-->
                 <Search @search="handleSearch" />
                 <div class="dropdown-selects">
                     <div class="dropdown-container">
@@ -129,7 +120,7 @@
                 </div>
             </div>
 
-            <!-- list 页面的 template 部分 -->
+            
             <div class="hotel-list">
                 <!-- 搜索消息提示 -->
                 <p v-if="searchMessage && (!hotels.value || hotels.value.length === 0)">{{ searchMessage }}</p>
@@ -178,23 +169,23 @@
     const router = useRouter();
 
     const hotels = ref([]);
-    const searchMessage = ref(""); // 用于存储搜索消息或错误消息
+    const searchMessage = ref(""); 
 
-    // list 页面的 script 部分，添加 handleSearch 函数处理搜索事件
+    
     function handleSearch(searchQuery) {
-        // Reset state before new search
+        //搜索時，清空現有的酒店數據和消息，並導航到新的 URL
+        //查詢參數（地址和容納人數）發生變化時，重新加載酒店數據
         hotels.value = [];
         searchMessage.value = "";
-        // 根据新的 searchQuery 更新页面展示的数据
         router.push({ path: '/hotel/list', query: { address: searchQuery.location ,capacity:searchQuery.adults + searchQuery.children} });
     }
     watch(() => [route.query.address, route.query.capacity], ([newAddress, newCapacity], [oldAddress, oldCapacity]) => {
-    // 当地址或容纳人数查询参数变化时，重新加载数据
+    // 如果參數有變化重新載入
     if (newAddress !== oldAddress || newCapacity !== oldCapacity) {
-        // 调用获取酒店数据的函数
+
         fetchHotelsAndRooms();
     }
-}, { deep: true }); // 设置deep为true，以便能够深度监听对象内部的变化
+    }, { deep: true }); // 監聽對象內部的所有屬性變化
 
  
     const facilities = ref([])
@@ -208,11 +199,9 @@
             console.error('Failed to fetch facilities:', error);
         }
     }
-
-    // 使用 onMounted 生命週期鉤子來在組件掛載時獲取數據
     onMounted(fetchFacilities);
 
-    const selectedPrice = ref([])
+    
 
     //處理圖片
     const getHotelImageUrl = (imagePath) => {
@@ -220,6 +209,7 @@
     };
 
     //價格篩選
+    const selectedPrice = ref([])
     const searchMix = ref('')
     const searchMin = ref('')
 
@@ -227,7 +217,7 @@
     const selectedRating = ref('')
     const ratingOptions = [
         { label: '不限', value: 'all' },
-        { label: '好评 9+', value: '9plus' },
+        { label: '好評 9+', value: '9plus' },
         { label: '非常好 8+', value: '8plus' },
         { label: '不錯 7+', value: '7plus' }
     ]
@@ -237,34 +227,34 @@
     const sortOptions = [
         { value: 'recommend', text: '推薦' },
         { value: 'popularity', text: '人氣' },
-        // ...更多排序選項
+        
     ]
 
     const selectedRegion = ref('')
     const regionOptions = [
         { value: 'north', text: '北部' },
         { value: 'south', text: '南部' },
-        // ...更多地區選項
+        
     ]
 
     const selectedFeature = ref('')
     const featureOptions = [
         { value: 'hotel', text: '飯店' },
         { value: 'motel', text: '汽車旅館' },
-        // ...更多住宿類型選項
+        
     ]
 
    
-    // 跳转到酒店详细页面的函数
+    // 跳轉去那個飯店
     const goToHotelRoom = (hotelId) => {
-        // 这里可以使用Vue Router或者window.location来导航
+    
         router.push({ name: 'HotelRoom', params: { id: hotelId } });
-        console.log('Go to hotel:');
+        
     };
 
-    
+    //設施篩選
     watch(selectedFacilities, (newValue, oldValue) => {
-        // 只在實際有變化時發送請求
+        
         if (newValue !== oldValue) {
             searchMessage.value ="";
             fetchHotelsBasedOnFacilities(newValue);
@@ -273,8 +263,7 @@
 
     async function fetchHotelsBasedOnFacilities(selectedFacilities) {
         try {
-            // 構造請求 URL，這裡假設你的後端支持通過查詢參數來篩選設施
-            // 注意：這裡的 URL 和參數需要根據你的實際後端接口進行調整
+
             const facilities = selectedFacilities;
             const queryString = facilities.map(f => `facilities=${f}`).join('&');
             const url = `https://localhost:7113/api/Hotels/GetHotelsByFacilities?${queryString}`;
@@ -297,27 +286,24 @@
 
     async function fetchHotelsAndRooms() {
         const address = route.query.address;
-        const name = route.query.name;
-        const capacity = route.query.capacity; // 添加容纳人数参数
+        const capacity = route.query.capacity; // 添加容納人數參數
         let url = 'https://localhost:7113/api/Hotels';
 
+        // 根據查詢參數動態構建 URL
         if (address) {
             url += `/search?address=${encodeURIComponent(address)}`;
-        } else if (name) {
-            // 如果你有一个基于name搜索酒店的API端点，你可以在这里构建URL
-            url += `/search?address=${encodeURIComponent(name)}`;
-            // 注意: 这里的'/searchByName'和查询参数'name'需要你根据实际API进行调整
         }
-        //&capacity=1
+
+        // 如果有 capacity，將其添加到查詢參數中
         if (capacity) {
             url += `&capacity=${encodeURIComponent(capacity)}`;
         }
+
         try {
             const response = await axios.get(url);
             hotels.value = response.data;
-            
-            console.log('1212');
-            // 為所有酒店同時發起請求，用 Promise.allSettled 等待所有請求完成或失敗
+
+            // 發送請求獲取每個酒店的房間信息
             const hotelRoomsRequests = hotels.value.map(hotel =>
                 axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotel.id}`)
             );
@@ -326,19 +312,16 @@
 
             hotelRoomsResponses.forEach((result, index) => {
                 if (result.status === 'fulfilled' && result.value.data.length > 0) {
-                    // 這裡我們只考慮至少有一個房間數據的情況
                     hotels.value[index].hotelRooms = result.value.data;
                 } else {
-                    // 如果請求失敗或沒有房間數據，可以根據您的業務需求做相應處理
                     hotels.value[index].hotelRooms = { weekendPrice: 'No data' };
                 }
-
             });
+
             console.log(hotels.value);
         } catch (error) {
-            // 当返回的数据为空数组时，设置提示信息
             searchMessage.value = "沒有找到匹配的酒店，請嘗試其他搜索條件。";
-            hotels.value = []; // 清空之前的搜索结果
+            hotels.value = []; // 清空之前的搜索結果
             console.error('Failed to fetch hotels:', error);
         }
     }
@@ -364,7 +347,7 @@
         color: black;
         padding: 20px;
         border-right: 2px solid #ddd;
-        overflow-y: auto;
+       
     }
 
     .content {
@@ -377,15 +360,15 @@
 
     .main-content {
         flex: 1; /* 讓 .main-content 佔滿剩餘空間 */
-        padding-left: 20px; /* 加點左邊距讓內容不會太擠 */
+        padding-left: 20px; 
     }
 
     .search-panel {
-        background-color: #D0AB7A; /* 您喜歡的顏色 */
+        background-color: #D0AB7A; 
         padding: 15px;
         border-radius: 8px;
-        max-width: 900px; /* 或者根據您的設計需求調整 */
-        margin: 0; /* 讓搜索面板在頁面中間顯示 */
+        max-width: 900px;
+        margin: 0; 
     }
     /*飯店設施*/
     .facility-list {
@@ -411,7 +394,7 @@
     .search-price {
         display: flex;
         flex-direction: column;
-        width: 100%; /* 或者根据您的布局需求调整 */
+        width: 100%; 
     }
 
     .form-group {
@@ -444,6 +427,7 @@
         /*三個select*/
     .dropdown-selects {
         display: flex;
+        /*將子元素均勻地分布在容器內*/
         justify-content: space-around;
         align-items: center;
         margin-bottom: 20px;
@@ -487,6 +471,7 @@
     /*飯店標題*/
     .hotel-list {
         display: flex;
+        /*垂直方向排列*/
         flex-direction: column;
     }
 
@@ -501,7 +486,7 @@
         position: relative;
     }
         .hotel-card:hover {
-            background-color: #F0DBBF; /* 改成你想要的顏色 */
+            background-color: #F0DBBF; 
         }
 
     .hotel-image {
@@ -524,39 +509,33 @@
         font-size: 16px;
     }
 
-    .original-price {
-        text-decoration: line-through;
-        color: grey;
-        margin-left: 10px;
-    }
 
     .booking-button {
         width:130px;
         height:60px;
         padding: 5px 5px;
-        background-color: #F3C364; /* 按钮背景颜色 */
-        color: white; /* 按钮文字颜色 */
+        background-color: #F3C364; 
+        color: white; 
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        /**/ /*margin-top: 5px;*/
         bottom: 13px;
         left: 450px;
         position: absolute;
     }
 
-    /* 增加 :hover 状态以改善用户体验 */
+
         .booking-button:hover {
             background-color: #FCC954;
         }
 
     .hotel-card {
-        cursor: pointer; /* 当鼠标悬停时显示指针手势 */
-        transition: box-shadow 0.3s; /* 添加过渡效果使点击有动画感 */
+        cursor: pointer;
+        transition: box-shadow 0.3s;
     }
 
     .hotel-card:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 悬停时添加阴影 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     }
 
 </style>

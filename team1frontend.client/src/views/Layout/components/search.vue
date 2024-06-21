@@ -94,7 +94,7 @@
     });
 </script>
 
-<!-- 添加 CSS 樣式如果有的話 -->
+
 <style scoped>
     
     .search-panel {
@@ -102,7 +102,7 @@
         background-color: #D0AB7A;
         padding: 15px;
         border-radius: 8px;
-        max-width: 100%; /* 调整为100%以适应父容器的宽度 */
+        max-width: 100%;
         margin:0px 50px 20px 50px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
@@ -110,8 +110,8 @@
     .search-form {
         display: flex;
         align-items: center; /* 垂直居中 */
-        justify-content: space-between; /* 两端对齐 */
-        gap: 10px; /* 输入框之间的间隔 */
+        justify-content: space-between; /* 兩端對齊 */
+        gap: 10px; 
     }
     .input-where {
         display: flex;
@@ -143,7 +143,7 @@
     .input-group-prepend .input-group-text {
         background-color: #e9ecef;
         border: none;
-        padding: 5px 10px; /* 缩小预置组件的填充 */
+        padding: 5px 10px; 
     }
 
     .input-group button {
@@ -151,7 +151,7 @@
         color: white;
         border: none;
         border-radius: 4px;
-        padding: 5px 15px; /* 减少填充 */
+        padding: 5px 15px; 
         cursor: pointer;
         transition: background-color 0.3s;
         white-space: nowrap;
@@ -163,13 +163,13 @@
     /*加入購物車的鍵*/
     @media (max-width: 768px) {
         .search-form {
-            flex-wrap: wrap; /* 允许换行 */
+            flex-wrap: wrap; 
         }
 
         .input-group {
-            flex-basis: 100%; /* 在小屏幕上调整宽度 */
+            flex-basis: 100%; /* 在小屏幕上調整寬度 */
             justify-content: center;
-            margin-bottom: 10px; /* 增加底部间距 */
+            margin-bottom: 10px; /* 增加底部間距 */
         }
 
             .input-group button {

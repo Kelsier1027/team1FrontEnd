@@ -54,7 +54,7 @@
                         <img :src="roomType.image" :alt="`房型圖片 ${roomType.name}`" class="room-type-image" />
                         <p>尺寸: {{ roomType.size }}</p>
                         <p>價格: NT${{ roomType.price }}</p>
-                        <!-- 数量选择器 -->
+                        <!-- 數量選擇器 -->
                         <div class="quantity-selector">
                             <button class="quantity-btn decrease" @click="decreaseQuantity(index)"
                                     :disabled="roomType.quantity === 0">
@@ -72,11 +72,10 @@
                                 class="add-to-cart-button">
                             添加到購物車
                         </button>
-                        <!-- 其他房型信息 -->
 
                     </div>
                 </div>
-                <!-- 其他你需要展示的酒店信息 -->
+              
             </div>
         </div>
     </v-main>
@@ -119,8 +118,6 @@ onMounted(async () => {
         const response = await axios.get(`https://localhost:7113/api/Hotels/${hotelId}`);
         const hotelData = response.data;
 
-
-
         // 現在hotel.value將包含修改後的飯店資料
         hotel.value.hotelInfo = { ...hotelData };
 
@@ -136,12 +133,12 @@ const hotel = ref({
     "hotelInfo": {},
     "roomTypes": []
 });
-// 使用计算属性动态获取酒店地址
-const address = computed(() => hotel.value.hotelInfo.name || '默认地址');
-// 生成地图源地址的计算属性
+
+const address = computed(() => hotel.value.hotelInfo.name || '默認地址');
+
 const mapSrc = computed(() => {
-    const query = encodeURIComponent(address.value); // 注意这里使用 address.value 来获取计算属性的值
-    const apiKey = 'AIzaSyCHn4jLlc2mfHlmAcXBC0NkeBzOsZYrSUE';
+    const query = encodeURIComponent(address.value); 
+    const apiKey = 'AIzaSyCHn4jLlc2mfHlmAcXBC0NkeBzOsZYrSUE';//Google Maps API 密鑰，用於授權訪問 Google Maps 服務。
     return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${query}`;
 });
 
@@ -162,64 +159,54 @@ async function fetchFacilityNamesByIds(ids) {
     return facilityNames;
 }
 
-// 在組件掛載後，從後端獲取詳細資料
+
 onMounted(async () => {
-    // 獲取路由參數中的酒店ID
+    
     const hotelId = route.params.id;
-    // 發送請求到後端獲取詳細資料
-    // 這裡假設你有一個API端點是 `/api/hotels/{id}`
-    // const response = await fetch(`/api/hotels/${hotelId}`);
-    // hotel.value = await response.json();
+    //設施
     try {
         const hotelResponse = await axios.get(`https://localhost:7113/api/Hotels/${hotelId}`);
         const hotelData = hotelResponse.data;
         const roomsResponse = await axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotelId}`);
         const roomTypesData = roomsResponse.data;
 
-        // Parse the hotelFacilities JSON string to get the array of facility IDs
         const facilityIds = JSON.parse(hotelData.hotelFacilities).FacilityIds;
 
-        // Fetch the facility names for the given IDs
         const facilityNames = await fetchFacilityNamesByIds(facilityIds);
 
-        // 设置酒店信息
+        // 設置飯店訊息
         hotel.value.hotelInfo = {
             id: hotelData.id,
             name: hotelData.name,
             address: hotelData.address,
-            rating: hotelData.grade, // 假设评分字段为 grade
-            facilities: facilityNames, // 假设这些信息需要另外处理
+            rating: hotelData.grade, 
+            facilities: facilityNames, 
+            //統一時間格式
             checkInTime: hotelData.checkinStart.split(':').slice(0, 2).join(':'),
             checkOutTime: hotelData.checkoutEnd.split(':').slice(0, 2).join(':'),
             describe: "",
-            images: [
-                // 假设使用 mainImage 作为展示图
-                `/assets/HotelImages/${hotelData.mainImage}`
-            ]
+
         };
 
-        // 设置酒店房型信息，这里假设每个房型信息中包含了设施描述
+        // 房型
         hotel.value.roomTypes = roomTypesData.map(room => ({
             id: room.id,
             name: room.name,
             size: room.size,
-            price: room.weekdayPrice, // 或者 room.weekendPrice
+            price: room.weekdayPrice, 
             count: room.count,
-            quantity: 0, // 为每个房间类型添加 quantity 属性
+            quantity: 0, 
             image: `/assets/HotelImages/${room.mainImage}`
         }));
         // 如果飯店的ID為3，則加上假資料的描述
          if (hotelData.id === 3) {
-                hotel.value.hotelInfo.describe = "艾莎公寓位於台南市中西區大智    街與保安路口，地處四通八達的地理中心位置，交通便捷，徒步3分鐘保安路、夏林路小吃，5分鐘海安路藝術商圈，6分鐘國華街和友愛街商圈，8分鐘新光三越台南新天地及藍曬圖文創園區，享有文創流行及美食小吃等多元的深度之旅。<br>" +
+                hotel.value.hotelInfo.describe = "艾莎公寓位於台南市中西區大智街與保安路口，地處四通八達的地理中心位置，交通便捷，徒步3分鐘保安路、夏林路小吃，5分鐘海安路藝術商圈，6分鐘國華街和友愛街商圈，8分鐘新光三越台南新天地及藍曬圖文創園區，享有文創流行及美食小吃等多元的深度之旅。<br>" +
                     "艾莎公寓是全新的電梯別墅，外觀日系內斂灰白外牆，入口搭配上綠意盎然的重植花園造景，讓您在熱鬧的市區裡感受到大自然的活力，公寓內備有多種不同風格的主題套房讓您選擇，不論您是喜愛簡潔沉靜的高雅、喜歡粉色溫馨的浪漫、異國風味的空間表現或是針對兒童設計的親子館，都能滿足您的需求，尤其適合親子一同來體驗移居台南的生活步調，把「艾莎公寓」當作是您台南第二個家。";
 
                 // 更新 HTML 中的描述
                 document.getElementById("hotel-description").innerHTML = hotel.value.hotelInfo.describe;
             }
-        console.log(hotelData);
-        console.log('13231');
-        console.log(hotel.value.hotelInfo.describe);
-        console.log(hotel.value.roomTypes);
+
     } catch (error) {
         console.error('Failed to fetch hotel details:', error);
     }
@@ -318,7 +305,7 @@ onMounted(async () => {
     height: 250px;
     /* 根據實際情況設置適當的高度 */
 }
-
+/* 手機 小型平板大小*/
 @media (max-width: 768px) {
     .details-map-container {
         flex-direction: column;
@@ -346,70 +333,49 @@ onMounted(async () => {
             background-color: #FCC954;
         }
 
-@media (max-width: 768px) {
-    /* 移动设备或小屏幕的特定样式 */
-    /* ... */
-}
 
 .quantity-selector {
     display: flex;
     align-items: center;
     gap: 10px;
-    /* 按钮和数量显示之间的间距 */
     margin-top: 10px;
-    /* 与其他元素的间距 */
+ 
 }
 
 .quantity-btn {
     padding: 5px 10px;
-    /* 按钮内部的填充空间 */
     font-size: 16px;
-    /* 字体大小 */
     color: #fff;
-    /* 字体颜色 */
     background-color: #007bff;
-    /* 背景颜色 */
     border: none;
-    /* 无边框 */
     border-radius: 4px;
-    /* 边角圆滑 */
     cursor: pointer;
-    /* 鼠标样式 */
     transition: background-color 0.3s;
-    /* 颜色变化过渡效果 */
 }
 
 .quantity-btn:disabled {
     background-color: #cccccc;
-    /* 禁用状态的背景颜色 */
     cursor: not-allowed;
-    /* 禁用状态的鼠标样式 */
 }
 
 .quantity-btn.decrease:hover,
 .quantity-btn.increase:hover {
     background-color: #0056b3;
-    /* 鼠标悬浮时的背景颜色 */
 }
 
 .quantity-display {
     font-size: 16px;
-    /* 数量显示的字体大小 */
     color: #333;
-    /* 数量显示的字体颜色 */
     min-width: 30px;
-    /* 确保有足够的显示空间 */
     text-align: center;
-    /* 文字居中 */
+
 }
 
 .error {
     color: #dc3545;
-    /* 错误信息的颜色 */
+    /* 錯誤訊息的顏色 */
     font-size: 14px;
-    /* 错误信息的字体大小 */
     margin-top: 5px;
-    /* 与数量选择器的间距 */
 }
     .check-in-out{
         margin-left:20px;
