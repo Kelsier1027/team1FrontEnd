@@ -77,6 +77,7 @@
         border-right: 2px solid #42b883;
         cursor: pointer;
         margin: 0 20px;
+       /* 變化等速 150毫秒=0.15秒*/
         transition: transform 150ms linear;
     }
 
@@ -116,6 +117,8 @@
             z-index: 3;
             margin-bottom: 2px;
         }
+
+
 
             .card-carousel-cards .card-carousel--card img {
                 vertical-align: bottom;

@@ -2,9 +2,7 @@
     <v-main class="main-container">
         <div class="block text-center">
             <el-carousel height="500px">
-                <el-carousel-item :interval="1500">
-                    <img src="https://kidfq.coach/wp-content/uploads/2023/09/%E5%AE%B6%E5%BA%AD%E6%97%85%E9%81%8A%EF%BC%BF1.webp" />
-                </el-carousel-item>
+                 <img src="https://kidfq.coach/wp-content/uploads/2023/09/%E5%AE%B6%E5%BA%AD%E6%97%85%E9%81%8A%EF%BC%BF1.webp" />
             </el-carousel>
         </div>
         <Search @search="handleSearch" />
@@ -19,25 +17,23 @@
 
 <script setup>
     import { useRouter } from 'vue-router';
-    
-    //搜尋
+     //搜尋
     import Search from '../Layout/components/search.vue';
-
-    const router = useRouter();
-    const searchQuery = ref({
-        // ... 你的搜索表单数据
-    });
-
-    // 在 index 页面的 script 中
-    function handleSearch(searchQuery) {
-        // 假设 searchQuery.location 包含了用户输入的搜索地点
-        router.push({ path: '/hotel/list', query: { address: searchQuery.location, capacity: searchQuery.adults + searchQuery.children } });
-    }
-
     //旋轉木馬
     import { onMounted, ref, computed } from 'vue';
     import axios from 'axios';
     import Carousel from '../Layout/components/Carousel.vue';
+
+    //使用Vue Router的useRouter鉤子，這是一個Composition API的方法
+    const router = useRouter();
+
+    // 搜尋地點,日期,人頭
+    function handleSearch(searchQuery) {
+       
+        router.push({ path: '/hotel/list', query: { address: searchQuery.location, capacity: searchQuery.adults + searchQuery.children } });
+    }
+
+
     const items = ref([
         { name: '台南', image: "https://www.taiwanviptravel.com/articles/images/chihkan-tower-fort-provintia-img1.jpg" },
         { name: '台中', image: "https://image.kkday.com/v2/image/get/w_960%2Cc_fit%2Cq_55%2Ct_webp/s1.kkday.com/product_20142/20181024030541_OKzvH/jpg" },
@@ -48,14 +44,18 @@
         { name: "高雄", image: "https://cpok.tw/wp-content/uploads/2024/01/202403-5.jpg" },
         // 更多項目...
     ]);
+
+    //旋轉木馬
     const currentOffset = ref(0);
     const paginationFactor = 220;
     const windowSize = 3;
     const acount = 0;
 
+    //到末尾
     const atEndOfList = computed(() => {
         return currentOffset.value <= paginationFactor * -1 * (items.value.length - windowSize);
     });
+    //開頭
     const atHeadOfList = computed(() => {
         return currentOffset.value === 0;
     });
@@ -71,13 +71,13 @@
     // 使用 onMounted 鉤子在組件掛載時發起 API 請求
     onMounted(() => {
         items.value.forEach(async (item, index) => {
-            try {
+            try {//使用await等待axios.get方法的結果。axios.get發送一個HTTP GET請求並返回一個Promise
                 const response = await axios.get(`https://localhost:7113/api/Hotels/search?address=${encodeURIComponent(item.name)}`);
-                // 假设 response 的 data 是一个数组，其长度即为该地区的酒店数量
-                items.value[index].acount = response.data.length; // 更新对应地区的酒店数量
+                
+                items.value[index].acount = response.data.length; 
             } catch (error) {
                 console.log(`搜尋 ${item.name} 地區酒店數量發生錯誤:`, error);
-                items.value[index].acount = 0; // 如果请求失败，将数量设置为0
+                items.value[index].acount = 0; // 如果失敗,數量為0
             }
         });
     });
@@ -86,8 +86,8 @@
 
 <style scoped>
     .main-container {
-        max-width: 100%; /* 確保最大寬度為100% */
-        width: 100%; /* 新增，確保容器寬度為100% */
+        max-width: 100%; 
+        width: 100%;
         position: relative;
     }
     .search-panel {
@@ -99,7 +99,7 @@
 
 
     .el-carousel {
-        width: 100%; /* 確保旋轉木馬的寬度為100% */
+        width: 100%; 
         height:500px;
     }
 
@@ -108,8 +108,8 @@
     }
 
     img {
-        width: 100%; /* 新增，確保圖片寬度為100% */
-        height: 100%; /* 保持圖片的高度自動調整以保持宽高比 */
+        width: 100%; 
+        height: 100%; 
         object-fit: cover; /* 更改為cover，以避免圖片失真 */
     }
 </style>

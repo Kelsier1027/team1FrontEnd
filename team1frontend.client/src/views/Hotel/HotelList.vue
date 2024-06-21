@@ -4,7 +4,7 @@
         <div class="wrapper">
             <!--左邊篩選直條-->
             <div class="facilities">
-                <p>設施服務</p>
+                <p><i class="fa-solid fa-house"></i>設施服務</p>
                 <!-- 確保文字是實際的 HTML 元素 -->
                 <!--飯店設施-->
                 <div class="facility-list">
@@ -169,6 +169,8 @@
     import { useRoute, useRouter } from 'vue-router';
     import axios from 'axios';
     import { watch } from 'vue';
+
+
    
 
 
