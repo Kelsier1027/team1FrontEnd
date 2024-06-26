@@ -3,6 +3,7 @@ import Layout from '@/views/Layout/index.vue';
 import Hotel from '@/views/Hotel/index.vue';
 import HotelList from '@/views/Hotel/HotelList.vue';
 import HotelRoom from '@/views/Hotel/HotelRoom.vue';
+import Collect from '@/views/Hotel/collect.vue';
 import Tour from '@/views/Tour/index.vue';
 import Tour2 from '@/views/Tour2/index2.vue';
 import Member from '@/views/Member/index.vue';
@@ -53,6 +54,11 @@ const routes = [
                 path: 'hotel/list',
                 name: 'HotelList',
                 component: HotelList,
+            },
+            {
+                path: 'collect',
+                name: 'Collect',
+                component: Collect, // 添加這一行
             },
 
             {

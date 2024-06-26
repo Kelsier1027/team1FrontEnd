@@ -2,7 +2,7 @@
     <v-main class="main-container">
         <div class="block text-center">
             <el-carousel height="500px">
-                 <img src="https://kidfq.coach/wp-content/uploads/2023/09/%E5%AE%B6%E5%BA%AD%E6%97%85%E9%81%8A%EF%BC%BF1.webp" />
+                <img src="https://kidfq.coach/wp-content/uploads/2023/09/%E5%AE%B6%E5%BA%AD%E6%97%85%E9%81%8A%EF%BC%BF1.webp" />
             </el-carousel>
         </div>
         <Search @search="handleSearch" />
@@ -11,6 +11,9 @@
                   :atHeadOfList="atHeadOfList"
                   @move-carousel="moveCarousel"
                   @item-clicked="navigateToHotelList" />
+        <div>
+            <mediaIcon />
+        </div>
     </v-main>
 
 </template>
@@ -23,6 +26,7 @@
     import { onMounted, ref, computed } from 'vue';
     import axios from 'axios';
     import Carousel from '../Layout/components/Carousel.vue';
+    import mediaIcon from '../Layout/components/mediaIcon.vue';
 
     //使用Vue Router的useRouter鉤子，這是一個Composition API的方法
     const router = useRouter();

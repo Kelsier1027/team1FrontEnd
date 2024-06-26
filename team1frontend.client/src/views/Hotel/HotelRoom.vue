@@ -75,8 +75,11 @@
 
                     </div>
                 </div>
-              
+
             </div>
+        </div>
+        <div>
+            <mediaIcon />
         </div>
     </v-main>
 </template>
@@ -87,6 +90,7 @@ import Cart from '@/views/Ticket/components/cart.vue'
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 import { AddItemToCart } from '@/apis/Cart/additem';
+import mediaIcon from '../Layout/components/mediaIcon.vue';
 
 const router = useRouter();
 const route = useRoute();

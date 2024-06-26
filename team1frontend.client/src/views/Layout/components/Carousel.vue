@@ -1,6 +1,7 @@
 <!-- components/Carousel.vue -->
 <template>
     <div class="card-carousel-wrapper">
+        <!--當左導航按鈕被點擊時，觸發move-carousel事件並傳遞-1，表示向左移動。-->
         <div class="card-carousel--nav__left" @click="$emit('move-carousel', -1)" :disabled="atHeadOfList"></div>
         <div class="card-carousel">
             <div class="card-carousel--overflow-container">

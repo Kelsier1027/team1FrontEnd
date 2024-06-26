@@ -2,6 +2,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@vuepic/vue-datepicker": "^8.3.1",
-    "vue-datepicker-ui": "^3.1.1"
+    "vue-datepicker-ui": "^3.1.1",
+    "vuex": "^4.0.2"
   }
 }

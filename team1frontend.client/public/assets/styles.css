@@ -1,0 +1,111 @@
+
+
+.foot {
+   display:flex;
+   justify-content:space-between;
+   width:100%;
+   margin-top:80px;
+}
+
+.icons {
+    width: 30%;
+    display: flex;
+    justify-content: start;
+    align-items: end;
+}
+.icons img{
+    width:50%;
+}
+
+.logo {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+    .logo img {
+        width: 25%;
+
+    }
+    .logo p {
+        font-family: Poppins;
+        font-size:20px;
+    }
+
+
+.contact {
+    width: 30%;
+    padding-right:20px;
+    padding-bottom:10px;
+    display:flex;
+    justify-content:end;
+    align-items:end;
+    
+}
+    .contact p {
+        cursor: pointer;
+        font-family: Poppins;
+        font-size: 20px;
+    }
+        .contact p:hover {
+            text-decoration: underline;
+        }
+p {
+    font-family: Poppins;
+}
+.aa{
+    width:100%;
+    
+    height:100%;
+    margin-bottom:10px;
+}
+
+
+
+
+.marquee-container {
+    width: 80%; /* 設置跑馬燈容器的寬度 */
+    height: 50%;
+    display:flex;
+    overflow: hidden; /* 隱藏超出容器範圍的內容 */
+    background-color: #E0E0E0; /* 背景色 */
+    box-sizing: border-box;
+    border-radius: 20px;
+    margin: 0 auto;
+}
+
+
+/*.marquee {
+    width: 60%;
+    display: inline-block;*/ /* 內聯塊元素 */
+    /*white-space: nowrap;*/ /* 防止文本換行 */
+    /*animation: marquee 20s linear infinite;*/ /* 設置動畫 */
+/*}*/
+
+/*@keyframes marquee {
+    0% {
+        transform: translateX(100%);*/ /* 從右側開始 */
+    /*}
+
+    50% {
+        transform: translateX(0%);*/ /* 移動到中間 */
+    /*}
+
+    100% {
+        transform: translateX(-100%);*/ /* 移動到左側 */
+    /*}
+
+}*/
+
+.media-icon {
+    opacity: 0;
+    transition: opacity 2s ease-in-out; /* 設置過渡效果 */
+}
+
+    .fade-in {
+        opacity: 1;
+    }
+
+
+

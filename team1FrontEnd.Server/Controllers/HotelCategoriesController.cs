@@ -105,5 +105,7 @@ namespace team1FrontEnd.Server.Controllers
         {
             return (_context.HotelCategories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+
     }
 }

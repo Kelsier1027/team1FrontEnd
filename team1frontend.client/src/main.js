@@ -1,13 +1,17 @@
 //import './assets/main.css';
 // import '@/assets/js/jquery.min.js';
 
+// 引入全局樣式
+import '../public/assets/styles.css';
+
 import { createApp } from 'vue';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
-import 'bootstrap/dist/css/bootstrap.min.css'
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import thor from 'thor-x'
 // import 'thor-x/dist/index.css'
@@ -37,7 +41,11 @@ import vuetify from './plugins/vuetify';
 // import '@/styles/common.scss';
 
 import signalr from './utils/signalR'
- import axios from 'axios'
+import axios from 'axios'
+
+
+
+
 
 const pinia = createPinia();
 
@@ -56,4 +64,5 @@ app.use(pinia);
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(router);
 app.component('font-awesome-icon', FontAwesomeIcon)
+
 app.mount('#app');

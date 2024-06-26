@@ -66,6 +66,11 @@
     "@vue/compiler-dom" "3.4.21"
     "@vue/shared" "3.4.21"
 
+"@vue/devtools-api@^6.0.0-beta.11":
+  version "6.6.3"
+  resolved "https://registry.npmjs.org/@vue/devtools-api/-/devtools-api-6.6.3.tgz"
+  integrity sha512-0MiMsFma/HqA6g3KLKn+AGpL1kgKhFWszC9U29NfpWK5LE7bjeXxySWJrOJ77hBz+TBrBQ7o4QJqbPbqbs8rJw==
+
 "@vue/reactivity@3.4.21":
   version "3.4.21"
   resolved "https://registry.npmjs.org/@vue/reactivity/-/reactivity-3.4.21.tgz"
@@ -173,7 +178,7 @@ vue-datepicker-ui@^3.1.1:
   dependencies:
     calendar-data-generate "^1.0.3"
 
-vue@^3.2.1, vue@>=3.2.0, vue@3.4.21:
+vue@^3.0.2, vue@^3.2.1, vue@>=3.2.0, vue@3.4.21:
   version "3.4.21"
   resolved "https://registry.npmjs.org/vue/-/vue-3.4.21.tgz"
   integrity sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==
@@ -183,3 +188,10 @@ vue@^3.2.1, vue@>=3.2.0, vue@3.4.21:
     "@vue/runtime-dom" "3.4.21"
     "@vue/server-renderer" "3.4.21"
     "@vue/shared" "3.4.21"
+
+vuex@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/vuex/-/vuex-4.0.2.tgz"
+  integrity sha512-M6r8uxELjZIK8kTKDGgZTYX/ahzblnzC4isU1tpmEuOIIKmV+TRdc+H4s8ds2NuZ7wpUTdGRzJRtoj+lI+pc0Q==
+  dependencies:
+    "@vue/devtools-api" "^6.0.0-beta.11"

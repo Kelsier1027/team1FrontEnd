@@ -23,34 +23,31 @@
                     <p>價格篩選</p>
                     <div class="form-group">
                         <label for="searchMix">最高金額</label>
-                        <input
-                            type="text"
-                            id="searchName"
-                            v-model="searchMix"
-                        />
+                        <input type="text"
+                               id="searchName"
+                               v-model="searchMix" />
                     </div>
 
                     <div class="form-group">
                         <label for="searchMin">最低金額</label>
-                        <input
-                            type="text"
-                            id="searchLocation"
-                            v-model="searchMin"
-                        />
+                        <input type="text"
+                               id="searchLocation"
+                               v-model="searchMin" />
                     </div>
                 </div>
                 <!--旅客評分篩選-->
                 <div class="rating-filter">
                     <p>旅客評分</p>
                     <label v-for="option in ratingOptions" :key="option.value">
-                        <input
-                            type="radio"
-                            name="rating"
-                            :value="option.value"
-                            v-model="selectedRating"
-                        />
+                        <input type="radio"
+                               name="rating"
+                               :value="option.value"
+                               v-model="selectedRating" />
                         {{ option.label }}
                     </label>
+                </div>
+                <div class="collect">
+                    <button @click="goToCollect"><i class="fa-solid fa-heart"></i>我的收藏</button>
                 </div>
             </div>
         </div>
@@ -59,60 +56,42 @@
                 <Search @search="handleSearch" />
                 <div class="dropdown-selects">
                     <div class="dropdown-container">
-                        <label for="sort" class="dropdown-label"
-                            >排序方式 :</label
-                        >
-                        <select
-                            v-model="selectedSort"
-                            id="sort"
-                            class="dropdown"
-                        >
+                        <label for="sort" class="dropdown-label">排序方式 :</label>
+                        <select v-model="selectedSort"
+                                id="sort"
+                                class="dropdown">
                             <option disabled value="">請選擇</option>
-                            <option
-                                v-for="option in sortOptions"
-                                :key="option.value"
-                                :value="option.value"
-                            >
+                            <option v-for="option in sortOptions"
+                                    :key="option.value"
+                                    :value="option.value">
                                 {{ option.text }}
                             </option>
                         </select>
                     </div>
 
                     <div class="dropdown-container">
-                        <label for="region" class="dropdown-label"
-                            >地區 :</label
-                        >
-                        <select
-                            v-model="selectedRegion"
-                            id="region"
-                            class="dropdown"
-                        >
+                        <label for="region" class="dropdown-label">地區 :</label>
+                        <select v-model="selectedRegion"
+                                id="region"
+                                class="dropdown">
                             <option disabled value="">請選擇</option>
-                            <option
-                                v-for="region in regionOptions"
-                                :key="region.value"
-                                :value="region.value"
-                            >
+                            <option v-for="region in regionOptions"
+                                    :key="region.value"
+                                    :value="region.value">
                                 {{ region.text }}
                             </option>
                         </select>
                     </div>
 
                     <div class="dropdown-container">
-                        <label for="features" class="dropdown-label"
-                            >住宿類型 :</label
-                        >
-                        <select
-                            v-model="selectedFeature"
-                            id="features"
-                            class="dropdown"
-                        >
+                        <label for="features" class="dropdown-label">住宿類型 :</label>
+                        <select v-model="selectedFeature"
+                                id="features"
+                                class="dropdown">
                             <option disabled value="">請選擇</option>
-                            <option
-                                v-for="feature in featureOptions"
-                                :key="feature.value"
-                                :value="feature.value"
-                            >
+                            <option v-for="feature in featureOptions"
+                                    :key="feature.value"
+                                    :value="feature.value">
                                 {{ feature.text }}
                             </option>
                         </select>
@@ -120,7 +99,7 @@
                 </div>
             </div>
 
-            
+
             <div class="hotel-list">
                 <!-- 搜索消息提示 -->
                 <p v-if="searchMessage && (!hotels.value || hotels.value.length === 0)">{{ searchMessage }}</p>
@@ -141,17 +120,32 @@
                             <div class="hotel-price">
                                 <span v-if="hotel.hotelRooms.length">NT${{ hotel.hotelRooms[0].weekendPrice }}</span>
                             </div>
-
+                            <div class="heart" @click.stop="toggleFavorite(hotel)">
+                                <i :class="hotel.isFavorite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+                            </div>
                         </div>
                         <button class="booking-button">
-                            立即訂購
+                            立即訂購 
                         </button>
+                       
                     </div>
                 </div>
-            </div>  
+            </div>
 
         </div>
+
+
+
+
     </v-main>
+    
+
+    <div>
+        <mediaIcon />
+    </div>
+
+
+
 </template>
 
 <script setup>
@@ -160,17 +154,28 @@
     import { useRoute, useRouter } from 'vue-router';
     import axios from 'axios';
     import { watch } from 'vue';
-
-
-   
-
+    import mediaIcon from '../Layout/components/mediaIcon.vue';
+    import { useHotelStore } from '../../stores/hotel.js';
+    
 
     const route = useRoute();
     const router = useRouter();
 
     const hotels = ref([]);
     const searchMessage = ref(""); 
+    const store = useHotelStore();  // 使用 Pinia Store
 
+
+    function goToCollect() {
+        console.log('Navigating to Collect page');
+        router.push({ name: 'Collect' })
+    }
+
+    // 記得在 setup 函數的返回值中包含 goToCollect
+    //return {
+    //    // ... 其他返回值
+    //    goToCollect,
+    //};
     
     function handleSearch(searchQuery) {
         //搜索時，清空現有的酒店數據和消息，並導航到新的 URL
@@ -270,11 +275,11 @@
             const response = await axios.get(url);
             // 假設後端返回的是一個符合條件的飯店列表
             hotels.value = response.data;
-            console.log("77777");
-            console.log(selectedFacilities.join(','));
-            console.log(response.data);
-            console.log(hotels.value);
-            console.log("88888");
+            hotels.value = hotels.value.map(hotel => ({
+                ...hotel,
+                isFavorite: store.isFavorite(hotel.id)
+            }));
+
         } catch (error) {
             searchMessage.value = "沒有找到匹配的酒店，請嘗試其他搜索條件。";
             hotels.value = []; // 清空之前的搜索结果
@@ -282,11 +287,16 @@
         }
     }
 
+
+    
+
    
 
     async function fetchHotelsAndRooms() {
         const address = route.query.address;
         const capacity = route.query.capacity; // 添加容納人數參數
+        const name = route.query.name; //承接Carousel.vue裡面的name:itemname
+
         let url = 'https://localhost:7113/api/Hotels';
 
         // 根據查詢參數動態構建 URL
@@ -294,6 +304,10 @@
             url += `/search?address=${encodeURIComponent(address)}`;
         }
 
+        if (name) {
+            url += `/search?address=${encodeURIComponent(name)}`;
+        }
+        
         // 如果有 capacity，將其添加到查詢參數中
         if (capacity) {
             url += `&capacity=${encodeURIComponent(capacity)}`;
@@ -302,7 +316,7 @@
         try {
             const response = await axios.get(url);
             hotels.value = response.data;
-
+            
             // 發送請求獲取每個酒店的房間信息
             const hotelRoomsRequests = hotels.value.map(hotel =>
                 axios.get(`https://localhost:7113/api/HotelRooms/hotel/${hotel.id}`)
@@ -318,7 +332,10 @@
                 }
             });
 
-            console.log(hotels.value);
+            hotels.value = hotels.value.map(hotel => ({
+                ...hotel,
+                isFavorite: store.isFavorite(hotel.id)
+            }));
         } catch (error) {
             searchMessage.value = "沒有找到匹配的酒店，請嘗試其他搜索條件。";
             hotels.value = []; // 清空之前的搜索結果
@@ -326,7 +343,12 @@
         }
     }
 
+    function toggleFavorite(hotel) {
+        store.toggleFavorite(hotel);
+        hotel.isFavorite = store.isFavorite(hotel.id);
+    }
     onMounted(fetchHotelsAndRooms);
+
 
 
 
@@ -340,6 +362,7 @@
         display: grid;
         grid-template-columns: 300px auto; /* 300px為左側篩選欄寬度，剩餘空間給右側內容 */
         gap: 20px;
+        height:60%;
     }
 
     .facilities {
@@ -351,6 +374,7 @@
     }
 
     .content {
+        
         display: flex;
         flex: 1; /* 讓 .content 佔滿剩餘空間 */
         max-width: 1500px; /* 設定最大寬度 */
@@ -532,10 +556,46 @@
     .hotel-card {
         cursor: pointer;
         transition: box-shadow 0.3s;
+        position:relative;
     }
 
     .hotel-card:hover {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    }
+    .pagination{
+        display:flex;
+        justify-content:center;
+        margin:0 auto;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .page-item.disabled .page-link {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    .page-item.active .page-link {
+        background-color: #007bff;
+        color: white;
+    }
+                            
+    .heart{
+        font-size:40px;
+        display:flex;
+        position:absolute;
+        top:10px;
+        right:10px;
+    }
+    .collect{
+        width:100px;
+        border:2px solid black;
+        border-radius:20px;
+        padding-left:5px;
     }
 
 </style>
